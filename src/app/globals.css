@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f6f7f9;
+  --surface: #ffffff;
+  --surface-soft: #eef0f3;
+  --foreground: #1a1d21;
+  --muted: #5b6472;
+  --line: rgba(26, 29, 33, 0.12);
+  --brand: #6d28d9;
+
+  /* モール別カラーリング（要件3） */
+  --mall-rakuten: #bf0000;
+  --mall-yahoo: #0f4fd6;
+  --mall-amazon: #e47911;
+  --mall-shopify: #1a8a5a;
+  --mall-common: #5b6472;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #101216;
+    --surface: #181b20;
+    --surface-soft: #1f2228;
+    --foreground: #eef0f3;
+    --muted: #9aa3b0;
+    --line: rgba(238, 240, 243, 0.14);
+    --brand: #a78bfa;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-soft: var(--surface-soft);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+}
+
+* {
+  border-color: var(--line);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+    Meiryo, sans-serif;
+}
+
+.mall-bar {
+  position: relative;
+}
+.mall-bar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--mall);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+}
+
+input,
+textarea,
+select {
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+/* ファイル選択：ブラウザ既定は枠が無く周囲のカードに溶けて見えるため、
+   全ツール共通で枠付きフィールド＋ボタン風の外観にする（.hidden 指定のものは対象外）。 */
+input[type="file"]:not(.hidden) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  background: var(--surface-soft);
+  border: 1px dashed var(--line);
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+input[type="file"]:not(.hidden):hover {
+  border-color: var(--brand);
+}
+input[type="file"]:not(.hidden)::file-selector-button {
+  margin-right: 0.75rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--foreground);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+input[type="file"]:not(.hidden)::file-selector-button:hover {
+  color: #fff;
+  background: var(--brand);
+  border-color: var(--brand);
+}
