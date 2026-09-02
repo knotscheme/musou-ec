@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
-import { LOCALES, LOCALE_LABEL } from "@/i18n/dictionaries";
 import {
   getApiKey,
   setApiKey,
@@ -17,7 +16,7 @@ import { Field } from "@/components/ToolShell";
 import { Glyph } from "@/components/Glyph";
 
 export default function SettingsPage() {
-  const { t, locale, setLocale } = useI18n();
+  const { t } = useI18n();
   const [key, setKey] = useState("");
   const [model, setModelState] = useState(DEFAULT_MODEL);
   const [test, setTest] = useState<{ ok?: boolean; msg: string } | null>(null);
@@ -73,21 +72,6 @@ export default function SettingsPage() {
           設定はこのブラウザ（localStorage）にのみ保存され、サーバーには送信されません。
         </p>
       </div>
-
-      <section className="card space-y-4 p-5">
-        <h2 className="font-bold">言語 / Language</h2>
-        <select
-          value={locale}
-          onChange={(e) => setLocale(e.target.value as (typeof LOCALES)[number])}
-          className="w-full rounded-md border px-3 py-2 text-sm"
-        >
-          {LOCALES.map((l) => (
-            <option key={l} value={l}>
-              {LOCALE_LABEL[l]}
-            </option>
-          ))}
-        </select>
-      </section>
 
       <section className="card space-y-4 p-5">
         <div>

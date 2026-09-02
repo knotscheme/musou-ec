@@ -272,6 +272,114 @@ function ImageDrop({ value, onChange }: { value: string; onChange: (v: string) =
   );
 }
 
+// ── 複数画像を持つブロック（スライド/アイコン/ギャラリー/ロゴ/商品）の行エディタ ──
+// 内部表現は「1行 = a|b|c…」の文字列のまま。行ごとに画像はドロップ/選択/URLで指定できる。
+type RowCol = { label: string; image?: boolean };
+
+function RowsEditor({
+  value,
+  onChange,
+  columns,
+  addLabel = "行を追加",
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  columns: RowCol[];
+  addLabel?: string;
+}) {
+  const [textMode, setTextMode] = useState(false);
+  const parsed = (value ?? "").split(/\r?\n/).map((l) => l.split("|"));
+  const rows: string[][] = parsed.length ? parsed : [columns.map(() => "")];
+
+  const serialize = (r: string[][]) =>
+    r
+      .map((cells) => columns.map((_, i) => (cells[i] ?? "").replace(/\r?\n/g, " ").trim()).join("|"))
+      .filter((line) => line.replace(/\|/g, "").trim() !== "")
+      .join("\n");
+
+  const setCell = (ri: number, ci: number, v: string) => {
+    const next = rows.map((r) => [...r]);
+    while (next[ri].length < columns.length) next[ri].push("");
+    next[ri][ci] = v;
+    onChange(serialize(next));
+  };
+  const addRow = () => onChange(serialize([...rows, columns.map(() => "")]));
+  const delRow = (ri: number) => onChange(serialize(rows.filter((_, i) => i !== ri)));
+  const moveRow = (ri: number, dir: -1 | 1) => {
+    const j = ri + dir;
+    if (j < 0 || j >= rows.length) return;
+    const next = rows.map((r) => [...r]);
+    [next[ri], next[j]] = [next[j], next[ri]];
+    onChange(serialize(next));
+  };
+
+  if (textMode) {
+    return (
+      <div className="space-y-1 sm:col-span-2">
+        <div className="flex justify-end">
+          <button onClick={() => setTextMode(false)} className="text-[11px] text-[var(--brand)]">
+            ← 通常の編集に戻る
+          </button>
+        </div>
+        <textarea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          rows={Math.max(3, rows.length + 1)}
+          className="w-full rounded border px-2 py-1 font-mono text-xs"
+        />
+        <p className="text-[10px] text-[var(--muted)]">1行 = {columns.map((c) => c.label).join(" | ")}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2 sm:col-span-2">
+      {rows.map((cells, ri) => (
+        <div key={ri} className="rounded-md border p-2">
+          <div className="mb-1 flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-[var(--muted)]">{ri + 1}</span>
+            <span className="flex gap-1">
+              <button onClick={() => moveRow(ri, -1)} disabled={ri === 0} className="rounded border px-1 py-0.5 text-xs disabled:opacity-30" title="上へ">
+                <Glyph name="arrowUp" size={11} />
+              </button>
+              <button onClick={() => moveRow(ri, 1)} disabled={ri === rows.length - 1} className="rounded border px-1 py-0.5 text-xs disabled:opacity-30" title="下へ">
+                <Glyph name="arrowDown" size={11} />
+              </button>
+              <button onClick={() => delRow(ri)} className="rounded border px-1 py-0.5 text-xs text-[#bf0000]" title="削除">
+                <Glyph name="x" size={11} />
+              </button>
+            </span>
+          </div>
+          <div className="grid gap-1.5">
+            {columns.map((col, ci) => (
+              <label key={ci} className="block text-xs">
+                <span className="mb-0.5 block text-[var(--muted)]">{col.label}</span>
+                {col.image ? (
+                  <ImageDrop value={cells[ci] ?? ""} onChange={(v) => setCell(ri, ci, v)} />
+                ) : (
+                  <input
+                    value={cells[ci] ?? ""}
+                    onChange={(e) => setCell(ri, ci, e.target.value)}
+                    className="w-full rounded border px-2 py-1 text-sm"
+                  />
+                )}
+              </label>
+            ))}
+          </div>
+        </div>
+      ))}
+      <div className="flex items-center justify-between">
+        <button onClick={addRow} className="rounded-md border px-3 py-1.5 text-xs font-semibold">
+          ＋ {addLabel}
+        </button>
+        <button onClick={() => setTextMode(true)} className="text-[11px] text-[var(--muted)] underline">
+          テキストで一括編集
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── リスト表示のチップ（カーソルを2秒合わせるとプレビューを表示） ──
 function BlockChip({
   bt,
@@ -1182,10 +1290,10 @@ export default function PageBuilder({ target }: { target: "rakuten" | "yahoo" })
               />
             </span>
           </div>
+          {/* スクロールは iframe 内の1本だけにする（外側のラッパーはスクロールさせない） */}
           <div
             ref={previewWrapRef}
-            className="overflow-x-hidden overflow-y-auto rounded-xl border bg-[#f3f3f3] p-3"
-            style={{ maxHeight: 620 }}
+            className="overflow-hidden rounded-xl border bg-[#f3f3f3] p-3"
           >
             <iframe
               ref={previewRef}
@@ -1200,7 +1308,7 @@ export default function PageBuilder({ target }: { target: "rakuten" | "yahoo" })
               srcDoc={iframeDoc}
               style={{
                 width: pw,
-                height: previewZoom < 1 ? Math.round(600 / previewZoom) : 600,
+                height: previewZoom < 1 ? Math.round(620 / previewZoom) : 620,
                 border: 0,
                 background: "#fff",
                 borderRadius: 8,
@@ -1636,6 +1744,18 @@ function BlockEditor({
       <textarea value={p[k] ?? ""} placeholder={ph} onChange={(e) => onUpdate({ [k]: e.target.value })} rows={3} className="w-full rounded border px-2 py-1 font-mono text-xs" />
     </label>
   );
+  // 複数画像ブロック用：行ごとに画像ドロップ/選択/URL で編集できる
+  const Rows = (k: string, label: string, columns: RowCol[], addLabel: string) => (
+    <div className="block text-xs sm:col-span-2">
+      <span className="mb-1 block text-[var(--muted)]">{label}</span>
+      <RowsEditor
+        value={p[k] ?? ""}
+        onChange={(v) => onUpdate({ [k]: v })}
+        columns={columns}
+        addLabel={addLabel}
+      />
+    </div>
+  );
   // 短い文言だが Enter で改行したい欄用（見出し・クーポン等）
   const TA = (k: string, label: string, ph = "Enterで改行", rows = 2) => (
     <label className="block text-xs">
@@ -1803,7 +1923,12 @@ function BlockEditor({
           {CF("border", "枠線の色", "#eeeeee")}
           {CF("labelColor", "ラベル文字色", "#333333")}
           {CF("hover", "hover時の枠色", theme.primary)}
-          {Area("items", "項目（1行 = ラベル|画像URL|リンク）", "新着|img/ico-new.png|#")}
+          {Rows(
+            "items",
+            "項目（ラベル・アイコン画像・リンク）",
+            [{ label: "ラベル" }, { label: "アイコン画像（任意）", image: true }, { label: "リンク先URL" }],
+            "項目を追加",
+          )}
         </>
       )}
       {bt === "slideshow" && (
@@ -1811,14 +1936,30 @@ function BlockEditor({
           {Num("interval", "切替秒数", "4")}
           {R()}
           {CF("dot", "ページャー（ドット）の色", "#ffffff")}
-          {Area("slides", "スライド（1行 = 画像URL|リンク）", "img/slide1.jpg|#")}
+          {Rows(
+            "slides",
+            "スライド（画像・リンク）",
+            [{ label: "画像", image: true }, { label: "リンク先URL（任意）" }],
+            "スライドを追加",
+          )}
         </>
       )}
       {(bt === "productgrid" || bt === "ranking") && (
         <>
           {bt === "productgrid" && Sel("cols", "列数", [["2", "2"], ["3", "3"], ["4", "4"]])}
           <div className="sm:col-span-2">{Chk("auto", "自動更新エリアにする（拡張連携で毎日更新）")}</div>
-          {p.auto !== "1" && Area("items", "商品（1行 = 商品名|画像URL|価格|リンク）", "商品名A|img/p1.jpg|2,980円|#")}
+          {p.auto !== "1" &&
+            Rows(
+              "items",
+              "商品（商品名・画像・価格・リンク）",
+              [
+                { label: "商品名" },
+                { label: "商品画像", image: true },
+                { label: "価格（例: 2,980円）" },
+                { label: "リンク先URL" },
+              ],
+              "商品を追加",
+            )}
           {CF("cardBg", "カード背景色", "#ffffff")}
           {CF("border", "カード枠線の色", "#eeeeee")}
           {CF("nameColor", "商品名の色", "#333333")}
@@ -1926,7 +2067,12 @@ function BlockEditor({
           {Sel("cols", "列数", [["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"]])}
           {Num("gap", "画像の間隔（px）", "8")}
           {R()}
-          {Area("items", "画像（1行 = 画像URL|リンク）", "img/g1.jpg|#")}
+          {Rows(
+            "items",
+            "画像（画像・リンク）",
+            [{ label: "画像", image: true }, { label: "リンク先URL（任意）" }],
+            "画像を追加",
+          )}
         </>
       )}
       {bt === "video" && (
@@ -1962,7 +2108,12 @@ function BlockEditor({
         <>
           {T("title", "見出し（任意）", "取り扱いブランド")}
           {Chk("grayscale", "グレースケール表示にする")}
-          {Area("items", "ロゴ（1行 = 画像URL|リンク）", "img/brand-a.png|#")}
+          {Rows(
+            "items",
+            "ロゴ（ロゴ画像・リンク）",
+            [{ label: "ロゴ画像", image: true }, { label: "リンク先URL（任意）" }],
+            "ロゴを追加",
+          )}
         </>
       )}
       {bt === "tabs" && Area("items", "タブ（1行 = タブ名|中身。中身は改行OK）", "商品詳細|素材・仕様・お手入れ方法。")}

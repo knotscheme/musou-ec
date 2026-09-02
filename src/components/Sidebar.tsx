@@ -2,16 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MALLS, MALL_ORDER, toolsByMall, getStatus, STATUS_COLOR, type MallId } from "@/lib/malls";
 import { ToolIcon } from "@/components/ToolIcon";
 import { Glyph } from "@/components/Glyph";
 import { useI18n } from "@/lib/i18n";
-import { LOCALES, LOCALE_LABEL } from "@/i18n/dictionaries";
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { t, locale, setLocale } = useI18n();
+  const { t } = useI18n();
   const [open, setOpen] = useState<Record<MallId, boolean>>({
     rakuten: true,
     yahoo: false,
@@ -21,7 +20,29 @@ export function Sidebar() {
   });
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const toggle = (m: MallId) => setOpen((s) => ({ ...s, [m]: !s[m] }));
+  // 開閉状態をこの端末に保存し、次回以降も復元する
+  const OPEN_KEY = "musou.sidebar.open";
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(OPEN_KEY) || "null");
+      if (saved && typeof saved === "object") {
+        setOpen((s) => ({ ...s, ...saved }));
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const toggle = (m: MallId) =>
+    setOpen((s) => {
+      const next = { ...s, [m]: !s[m] };
+      try {
+        localStorage.setItem(OPEN_KEY, JSON.stringify(next));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
 
   return (
     <>
@@ -119,22 +140,6 @@ export function Sidebar() {
             );
           })}
 
-          <div className="mt-6 px-3">
-            <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">
-              Language
-            </label>
-            <select
-              value={locale}
-              onChange={(e) => setLocale(e.target.value as (typeof LOCALES)[number])}
-              className="w-full rounded-md border px-2 py-1.5 text-sm"
-            >
-              {LOCALES.map((l) => (
-                <option key={l} value={l}>
-                  {LOCALE_LABEL[l]}
-                </option>
-              ))}
-            </select>
-          </div>
         </nav>
       </aside>
     </>

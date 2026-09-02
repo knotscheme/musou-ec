@@ -141,19 +141,19 @@ export const BLOCK_DEFAULT: Record<BlockType, Record<string, string>> = {
   banner: { src: "", alt: "", href: "", caption: "", radius: "theme", shadow: "none", capColor: "#777777", ovColor: "#000000", ov: "0", blur: "0" },
   iconmenu: {
     cols: "4", items: "新着||#\nランキング||#\nセール||#\nクーポン||#",
-    bg: "", border: "", labelColor: "", hover: "", radius: "14", iconSize: "42",
+    bg: "", border: "", labelColor: "", hover: "", radius: "theme", iconSize: "42",
   },
   slideshow: { slides: "|#\n|#\n|#", interval: "4", radius: "theme", dot: "" },
   productgrid: {
     cols: "3", items: "商品名A||2,980円|#\n商品名B||3,480円|#\n商品名C||1,980円|#", auto: "",
-    cardBg: "", border: "", nameColor: "", priceColor: "", radius: "14",
+    cardBg: "", border: "", nameColor: "", priceColor: "", radius: "theme",
   },
   ranking: {
     items: "1位商品||4,980円|#\n2位商品||3,980円|#\n3位商品||2,980円|#", auto: "",
-    cardBg: "", border: "", nameColor: "", priceColor: "", radius: "14", badge: "",
+    cardBg: "", border: "", nameColor: "", priceColor: "", radius: "theme", badge: "",
   },
-  coupon: { title: "全商品で使える500円OFFクーポン", detail: "5,000円以上のご購入で / 期間中何度でも", code: "", href: "#", bg: "", color: "#ffffff", radius: "16" },
-  countdown: { title: "セール終了まで", deadline: "", bg: "#1a1a1a", color: "#ffffff", accent: "", radius: "14" },
+  coupon: { title: "全商品で使える500円OFFクーポン", detail: "5,000円以上のご購入で / 期間中何度でも", code: "", href: "#", bg: "", color: "#ffffff", radius: "theme" },
+  countdown: { title: "セール終了まで", deadline: "", bg: "#1a1a1a", color: "#ffffff", accent: "", radius: "theme" },
   button: { label: "商品一覧を見る", href: "#", bg: "", color: "#ffffff", hoverBg: "", hoverColor: "", align: "center", size: "md", radius: "theme", full: "", shadow: "1" },
   sns: { kind: "instagram", url: "", bg: "", color: "#ffffff" },
   spacer: { height: "40", bg: "" },
@@ -433,7 +433,7 @@ export function blockHtml(b: Block, baseUrl: string): string {
       const vars = sx(
         ["--mu-ico-cols", p.cols || "4"],
         ["--mu-ico-bg", p.bg], ["--mu-ico-border", p.border], ["--mu-ico-color", p.labelColor],
-        ["--mu-ico-hover", p.hover], ["--mu-ico-r", radiusPx(p.radius) || "14px"], ["--mu-ico-size", `${p.iconSize || "42"}px`],
+        ["--mu-ico-hover", p.hover], ["--mu-ico-r", radiusPx(p.radius) || "var(--mu-radius)"], ["--mu-ico-size", `${p.iconSize || "42"}px`],
       );
       const rows = lines(p.items);
       const cells = rows.map((l) => {
@@ -464,7 +464,7 @@ export function blockHtml(b: Block, baseUrl: string): string {
         ["--mu-cols", isRank ? "3" : p.cols || "3"],
         ["--mu-card-bg", p.cardBg], ["--mu-card-border", p.border],
         ["--mu-name-color", p.nameColor], ["--mu-price-color", p.priceColor],
-        ["--mu-card-r", radiusPx(p.radius) || "14px"], ["--mu-badge", isRank && p.badge],
+        ["--mu-card-r", radiusPx(p.radius) || "var(--mu-radius)"], ["--mu-badge", isRank && p.badge],
       );
       const cards = lines(p.items).map((l, i) => {
         const [name, src, price, href] = l.split("|").map((x) => (x || "").trim());
@@ -813,7 +813,7 @@ h2.mu-h{font-size:26px;letter-spacing:.02em}h3.mu-h{font-size:20px}h4.mu-h{font-
 .mu-banner-cap{text-align:center;font-size:13px;margin-top:8px}
 
 .mu-iconmenu{display:grid;grid-template-columns:repeat(var(--mu-ico-cols,4),minmax(0,1fr));gap:8px;margin:22px 16px}
-.mu-ico{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;text-decoration:none;font-size:11px;font-weight:600;line-height:1.35;color:var(--mu-ico-color,#333);padding:13px 6px;border:1px solid var(--mu-ico-border,#eee);border-radius:var(--mu-ico-r,14px);background:var(--mu-ico-bg,#fff);transition:.15s}
+.mu-ico{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;text-decoration:none;font-size:11px;font-weight:600;line-height:1.35;color:var(--mu-ico-color,#333);padding:13px 6px;border:1px solid var(--mu-ico-border,#eee);border-radius:var(--mu-ico-r,var(--mu-radius));background:var(--mu-ico-bg,#fff);transition:.15s}
 .mu-ico:hover{border-color:var(--mu-ico-hover,var(--mu-primary));transform:translateY(-2px)}
 .mu-ico>span{max-width:100%;text-align:center;overflow-wrap:break-word;word-break:keep-all}
 .mu-ico-img{width:var(--mu-ico-size,42px);height:var(--mu-ico-size,42px);object-fit:contain;border-radius:0;flex:0 0 auto}
@@ -840,7 +840,7 @@ h2.mu-h{font-size:26px;letter-spacing:.02em}h3.mu-h{font-size:20px}h4.mu-h{font-
 .mu-dots button[data-active]{background:var(--mu-dot,#fff)}
 
 .mu-cards{display:grid;grid-template-columns:repeat(var(--mu-cols,3),1fr);gap:12px;margin:22px 16px}
-.mu-card{position:relative;display:flex;flex-direction:column;text-decoration:none;color:#333;border:1px solid var(--mu-card-border,#eee);border-radius:var(--mu-card-r,14px);overflow:hidden;background:var(--mu-card-bg,#fff);transition:.18s}
+.mu-card{position:relative;display:flex;flex-direction:column;text-decoration:none;color:#333;border:1px solid var(--mu-card-border,#eee);border-radius:var(--mu-card-r,var(--mu-radius));overflow:hidden;background:var(--mu-card-bg,#fff);transition:.18s}
 .mu-card:hover{box-shadow:0 10px 26px rgba(0,0,0,.1);transform:translateY(-3px)}
 .mu-card img{aspect-ratio:1/1;object-fit:cover;border-radius:0}
 .mu-card-name{padding:10px 10px 2px;font-size:13px;font-weight:600;line-height:1.55;color:var(--mu-name-color,#333);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -851,12 +851,12 @@ h2.mu-h{font-size:26px;letter-spacing:.02em}h3.mu-h{font-size:20px}h4.mu-h{font-
 .mu-card:nth-child(3):not(.mu-badge-custom) .mu-rank-badge{background:#b06a3b}
 .mu-badge-custom .mu-rank-badge{background:var(--mu-badge,var(--mu-primary))}
 
-.mu-coupon{display:flex;flex-direction:column;align-items:center;gap:4px;margin:22px 16px;padding:24px 16px;border-radius:16px;color:#fff;text-decoration:none;text-align:center;background:var(--mu-primary)}
+.mu-coupon{display:flex;flex-direction:column;align-items:center;gap:4px;margin:22px 16px;padding:24px 16px;border-radius:var(--mu-radius);color:#fff;text-decoration:none;text-align:center;background:var(--mu-primary)}
 .mu-coupon-t{max-width:100%;font-size:19px;font-weight:800;text-wrap:balance}
 .mu-coupon-d{max-width:100%;font-size:13px;opacity:.92;text-wrap:balance}
 .mu-coupon-code{margin-top:8px;padding:5px 14px;background:rgba(255,255,255,.18);border-radius:6px;font-size:13px;letter-spacing:.06em}
 
-.mu-countdown{display:flex;flex-direction:column;align-items:center;gap:6px;margin:22px 16px;padding:20px;border-radius:14px;text-align:center}
+.mu-countdown{display:flex;flex-direction:column;align-items:center;gap:6px;margin:22px 16px;padding:20px;border-radius:var(--mu-radius);text-align:center}
 .mu-cd-t{font-size:14px;font-weight:700;letter-spacing:.08em}
 .mu-cd-nums{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
 .mu-cd-nums b{font-size:26px;color:var(--mu-cd-accent,inherit)}
@@ -1009,7 +1009,7 @@ h2.mu-h{font-size:26px;letter-spacing:.02em}h3.mu-h{font-size:20px}h4.mu-h{font-
 
 /* 安心バッジ帯 */
 .mu-trusts{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:24px 16px}
-.mu-trust{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:130px;padding:13px 18px;border:1px solid #e7e7e7;border-radius:12px;background:#fafafa}
+.mu-trust{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:130px;padding:13px 18px;border:1px solid #e7e7e7;border-radius:var(--mu-radius);background:#fafafa}
 .mu-trust b{font-size:13px;color:var(--mu-primary)}
 .mu-trust small{font-size:10.5px;color:#8a8a8a}
 

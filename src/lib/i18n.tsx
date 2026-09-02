@@ -1,9 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { DICT, LOCALES, type Locale } from "@/i18n/dictionaries";
+import { createContext, useContext, useEffect, useCallback } from "react";
+import { DICT, type Locale } from "@/i18n/dictionaries";
 
-const STORE = "musou.locale";
+/**
+ * 当面は日本人向けのため日本語固定。将来的に多言語化する場合は
+ * ここで locale の切替（localStorage / navigator.language 検出）を復活させる。
+ */
+const FIXED_LOCALE: Locale = "ja";
 
 type Ctx = {
   locale: Locale;
@@ -13,28 +17,15 @@ type Ctx = {
 
 const I18nContext = createContext<Ctx | null>(null);
 
-function detect(): Locale {
-  if (typeof window === "undefined") return "ja";
-  const saved = localStorage.getItem(STORE) as Locale | null;
-  if (saved && LOCALES.includes(saved)) return saved;
-  const nav = navigator.language.slice(0, 2).toLowerCase();
-  return (LOCALES as readonly string[]).includes(nav) ? (nav as Locale) : "ja";
-}
-
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("ja");
-
-  useEffect(() => {
-    setLocaleState(detect());
-  }, []);
+  const locale = FIXED_LOCALE;
 
   useEffect(() => {
     if (typeof document !== "undefined") document.documentElement.lang = locale;
   }, [locale]);
 
-  const setLocale = useCallback((l: Locale) => {
-    setLocaleState(l);
-    if (typeof window !== "undefined") localStorage.setItem(STORE, l);
+  const setLocale = useCallback(() => {
+    /* 多言語切替は現在無効（日本語固定） */
   }, []);
 
   const t = useCallback(
