@@ -1,11 +1,33 @@
 "use client";
 
+import { createContext, useContext } from "react";
 import Link from "next/link";
 import { getTool, getStatus, MALLS, KIND_LABEL } from "@/lib/malls";
 import { ToolIcon } from "@/components/ToolIcon";
 import { StatusBadge, SaveButton } from "@/components/ToolMeta";
 
-export function ToolShell({ slug, children }: { slug: string; children: React.ReactNode }) {
+/**
+ * ハブ（タブで複数ツールを内包）配下では各ツールの ToolShell ヘッダーを出さない。
+ * Provider を true にすると、その中の全 ToolShell が「中身だけ」レンダリングになる。
+ */
+export const BareToolShellContext = createContext(false);
+
+export function ToolShell({
+  slug,
+  children,
+  bare,
+}: {
+  slug: string;
+  children: React.ReactNode;
+  bare?: boolean;
+}) {
+  const inheritedBare = useContext(BareToolShellContext);
+
+  // ハブ配下（bare）ではヘッダーを出さず中身だけ。slug が TOOLS に無くても動くようにする。
+  if (bare ?? inheritedBare) {
+    return <div className="space-y-5">{children}</div>;
+  }
+
   const tool = getTool(slug);
   if (!tool) return <div>Unknown tool: {slug}</div>;
   const mall = MALLS[tool.mall];

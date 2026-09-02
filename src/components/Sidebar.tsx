@@ -103,34 +103,43 @@ export function Sidebar() {
                     {tools.map((tool) => {
                       const href = `/tools/${tool.slug}/`;
                       const active = pathname === href;
+                      const cls = `flex items-center gap-2 rounded-md px-2 py-1.5 leading-snug hover:bg-[var(--surface-soft)] ${
+                        active ? "bg-[var(--surface-soft)] font-semibold" : ""
+                      }`;
+                      const body = (
+                        <>
+                          <ToolIcon name={tool.icon} color={mall.color} size={22} variant="soft" />
+                          <span className="flex-1">{tool.name}</span>
+                          {tool.external ? (
+                            <Glyph name="external" size={12} className="text-[var(--muted)]" />
+                          ) : (
+                            <>
+                              <span
+                                className="h-1.5 w-1.5 shrink-0 rounded-full"
+                                title={getStatus(tool) === "live" ? "稼働中" : "開発中"}
+                                style={{ background: STATUS_COLOR[getStatus(tool)] }}
+                              />
+                              {tool.kind === "extension" && (
+                                <Glyph name="layers" size={12} className="text-[var(--muted)]" />
+                              )}
+                              {tool.kind === "byok" && (
+                                <Glyph name="key" size={12} className="text-[var(--muted)]" />
+                              )}
+                            </>
+                          )}
+                        </>
+                      );
                       return (
                         <li key={tool.slug}>
-                          <Link
-                            href={href}
-                            onClick={() => setMobileOpen(false)}
-                            className={`flex items-center gap-2 rounded-md px-2 py-1.5 leading-snug hover:bg-[var(--surface-soft)] ${
-                              active ? "bg-[var(--surface-soft)] font-semibold" : ""
-                            }`}
-                          >
-                            <ToolIcon
-                              name={tool.icon}
-                              color={mall.color}
-                              size={22}
-                              variant="soft"
-                            />
-                            <span className="flex-1">{tool.name}</span>
-                            <span
-                              className="h-1.5 w-1.5 shrink-0 rounded-full"
-                              title={getStatus(tool) === "live" ? "稼働中" : "開発中"}
-                              style={{ background: STATUS_COLOR[getStatus(tool)] }}
-                            />
-                            {tool.kind === "extension" && (
-                              <Glyph name="layers" size={12} className="text-[var(--muted)]" />
-                            )}
-                            {tool.kind === "byok" && (
-                              <Glyph name="key" size={12} className="text-[var(--muted)]" />
-                            )}
-                          </Link>
+                          {tool.external ? (
+                            <a href={tool.external} target="_blank" rel="noopener noreferrer" className={cls}>
+                              {body}
+                            </a>
+                          ) : (
+                            <Link href={href} onClick={() => setMobileOpen(false)} className={cls}>
+                              {body}
+                            </Link>
+                          )}
                         </li>
                       );
                     })}

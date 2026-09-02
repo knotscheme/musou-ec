@@ -3,7 +3,8 @@ import { MockTool } from "@/components/MockTool";
 import { TOOL_COMPONENTS } from "@/tools/registry";
 
 export function generateStaticParams() {
-  return TOOLS.map((t) => ({ slug: t.slug }));
+  // 外部リンクのツール（external）は自前のページを持たない
+  return TOOLS.filter((t) => !t.external).map((t) => ({ slug: t.slug }));
 }
 
 export const dynamicParams = false;

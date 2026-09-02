@@ -10,6 +10,8 @@
  *       Yahoo は2025/8にアイテムマッチ→アイテムリーチ広告へ移行 → 名称を更新。
  *   逆に「モール横断」の作業（CSV項目変換・売上/粗利の串刺し集計・レビュー横断分析）は
  *   無料ツールが手薄なため共通カテゴリで厚めに用意する。
+ *   重複していた小ツールは統合ハブ（image-studio / discount-sim / message-gen / title-seo /
+ *   data-hub）にタブでまとめている。
  */
 
 export type MallId = "rakuten" | "yahoo" | "amazon" | "shopify" | "common";
@@ -50,6 +52,8 @@ export interface Tool {
   icon: string;
   /** 省略時は "wip"（開発中）。実装が済んだツールだけ "live" を明示する。 */
   status?: ToolStatus;
+  /** 別サービス（外部URL）へのリンクの場合。自前のツールページは持たない。 */
+  external?: string;
 }
 
 export const getStatus = (t: Tool): ToolStatus => t.status ?? "wip";
@@ -77,15 +81,6 @@ export const TOOLS: Tool[] = [
     status: "live",
   },
   {
-    slug: "rakuten-suggest",
-    mall: "rakuten",
-    name: "楽天サジェスト抽出ツール",
-    summary: "楽天の検索サジェストを深堀り取得し CSV でダウンロード。拡張から分散取得。",
-    kind: "extension",
-    icon: "search",
-    status: "live",
-  },
-  {
     slug: "image-text-ratio",
     mall: "rakuten",
     name: "サムネイル一括テキスト占有率チェック",
@@ -95,30 +90,12 @@ export const TOOLS: Tool[] = [
     status: "live",
   },
   {
-    slug: "rank-tracker",
-    mall: "rakuten",
-    name: "検索順位自動計測ツール",
-    summary: "登録キーワードの検索順位を定期取得し推移をローカル保存。拡張から実行。",
-    kind: "extension",
-    icon: "chart",
-    status: "live",
-  },
-  {
     slug: "rakuten-rms-csv",
     mall: "rakuten",
     name: "RMS商品CSV一括編集ツール",
     summary: "RMS の item.csv を読み込み、価格・在庫・キャッチコピー・SKUを一括置換して書き出し。",
     kind: "client",
     icon: "table",
-    status: "live",
-  },
-  {
-    slug: "rakuten-point-sim",
-    mall: "rakuten",
-    name: "ポイント施策 原資シミュレーター",
-    summary: "ポイント変倍・SPU・スーパーSALE・買い回りの付与原資と実質利益率を試算。",
-    kind: "client",
-    icon: "coins",
     status: "live",
   },
   {
@@ -132,31 +109,31 @@ export const TOOLS: Tool[] = [
     status: "live",
   },
   {
+    slug: "rakuten-suggest",
+    mall: "rakuten",
+    name: "楽天サジェスト抽出ツール",
+    summary: "楽天の検索サジェストを深堀り取得し CSV でダウンロード。拡張機能（準備中）から分散取得。",
+    kind: "extension",
+    icon: "search",
+    status: "wip",
+  },
+  {
+    slug: "rank-tracker",
+    mall: "rakuten",
+    name: "検索順位自動計測ツール",
+    summary: "登録キーワードの検索順位を定期取得し推移をローカル保存。拡張機能（準備中）から実行。",
+    kind: "extension",
+    icon: "chart",
+    status: "wip",
+  },
+  {
     slug: "rakuten-competitor",
     mall: "rakuten",
     name: "競合店舗リサーチ",
-    summary: "競合商品ページから価格・ポイント・レビュー数/評価・ランキングを取得し比較表化。拡張連携。",
+    summary: "競合商品ページから価格・ポイント・レビュー数/評価・ランキングを取得し比較表化。拡張機能（準備中）連携。",
     kind: "extension",
     icon: "users",
-    status: "live",
-  },
-  {
-    slug: "rakuten-review-followup",
-    mall: "rakuten",
-    name: "レビュー・買い回り訴求メール文面",
-    summary: "RMS メルマガ／ステップメール用に、レビュー依頼・買い回り・リピート訴求の文面を生成。",
-    kind: "client",
-    icon: "mail",
-    status: "live",
-  },
-  {
-    slug: "rakuten-genre-keyword",
-    mall: "rakuten",
-    name: "ジャンル別 検索KW最適化チェッカー",
-    summary: "商品名・キャッチコピー・PC用商品説明のキーワード配置を診断し、最適ジャンルIDを提案。",
-    kind: "client",
-    icon: "search",
-    status: "live",
+    status: "wip",
   },
 
   // ── Yahoo!ショッピング ────────────────────
@@ -186,24 +163,6 @@ export const TOOLS: Tool[] = [
     summary: "優良配送の付与条件と「優先表示おすすめ順」への影響要因をチェックリストで自己診断。",
     kind: "client",
     icon: "truck",
-    status: "live",
-  },
-  {
-    slug: "yahoo-name-seo",
-    mall: "yahoo",
-    name: "商品名SEOチェッカー",
-    summary: "最重要要素の商品名を診断。先頭キーワード・文字数・重複・記号・カテゴリ整合を採点。",
-    kind: "client",
-    icon: "tag",
-    status: "live",
-  },
-  {
-    slug: "yahoo-coupon-sim",
-    mall: "yahoo",
-    name: "クーポン・PayPay原資シミュレーター",
-    summary: "ストアクーポン＋PayPay付与＋LYPプレミアムの合計原資と、値引き後の粗利を計算。",
-    kind: "client",
-    icon: "ticket",
     status: "live",
   },
   {
@@ -244,26 +203,8 @@ export const TOOLS: Tool[] = [
     icon: "grid",
     status: "live",
   },
-  {
-    slug: "yahoo-abandoned",
-    mall: "yahoo",
-    name: "カート・お気に入り落ち対策",
-    summary: "離脱ユーザー向けのクーポン設計と訴求文（値引き率別の利益影響つき）を作成。",
-    kind: "client",
-    icon: "ticket",
-    status: "live",
-  },
 
   // ── Amazon ───────────────────────────────
-  {
-    slug: "amazon-a9-keyword",
-    mall: "amazon",
-    name: "A9キーワードアナライザー",
-    summary: "タイトル・検索キーワード欄(250byte)の重複・冗長・出現頻度を解析し索引最適化を支援。",
-    kind: "client",
-    icon: "search",
-    status: "live",
-  },
   {
     slug: "amazon-breakeven",
     mall: "amazon",
@@ -340,6 +281,17 @@ export const TOOLS: Tool[] = [
 
   // ── Shopify / 自社サイト ──────────────────
   {
+    slug: "web-template-studio",
+    mall: "shopify",
+    name: "Web Template Studio（別サービス）",
+    summary:
+      "Shopify などにそのまま貼れるセクション（HTML/CSS）を組んで出力できる外部ツール。新しいタブで開きます。",
+    kind: "client",
+    icon: "layout",
+    status: "live",
+    external: "https://web-template-studio.knotscheme.workers.dev/",
+  },
+  {
     slug: "site-speed",
     mall: "shopify",
     name: "サイト表示スピード診断",
@@ -385,24 +337,6 @@ export const TOOLS: Tool[] = [
     status: "live",
   },
   {
-    slug: "shopify-loyalty",
-    mall: "shopify",
-    name: "ポイント/ロイヤルティ 原資シミュレーター",
-    summary: "付与率×利用率×リピート増分から施策のROIと必要原資を試算。レビュー投稿ポイントも加味。",
-    kind: "client",
-    icon: "award",
-    status: "live",
-  },
-  {
-    slug: "shopify-abandoned-cart",
-    mall: "shopify",
-    name: "カゴ落ちリカバリー メール3通ジェネレーター",
-    summary: "1時間後／24時間後／72時間後の3通を、クーポン有無・トーン別に一括生成。",
-    kind: "client",
-    icon: "mail",
-    status: "live",
-  },
-  {
     slug: "shopify-cro-checklist",
     mall: "shopify",
     name: "商品ページCRO診断",
@@ -413,11 +347,48 @@ export const TOOLS: Tool[] = [
   },
 
   // ── 全店舗共通 ────────────────────────────
+  // 統合ハブ（重複していた小ツールをタブでまとめたもの）
   {
-    slug: "csv-mall-converter",
+    slug: "image-studio",
     mall: "common",
-    name: "モール横断 商品CSV変換ツール",
-    summary: "楽天 item.csv ⇄ Yahoo ⇄ Amazon 在庫ファイル ⇄ Shopify product CSV を項目マッピングして相互変換。",
+    name: "商品画像スタジオ",
+    summary: "リサイズ・圧縮／モール規定サイズ書き出し／帯・SALEバッジ合成 をタブでまとめた画像加工ツール。すべてブラウザ内処理。",
+    kind: "client",
+    icon: "crop",
+    status: "live",
+  },
+  {
+    slug: "discount-sim",
+    mall: "common",
+    name: "値引き・原資シミュレーター",
+    summary: "楽天ポイント原資／Yahooクーポン＋PayPay／Shopifyロイヤルティ／併用の赤字ガード をモール別タブで。",
+    kind: "client",
+    icon: "calculator",
+    status: "live",
+  },
+  {
+    slug: "message-gen",
+    mall: "common",
+    name: "EC文面ジェネレーター",
+    summary: "レビュー・買い回り訴求／カート落ち対策／カゴ落ち3通／フォローメール・SMS を状況別タブで生成。CSV差し込み対応。",
+    kind: "client",
+    icon: "mail",
+    status: "live",
+  },
+  {
+    slug: "title-seo",
+    mall: "common",
+    name: "商品名・キーワードSEO診断",
+    summary: "楽天ジャンル別KW／Yahoo商品名SEO／Amazon A9キーワード をモール別ルールで採点・診断。",
+    kind: "client",
+    icon: "search",
+    status: "live",
+  },
+  {
+    slug: "data-hub",
+    mall: "common",
+    name: "商品データ変換ハブ",
+    summary: "1件のマスター → 全モール項目へ展開／モール間の商品CSV相互変換 をタブでまとめた変換ツール。",
     kind: "client",
     icon: "convert",
     status: "live",
@@ -441,24 +412,6 @@ export const TOOLS: Tool[] = [
     status: "live",
   },
   {
-    slug: "image-resize",
-    mall: "common",
-    name: "商品画像一括リサイズ・圧縮ツール",
-    summary: "複数画像を Canvas でリサイズ・再圧縮。サーバー送信なしで一括ダウンロード。",
-    kind: "client",
-    icon: "crop",
-    status: "live",
-  },
-  {
-    slug: "image-badge",
-    mall: "common",
-    name: "商品画像 帯・SALEバッジ一括合成",
-    summary: "セール告知の帯・バッジを複数画像へ一括合成。楽天/Yahoo のモール規定サイズに対応。",
-    kind: "client",
-    icon: "award",
-    status: "live",
-  },
-  {
     slug: "ai-description",
     mall: "common",
     name: "AI商品説明文ジェネレーター",
@@ -475,16 +428,6 @@ export const TOOLS: Tool[] = [
       "発送完了／遅延お詫び／一部欠品・分割発送／海外発送 の連絡文を主要6言語で生成。配送業者の追跡URL自動生成・CSV差し込み対応。全モールのメール/配信ツールに貼れる。",
     kind: "client",
     icon: "truck",
-    status: "live",
-  },
-  {
-    slug: "followup-message",
-    mall: "common",
-    name: "フォローメール／SMS文面ジェネレーター",
-    summary:
-      "サンクス・到着確認・レビュー依頼・リピート促進の文面を配信タイミング別に作成。CSV差し込み対応。",
-    kind: "client",
-    icon: "mail",
     status: "live",
   },
   {
@@ -506,43 +449,6 @@ export const TOOLS: Tool[] = [
     status: "live",
   },
   {
-    slug: "page-reverse",
-    mall: "common",
-    name: "ページ構成リバースエンジニアリング",
-    summary: "競合商品ページの DOM 構成・見出し・画像枚数・文字数を抽出。拡張機能連携。",
-    kind: "extension",
-    icon: "layers",
-    status: "live",
-  },
-  {
-    slug: "product-master",
-    mall: "common",
-    name: "商品マスター → 全モール項目展開ツール",
-    summary:
-      "1件のマスターデータを入力すると、楽天/Yahoo/Amazon/Shopify の各項目フォーマットへ変換してCSV・コピー出力。二重入力を撲滅。",
-    kind: "client",
-    icon: "columns",
-    status: "live",
-  },
-  {
-    slug: "image-multisize",
-    mall: "common",
-    name: "画像 マルチサイズ一括書き出し",
-    summary: "1枚の画像を楽天・Yahoo・Amazon・Instagram・正方形などの規定サイズへ一括トリミング＆書き出し。",
-    kind: "client",
-    icon: "grid",
-    status: "live",
-  },
-  {
-    slug: "coupon-guard",
-    mall: "common",
-    name: "クーポン・値引き 最低利益ガード",
-    summary: "クーポン＋ポイント＋セール価格の併用時に、赤字化する値引きの組み合わせを事前検知。許容下限を提示。",
-    kind: "client",
-    icon: "calculator",
-    status: "live",
-  },
-  {
     slug: "shipping-line-sim",
     mall: "common",
     name: "送料設定・送料無料ライン シミュレーター",
@@ -559,6 +465,15 @@ export const TOOLS: Tool[] = [
     kind: "client",
     icon: "search",
     status: "live",
+  },
+  {
+    slug: "page-reverse",
+    mall: "common",
+    name: "ページ構成リバースエンジニアリング",
+    summary: "競合商品ページの DOM 構成・見出し・画像枚数・文字数を抽出。拡張機能（準備中）連携。",
+    kind: "extension",
+    icon: "layers",
+    status: "wip",
   },
 ];
 

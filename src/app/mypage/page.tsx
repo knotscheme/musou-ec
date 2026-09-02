@@ -28,9 +28,21 @@ function ToolCard({ slug, onRemove }: { slug: string; onRemove?: () => void }) {
       <ToolIcon name={tool.icon} color={mall.color} size={36} />
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-1">
-          <Link href={`/tools/${tool.slug}/`} className="font-semibold leading-snug hover:underline">
-            {tool.name}
-          </Link>
+          {tool.external ? (
+            <a
+              href={tool.external}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold leading-snug hover:underline"
+            >
+              {tool.name}
+              <Glyph name="external" size={12} className="ml-1 inline align-baseline text-[var(--muted)]" />
+            </a>
+          ) : (
+            <Link href={`/tools/${tool.slug}/`} className="font-semibold leading-snug hover:underline">
+              {tool.name}
+            </Link>
+          )}
           {onRemove ? (
             <button onClick={onRemove} className="rounded border px-1.5 text-xs text-[var(--muted)]">
               ×

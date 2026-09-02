@@ -129,19 +129,22 @@ export default function Dashboard() {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {tools.map((tool) => {
                 const status = getStatus(tool);
-                return (
-                  <Link
-                    key={tool.slug}
-                    href={`/tools/${tool.slug}/`}
-                    className="card mall-bar flex flex-col gap-3 p-4 transition hover:shadow-md"
-                    style={{ ["--mall" as string]: mall.color }}
-                  >
+                const cardCls =
+                  "card mall-bar flex flex-col gap-3 p-4 transition hover:shadow-md";
+                const cardStyle = { ["--mall" as string]: mall.color };
+                const inner = (
+                  <>
                     <div className="flex gap-3">
                       <ToolIcon name={tool.icon} color={mall.color} size={40} />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-1">
-                          <span className="font-semibold leading-snug">{tool.name}</span>
-                          <SaveButton slug={tool.slug} compact />
+                          <span className="font-semibold leading-snug">
+                            {tool.name}
+                            {tool.external && (
+                              <Glyph name="external" size={12} className="ml-1 inline align-baseline text-[var(--muted)]" />
+                            )}
+                          </span>
+                          {!tool.external && <SaveButton slug={tool.slug} compact />}
                         </div>
                         <p className="mt-1 text-xs text-[var(--muted)]">{tool.summary}</p>
                       </div>
@@ -149,19 +152,43 @@ export default function Dashboard() {
                     <div className="mt-auto flex items-center gap-2">
                       <StatusBadge status={status} />
                       <span className="inline-flex items-center gap-1 text-[11px] text-[var(--muted)]">
-                        {tool.kind === "client" && t("kind_client")}
-                        {tool.kind === "byok" && (
+                        {tool.external ? (
                           <>
-                            <Glyph name="key" size={12} /> {t("kind_byok")}
+                            <Glyph name="external" size={12} /> 別サービス（新しいタブ）
                           </>
-                        )}
-                        {tool.kind === "extension" && (
+                        ) : (
                           <>
-                            <Glyph name="layers" size={12} /> {t("kind_extension")}
+                            {tool.kind === "client" && t("kind_client")}
+                            {tool.kind === "byok" && (
+                              <>
+                                <Glyph name="key" size={12} /> {t("kind_byok")}
+                              </>
+                            )}
+                            {tool.kind === "extension" && (
+                              <>
+                                <Glyph name="layers" size={12} /> {t("kind_extension")}
+                              </>
+                            )}
                           </>
                         )}
                       </span>
                     </div>
+                  </>
+                );
+                return tool.external ? (
+                  <a
+                    key={tool.slug}
+                    href={tool.external}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cardCls}
+                    style={cardStyle}
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  <Link key={tool.slug} href={`/tools/${tool.slug}/`} className={cardCls} style={cardStyle}>
+                    {inner}
                   </Link>
                 );
               })}
