@@ -25,8 +25,10 @@ const CHANNELS_PATH = path.join(ROOT, "scripts", "config", "channels.json");
 const OUT_PATH = path.join(ROOT, "src", "data", "videos.json");
 
 const PLATFORMS = ["rakuten", "amazon", "yahoo", "shopify", "common"];
-const PER_CHANNEL = 15;
+const PER_CHANNEL = 20;
 const API_KEY = process.env.YT_API_KEY || "";
+/** これより前に公開された動画は除外（EC情報は古いと使えないため）。MIN_PUBLISHED で上書き可。 */
+const MIN_PUBLISHED = process.env.MIN_PUBLISHED || "2025-01-01";
 
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
@@ -226,8 +228,15 @@ async function main() {
     all = await fetchViaRss(idOnly);
   }
 
+  const minTs = new Date(MIN_PUBLISHED).getTime();
   const seen = new Set();
-  const deduped = all.filter((v) => (seen.has(v.videoId) ? false : (seen.add(v.videoId), true)));
+  const deduped = all.filter((v) => {
+    if (seen.has(v.videoId)) return false;
+    seen.add(v.videoId);
+    const ts = new Date(v.publishedAt).getTime();
+    return !Number.isNaN(ts) && ts >= minTs;
+  });
+  console.log(`公開日フィルタ: ${MIN_PUBLISHED} 以降のみ → ${deduped.length} 件`);
 
   // 再生回数（統計）をまとめて取得（videos.list は 50件/リクエスト・1 unit）
   if (API_KEY && deduped.length) {
