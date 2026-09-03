@@ -114,10 +114,13 @@ export default function RankTracker() {
   }
 
   async function runBulk() {
-    const pairs = bulk
+    const lines = bulk
       .split(/\r?\n/)
       .map((l) => l.trim())
-      .filter(Boolean)
+      .filter(Boolean);
+    // ヘッダー行らしきものを除去
+    if (lines[0] && /キーワード/.test(lines[0]) && /(url|コード)/i.test(lines[0])) lines.shift();
+    const pairs = lines
       .map((l) => l.split(/[\t,]/).map((s) => s.trim()))
       .map(([keyword, tgt]) => ({ keyword: keyword || "", target: tgt || "" }))
       .filter((p) => p.keyword && p.target);
@@ -264,6 +267,18 @@ export default function RankTracker() {
                 }}
               />
             </label>
+            <button
+              onClick={() =>
+                downloadCSV("rank-tracker-template", [
+                  ["キーワード", "商品URLまたはコード"],
+                  ["本革ベルト", "https://item.rakuten.co.jp/yourshop/lb076/"],
+                  ["メンズ 財布", "yourshop/bt101"],
+                ])
+              }
+              className="rounded-md border px-3 py-2 text-sm font-semibold text-[var(--brand)]"
+            >
+              テンプレDL
+            </button>
             <span className="text-xs text-[var(--muted)]">今日の日付で記録。走査ページ数は上の設定を使用</span>
           </div>
           {bulkMsg && <p className="mt-1.5 text-xs text-[var(--muted)]">{bulkMsg}</p>}

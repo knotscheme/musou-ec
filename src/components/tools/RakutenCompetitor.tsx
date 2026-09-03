@@ -137,6 +137,13 @@ export default function RakutenCompetitor() {
       .split(/\r?\n/)
       .map((s) => s.trim())
       .filter(Boolean)
+      // 各行の先頭カラムをURLとみなす（ラベル,URL のようなCSVにも対応）
+      .map((l) => {
+        const cols = l.split(/[\t,]/).map((s) => s.trim());
+        return cols.find((c) => /^https?:\/\//i.test(c)) || cols[cols.length - 1] || l;
+      })
+      .filter((u) => !/^(url|競合|ラベル)/i.test(u)) // ヘッダー行を除去
+      .filter(Boolean)
       .map((u) => (/^https?:\/\//i.test(u) ? u : "https://" + u));
     if (!urls.length) return;
     setBulkBusy(true);
@@ -212,13 +219,47 @@ export default function RakutenCompetitor() {
             placeholder={"https://item.rakuten.co.jp/shopA/xxxx/\nhttps://item.rakuten.co.jp/shopB/yyyy/\nhttps://store.shopping.yahoo.co.jp/..."}
             className="w-full rounded-md border px-3 py-2 font-mono text-xs"
           />
-          <button
-            onClick={runBulk}
-            disabled={bulkBusy || !bulk.trim()}
-            className="mt-2 rounded-md bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-          >
-            {bulkBusy ? "取得中…" : "一括で取得して比較"}
-          </button>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <button
+              onClick={runBulk}
+              disabled={bulkBusy || !bulk.trim()}
+              className="rounded-md bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              {bulkBusy ? "取得中…" : "一括で取得して比較"}
+            </button>
+            <label className="cursor-pointer rounded-md border px-3 py-2 text-sm font-semibold">
+              CSV/テキストを読み込む
+              <input
+                type="file"
+                accept=".csv,.txt,text/plain,text/csv"
+                className="hidden"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  const t = await f.text();
+                  setBulk(
+                    t
+                      .split(/\r?\n/)
+                      .filter((l) => l.trim())
+                      .join("\n"),
+                  );
+                  e.target.value = "";
+                }}
+              />
+            </label>
+            <button
+              onClick={() =>
+                downloadCSV("competitor-template", [
+                  ["競合URL"],
+                  ["https://item.rakuten.co.jp/shopA/xxxx/"],
+                  ["https://store.shopping.yahoo.co.jp/shopB/yyyy.html"],
+                ])
+              }
+              className="rounded-md border px-3 py-2 text-sm font-semibold text-[var(--brand)]"
+            >
+              テンプレDL
+            </button>
+          </div>
           <p className="mt-1 text-xs text-[var(--muted)]">
             ※ 既存の枠は貼り付けたURLで置き換わります。取得後そのまま下の比較表・CSVに反映されます。
           </p>
