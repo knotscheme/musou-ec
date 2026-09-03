@@ -195,13 +195,33 @@ async function fetchViaRss(channels) {
 
 /* ---------- 共通 ---------- */
 
+// タイトルからプラットフォーム／目的カテゴリを推定（当たらなければチャンネル既定値）
+const PLAT_RULES = [
+  ["rakuten", /楽天|rakuten|\bRPP\b|R-?SNS|\bRMS\b|スーパーSALE|お買い物マラソン|楽天GOLD|クーポンアドバンス|RaCoupon|ラクマ/i],
+  ["yahoo", /ヤフー|yahoo|paypay|ペイペイ|アイテムマッチ|アイテムリーチ|ストアクリエイター|\bLYP\b|優良配送|ゾロ目の日|5のつく日/i],
+  ["amazon", /amazon|アマゾン|\bFBA\b|セラーセントラル|\bACoS\b|\bTACoS\b|スポンサープロダクト|\bA9\b|Amazon広告|プライムデー|大口出品|ブランド登録/i],
+  ["shopify", /shopify|ショッピファイ|\bliquid\b|セクション|ノーコード.*(ストア|EC)|Shopifyアプリ/i],
+];
+const CAT_RULES = [
+  ["集客・SEO", /SEO|検索対策|検索順位|広告|集客|RPP|アイテムマッチ|流入|キーワード|Instagram|SNS|MEO|アクセス数|露出/i],
+  ["転換・CRO", /CVR|コンバージョン|転換率|商品ページ|LP|ランディング|レビュー|接客|カゴ落ち|購入率|ファーストビュー|回遊|離脱/i],
+  ["構築・設定", /構築|開店|出店|初期設定|テーマ|デザイン|ページ作成|楽天GOLD|liquid|登録方法|始め方|作り方|セットアップ/i],
+  ["業務効率化", /CSV|一括|効率化|自動化|在庫|受注|発送|仕入れ|ツール活用|時短|オペレーション/i],
+];
+function detectBy(rules, title, fallback) {
+  const t = title || "";
+  for (const [val, re] of rules) if (re.test(t)) return val;
+  return fallback;
+}
+
 function withMeta(rows, ch, channelName) {
+  const chPlat = PLATFORMS.includes(ch.platform) ? ch.platform : "common";
   return rows.map((v) => ({
     ...v,
     channelId: ch.id,
     channelName: channelName || ch.name || "",
-    platform: PLATFORMS.includes(ch.platform) ? ch.platform : "common",
-    category: ch.category || "",
+    platform: detectBy(PLAT_RULES, v.title, chPlat),
+    category: detectBy(CAT_RULES, v.title, ch.category || ""),
     relatedToolPath: ch.relatedToolPath || "",
   }));
 }
