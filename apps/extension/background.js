@@ -116,22 +116,42 @@ async function handle(req) {
     }
 
     case "rakutenSuggest": {
-      // seed と、seed + 五十音/アルファベット の総当たりで深掘り
+      // seed と、seed + 五十音/アルファベット の総当たりで深掘り。
+      // ニッチ語だと1段では候補が少ないので、収穫が薄いときは2段目（1段目の結果をさらに展開）へ。
       const seed = String(req.seed || "").trim();
       if (!seed) return { keywords: [] };
-      const mode = req.mode === "alpha" ? ALPHA : GOJUON;
       const rp = req.rp ? String(req.rp) : "";
-      const probes = [seed, ...mode.map((x) => `${seed} ${x}`)];
+      const suffix = req.mode === "alpha" ? ALPHA : GOJUON;
+      const suffixLite = req.mode === "alpha" ? "abcdefghij".split("") : "あかさたなはまやらわ".split("");
       const all = new Set();
-      // 直列（相手サーバーに優しく）
-      for (const p of probes) {
-        const got = await rakutenSuggestOne(p, rp);
-        got.forEach((k) => all.add(k));
-        await new Promise((r) => setTimeout(r, 120));
+      let calls = 0;
+      const MAX_CALLS = 400;
+
+      async function sweep(base, sfx) {
+        for (const x of sfx) {
+          if (calls >= MAX_CALLS) return;
+          calls++;
+          const got = await rakutenSuggestOne(x ? `${base} ${x}` : base, rp);
+          got.forEach((k) => all.add(k));
+          await new Promise((r) => setTimeout(r, 70));
+        }
       }
+
+      // 1段目：seed 単体 + seed×全五十音/全アルファベット
+      await sweep(seed, ["", ...suffix]);
+
+      // 2段目：1段目で得た候補が薄いとき、上位の候補をさらに展開（軽い接尾辞セットで）
+      const lvl1 = [...all].filter((k) => k !== seed && k.length <= 40).slice(0, 15);
+      if (all.size < 40) {
+        for (const base of lvl1) {
+          if (calls >= MAX_CALLS) break;
+          await sweep(base, suffixLite);
+        }
+      }
+
       const keywords = [...all].sort((a, b) => a.localeCompare(b, "ja"));
       return keywords.length
-        ? { keywords }
+        ? { keywords, tried: calls }
         : { keywords: [], debug: lastSuggestError || "候補ゼロ（原因不明）" };
     }
 

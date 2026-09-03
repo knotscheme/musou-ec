@@ -36,11 +36,11 @@ export default function RakutenSuggest() {
   async function autoFetch() {
     if (!seed.trim()) return;
     setFetching(true);
-    setFetchMsg("拡張で取得中…（十数秒かかります）");
+    setFetchMsg("拡張で取得中…（キーワードにより30秒〜2分ほどかかります）");
     try {
-      const r = await extRequest<{ keywords: string[]; debug?: string }>(
+      const r = await extRequest<{ keywords: string[]; tried?: number; debug?: string }>(
         { type: "rakutenSuggest", seed: seed.trim(), mode },
-        90000,
+        180000,
       );
       const got = r?.keywords ?? [];
       if (!got.length) {
@@ -49,7 +49,9 @@ export default function RakutenSuggest() {
         );
       } else {
         setRaw((prev) => [prev, ...got].filter(Boolean).join("\n"));
-        setFetchMsg(`${got.length} 件を取得しました。`);
+        setFetchMsg(
+          `${got.length} 件を取得しました${r?.tried ? `（${r.tried} 通りを照会）` : ""}。ニッチな語ほど候補は少なめです。`,
+        );
       }
     } catch (e) {
       setFetchMsg(`取得エラー：${(e as Error).message}`);
