@@ -54,6 +54,8 @@ export interface Tool {
   status?: ToolStatus;
   /** 別サービス（外部URL）へのリンクの場合。自前のツールページは持たない。 */
   external?: string;
+  /** external カードの枠・背景に使う強調色（省略時はモール色）。 */
+  accent?: string;
 }
 
 export const getStatus = (t: Tool): ToolStatus => t.status ?? "wip";
@@ -347,6 +349,18 @@ export const TOOLS: Tool[] = [
   },
 
   // ── 全店舗共通 ────────────────────────────
+  {
+    slug: "sayatori-ai",
+    mall: "common",
+    name: "サヤトリAI",
+    summary:
+      "見つけるのは勘じゃなく、データ。AIがX(旧Twitter)を中心としたSNSと検索データから、伸び始めたジャンルを検出し仕入れ候補まで自動で突き合わせます。（別サービス・新しいタブで開きます）",
+    kind: "client",
+    icon: "target",
+    status: "live",
+    external: "https://sayatori-ai.onrender.com/lp",
+    accent: "#6d28d9",
+  },
   // 統合ハブ（重複していた小ツールをタブでまとめたもの）
   {
     slug: "image-studio",

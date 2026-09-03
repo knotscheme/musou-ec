@@ -129,20 +129,21 @@ export default function Dashboard() {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {tools.map((tool) => {
                 const status = getStatus(tool);
+                const emph = tool.accent ?? mall.color;
                 const cardCls = `card mall-bar flex flex-col gap-3 p-4 transition hover:shadow-md ${
                   tool.external ? "border-2" : ""
                 }`;
                 const cardStyle = tool.external
                   ? {
-                      ["--mall" as string]: mall.color,
-                      borderColor: mall.color,
-                      background: `color-mix(in srgb, ${mall.color} 7%, transparent)`,
+                      ["--mall" as string]: emph,
+                      borderColor: emph,
+                      background: `color-mix(in srgb, ${emph} 7%, transparent)`,
                     }
                   : { ["--mall" as string]: mall.color };
                 const inner = (
                   <>
                     <div className="flex gap-3">
-                      <ToolIcon name={tool.icon} color={mall.color} size={40} />
+                      <ToolIcon name={tool.icon} color={emph} size={40} />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-1">
                           <span className="font-semibold leading-snug">
