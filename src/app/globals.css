@@ -49,7 +49,14 @@
   border-color: var(--line);
 }
 
+/* html にも背景を敷く。body 外（オーバースクロール域・スクロール中の余白）が
+   ブラウザ既定の白になり「下部が白くなる」現象を防ぐ。 */
+html {
+  background: var(--background);
+}
+
 body {
+  min-height: 100dvh;
   background: var(--background);
   color: var(--foreground);
   font-family:
