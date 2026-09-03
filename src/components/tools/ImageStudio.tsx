@@ -10,6 +10,7 @@ export default function ImageStudio() {
   return (
     <Hub
       slug="image-studio"
+      keepMounted
       tabs={[
         { label: "リサイズ・圧縮", hint: "複数画像をまとめてリサイズ・再圧縮（サーバー送信なし）。", Comp: ImageResize },
         { label: "画像結合", hint: "複数画像を一括で読み込み、順番入れ替え・つなぎ目の余白を付けて1枚に結合。", Comp: ImageMerge },

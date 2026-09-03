@@ -1,6 +1,21 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { ToolShell, Field } from "@/components/ToolShell";
 import { Glyph } from "@/components/Glyph";
 import { triggerDownload } from "@/lib/csv";
@@ -20,6 +35,60 @@ type Align = "start" | "center" | "end";
 
 const rid = () => Math.random().toString(36).slice(2, 9);
 
+function SortableRow({
+  it,
+  last,
+  onUp,
+  onDown,
+  onRemove,
+}: {
+  it: Item;
+  i: number;
+  last: boolean;
+  onUp: () => void;
+  onDown: () => void;
+  onRemove: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: it.id,
+  });
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }}
+      className="flex items-center gap-2 rounded-md border bg-[var(--surface)] p-2"
+    >
+      <button
+        {...attributes}
+        {...listeners}
+        className="shrink-0 cursor-grab touch-none px-1 text-[var(--muted)]"
+        title="ドラッグで並び替え"
+      >
+        ⠿
+      </button>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={it.url} alt="" className="h-12 w-12 shrink-0 rounded object-cover" />
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-xs font-medium">{it.name}</div>
+        <div className="text-[11px] text-[var(--muted)]">
+          {it.w}×{it.h}
+        </div>
+      </div>
+      <div className="flex shrink-0 gap-1">
+        <button onClick={onUp} className="rounded border px-1.5 py-1 text-xs" title="前へ">
+          <Glyph name="arrowUp" size={12} />
+        </button>
+        <button onClick={onDown} disabled={last} className="rounded border px-1.5 py-1 text-xs disabled:opacity-30" title="次へ">
+          <Glyph name="arrowDown" size={12} />
+        </button>
+        <button onClick={onRemove} className="rounded border px-1.5 py-1 text-xs text-[#bf0000]" title="削除">
+          <Glyph name="x" size={12} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ImageMerge() {
   const [items, setItems] = useState<Item[]>([]);
   const [dir, setDir] = useState<Dir>("vertical");
@@ -33,6 +102,20 @@ export default function ImageMerge() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
   const previewRef = useRef<HTMLCanvasElement>(null);
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+
+  const onDragEnd = (e: DragEndEvent) => {
+    const { active, over: o } = e;
+    if (o && active.id !== o.id) {
+      setItems((cur) =>
+        arrayMove(
+          cur,
+          cur.findIndex((x) => x.id === active.id),
+          cur.findIndex((x) => x.id === o.id),
+        ),
+      );
+    }
+  };
 
   const add = useCallback(async (files: FileList | File[] | null | undefined) => {
     const list = Array.from(files ?? []).filter((f) => f.type.startsWith("image/"));
@@ -166,11 +249,6 @@ export default function ImageMerge() {
 
   return (
     <ToolShell slug="image-studio">
-      <p className="text-xs text-[var(--muted)]">
-        複数画像を一括で読み込み、順番を入れ替え、つなぎ目に余白を入れて1枚に結合します。
-        商品説明用の縦長画像づくりに。すべてブラウザ内処理（外部送信なし）。
-      </p>
-
       <label
         onDragOver={(e) => {
           e.preventDefault();
@@ -204,44 +282,23 @@ export default function ImageMerge() {
             <div className="min-w-0 space-y-2">
               <p className="text-xs font-semibold text-[var(--muted)]">
                 順番（{items.length}枚・{dir === "vertical" ? "上から下へ" : "左から右へ"}）
+                <span className="ml-1 font-normal">⠿ をドラッグで並び替え</span>
               </p>
-              {items.map((it, i) => (
-                <div key={it.id} className="flex items-center gap-2 rounded-md border p-2">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={it.url} alt="" className="h-12 w-12 rounded object-cover" />
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-xs font-medium">{it.name}</div>
-                    <div className="text-[11px] text-[var(--muted)]">
-                      {it.w}×{it.h}
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 gap-1">
-                    <button
-                      onClick={() => move(i, -1)}
-                      disabled={i === 0}
-                      className="rounded border px-1.5 py-1 text-xs disabled:opacity-30"
-                      title="前へ"
-                    >
-                      <Glyph name="arrowUp" size={12} />
-                    </button>
-                    <button
-                      onClick={() => move(i, 1)}
-                      disabled={i === items.length - 1}
-                      className="rounded border px-1.5 py-1 text-xs disabled:opacity-30"
-                      title="次へ"
-                    >
-                      <Glyph name="arrowDown" size={12} />
-                    </button>
-                    <button
-                      onClick={() => remove(it.id)}
-                      className="rounded border px-1.5 py-1 text-xs text-[#bf0000]"
-                      title="削除"
-                    >
-                      <Glyph name="x" size={12} />
-                    </button>
-                  </div>
-                </div>
-              ))}
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+                <SortableContext items={items.map((x) => x.id)} strategy={verticalListSortingStrategy}>
+                  {items.map((it, i) => (
+                    <SortableRow
+                      key={it.id}
+                      it={it}
+                      i={i}
+                      last={i === items.length - 1}
+                      onUp={() => move(i, -1)}
+                      onDown={() => move(i, 1)}
+                      onRemove={() => remove(it.id)}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
               <button
                 onClick={() => {
                   items.forEach((x) => URL.revokeObjectURL(x.url));

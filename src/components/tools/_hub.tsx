@@ -9,8 +9,20 @@ export interface HubTab {
   Comp: ComponentType;
 }
 
-/** 複数のツールをタブで内包するハブ。各ツールのヘッダーは Bare コンテキストで抑止する。 */
-export function Hub({ slug, tabs }: { slug: string; tabs: HubTab[] }) {
+/**
+ * 複数のツールをタブで内包するハブ。各ツールのヘッダーは Bare コンテキストで抑止する。
+ * keepMounted=true のときは全タブを常時マウントし、非表示タブは display:none。
+ * （タブを切り替えても入力状態が消えないようにしたいツール向け）
+ */
+export function Hub({
+  slug,
+  tabs,
+  keepMounted = false,
+}: {
+  slug: string;
+  tabs: HubTab[];
+  keepMounted?: boolean;
+}) {
   const [i, setI] = useState(0);
   const Active = tabs[i].Comp;
   return (
@@ -32,7 +44,18 @@ export function Hub({ slug, tabs }: { slug: string; tabs: HubTab[] }) {
       </div>
       {tabs[i].hint && <p className="text-xs text-[var(--muted)]">{tabs[i].hint}</p>}
       <BareToolShellContext.Provider value={true}>
-        <Active key={i} />
+        {keepMounted ? (
+          tabs.map((t, n) => {
+            const C = t.Comp;
+            return (
+              <div key={t.label} className={n === i ? "" : "hidden"}>
+                <C />
+              </div>
+            );
+          })
+        ) : (
+          <Active key={i} />
+        )}
       </BareToolShellContext.Provider>
     </ToolShell>
   );
