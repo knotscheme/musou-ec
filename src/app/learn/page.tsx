@@ -245,7 +245,7 @@ function VideoDetail({ video, onBack }: { video: LearnVideo; onBack: () => void 
         <Glyph name="arrowUp" size={13} className="-rotate-90" /> 一覧へ戻る
       </button>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div>
           <div className="overflow-hidden rounded-xl border bg-black">
             <iframe

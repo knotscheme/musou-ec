@@ -15,9 +15,17 @@ import { getGuestId, getMemberId, linkGuestToMember, unlinkMember } from "@/lib/
 import { Field } from "@/components/ToolShell";
 import { Glyph } from "@/components/Glyph";
 import { HistoryList } from "@/components/HistoryList";
+import { useThemePref, type ThemePref } from "@/lib/theme";
+
+const THEME_OPTS: [ThemePref, string][] = [
+  ["system", "端末に合わせる"],
+  ["light", "ライト"],
+  ["dark", "ダーク"],
+];
 
 export default function SettingsPage() {
   const { t } = useI18n();
+  const [themePref, setThemePref] = useThemePref();
   const [key, setKey] = useState("");
   const [model, setModelState] = useState(DEFAULT_MODEL);
   const [test, setTest] = useState<{ ok?: boolean; msg: string } | null>(null);
@@ -73,6 +81,28 @@ export default function SettingsPage() {
           設定はこのブラウザ（localStorage）にのみ保存され、サーバーには送信されません。
         </p>
       </div>
+
+      <section className="card space-y-3 p-5">
+        <div>
+          <h2 className="font-bold">表示テーマ</h2>
+          <p className="mt-1 text-sm text-[var(--muted)]">
+            「端末に合わせる」は OS のライト/ダーク設定に追従します。
+          </p>
+        </div>
+        <div className="inline-flex overflow-hidden rounded-md border text-sm font-semibold">
+          {THEME_OPTS.map(([v, label]) => (
+            <button
+              key={v}
+              onClick={() => setThemePref(v)}
+              className={`px-4 py-2 ${
+                themePref === v ? "bg-[var(--brand)] text-white" : "hover:bg-[var(--surface-soft)]"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </section>
 
       <section className="card space-y-4 p-5">
         <div>

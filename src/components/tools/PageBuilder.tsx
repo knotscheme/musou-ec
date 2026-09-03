@@ -426,7 +426,7 @@ function BlockChip({
       {show && (
         // pt-2 が透明の「橋」。ボタンとカードの間にすき間を作らずホバーを維持する
         <div className="absolute left-1/2 top-full z-40 -translate-x-1/2 pt-2">
-          <div className="w-[300px] overflow-hidden rounded-lg border bg-white shadow-xl">
+          <div className="w-[min(300px,calc(100vw-1.5rem))] overflow-hidden rounded-lg border bg-white shadow-xl">
             <iframe
               title={`preview-${bt}`}
               sandbox=""
@@ -745,11 +745,12 @@ export default function PageBuilder({ target }: { target: "rakuten" | "yahoo" })
       for (const e of entries) setWrapW(e.contentRect.width);
     });
     ro.observe(el);
-    setWrapW(el.clientWidth);
+    // clientWidth はパディング込みなので p-3（左右24px）を引いて中身の実幅に合わせる
+    setWrapW(Math.max(0, el.clientWidth - 24));
     return () => ro.disconnect();
   }, [mode]);
-  // 枠にほぼ収まるなら等倍（1）にスナップしてボケ・レイヤー生成を避ける
-  const previewZoom = wrapW > 0 && wrapW < pw - 4 ? Math.max(0.3, +(wrapW / pw).toFixed(3)) : 1;
+  // 枠に収まらない分だけ zoom で縮小（Chromium は再レイアウトするので文字がボケない）
+  const previewZoom = wrapW > 0 && wrapW < pw ? Math.max(0.3, +(wrapW / pw).toFixed(3)) : 1;
 
   // iframe に渡す srcDoc。プレビュー内でのドラッグ並び替え（local:true）のときだけ
   // 再読み込みを抑止して、iframe 側の FLIP アニメーションをそのまま活かす。
@@ -1082,7 +1083,7 @@ export default function PageBuilder({ target }: { target: "rakuten" | "yahoo" })
         <p className="text-sm text-[var(--muted)]">
           フォントとテーマカラーを選ぶと、サイト全体のCSSに反映されます（あとから変更・個別上書き可）。
         </p>
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
           <ThemePanel theme={theme} onChange={setTheme} />
           <div>
             <p className="mb-1 text-xs font-semibold text-[var(--muted)]">プレビュー</p>
@@ -1207,8 +1208,8 @@ export default function PageBuilder({ target }: { target: "rakuten" | "yahoo" })
         )}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <div className="space-y-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="min-w-0 space-y-2">
           <div className="flex items-center gap-2">
             <p className="flex-1 text-xs font-semibold text-[var(--muted)]">
               構成（{blocks.length}ブロック・ドラッグで並び替え）
@@ -1252,7 +1253,7 @@ export default function PageBuilder({ target }: { target: "rakuten" | "yahoo" })
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-xs font-semibold text-[var(--muted)]">プレビュー</p>
             {[390, 768, 1080].map((w) => (

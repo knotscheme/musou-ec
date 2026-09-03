@@ -4,6 +4,10 @@ import { I18nProvider } from "@/lib/i18n";
 import { Sidebar } from "@/components/Sidebar";
 import { ChatWidget } from "@/components/ChatWidget";
 import { MobileNav } from "@/components/MobileNav";
+import { ThemeSync } from "@/components/ThemeSync";
+
+// FOUC 回避：描画前に保存済みテーマを <html> へ反映
+const THEME_BOOT = `(function(){try{var p=localStorage.getItem('musou.theme')||'system';var r=document.documentElement;r.setAttribute('data-theme',p);var d=p==='dark'||(p!=='light'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);r.classList.toggle('theme-dark',d);}catch(e){}})();`;
 
 export const metadata: Metadata = {
   title: "MUSOU-EC — 完全無料のEC統合サポート",
@@ -14,7 +18,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+      </head>
       <body>
+        <ThemeSync />
         <I18nProvider>
           <div className="flex min-h-screen">
             <Sidebar />
