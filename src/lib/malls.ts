@@ -114,10 +114,10 @@ export const TOOLS: Tool[] = [
     slug: "rakuten-suggest",
     mall: "rakuten",
     name: "楽天サジェスト抽出ツール",
-    summary: "楽天の検索サジェストを深堀り取得し CSV でダウンロード。拡張機能（準備中）から分散取得。",
+    summary: "シード語＋五十音/アルファベット総当たりで楽天の検索サジェストを深堀り取得し、整形・重複除去・CSV化。MUSOU-EC コネクタ（Chrome拡張）で自動取得。",
     kind: "extension",
     icon: "search",
-    status: "wip",
+    status: "live",
   },
   {
     slug: "rank-tracker",
