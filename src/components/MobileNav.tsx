@@ -17,7 +17,7 @@ export function MobileNav() {
   const cell = "flex flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[9px] font-semibold leading-tight text-center transition";
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 lg:hidden">
-      <div className="mx-auto mb-3 flex w-[calc(100%-1.25rem)] max-w-md items-stretch justify-around gap-0.5 rounded-2xl border bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] p-1 shadow-[0_10px_34px_rgba(0,0,0,.2)] backdrop-blur">
+      <div className="mx-auto mb-3 flex w-[calc(100%-1.25rem)] max-w-md items-stretch justify-around gap-0.5 rounded-2xl border bg-[var(--surface)] p-1 shadow-[0_10px_34px_rgba(0,0,0,.2)]">
         {ITEMS.map((it) => {
           const on = it.match(pathname);
           return (

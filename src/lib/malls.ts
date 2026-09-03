@@ -170,7 +170,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "yahoo-item-csv",
     mall: "yahoo",
-    name: "商品データ(CSV)項目チェッカー",
+    name: "商品データ（CSV）項目チェッカー",
     summary: "Yahoo 商品CSV の必須項目欠落・文字数超過・禁止語・プロダクトカテゴリ未設定を検査。",
     kind: "client",
     icon: "clipboard",
@@ -305,7 +305,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "shopify-jsonld",
     mall: "shopify",
-    name: "構造化データ(JSON-LD)ジェネレーター",
+    name: "構造化データ（JSON-LD）ジェネレーター",
     summary: "既定テーマで不足しがちな Product / Review / FAQ / BreadcrumbList の JSON-LD を生成。",
     kind: "client",
     icon: "code",
@@ -354,7 +354,7 @@ export const TOOLS: Tool[] = [
     mall: "common",
     name: "サヤトリAI",
     summary:
-      "見つけるのは勘じゃなく、データ。AIがX(旧Twitter)を中心としたSNSと検索データから、伸び始めたジャンルを検出し仕入れ候補まで自動で突き合わせます。（別サービス・新しいタブで開きます）",
+      "見つけるのは勘じゃなく、データ。AIがX（旧Twitter）を中心としたSNSと検索データから、伸び始めたジャンルを検出し仕入れ候補まで自動で突き合わせます。（別サービス・新しいタブで開きます）",
     kind: "client",
     icon: "target",
     status: "live",
@@ -457,7 +457,7 @@ export const TOOLS: Tool[] = [
     slug: "barcode-generator",
     mall: "common",
     name: "JAN/バーコード一括生成ツール",
-    summary: "CSV の商品コードから JAN(EAN-13) バーコードSVG/PNGを一括生成。チェックデジット自動計算。",
+    summary: "CSV の商品コードから JAN（EAN-13）バーコードSVG/PNGを一括生成。チェックデジット自動計算。",
     kind: "client",
     icon: "barcode",
     status: "live",
