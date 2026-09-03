@@ -129,9 +129,16 @@ export default function Dashboard() {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {tools.map((tool) => {
                 const status = getStatus(tool);
-                const cardCls =
-                  "card mall-bar flex flex-col gap-3 p-4 transition hover:shadow-md";
-                const cardStyle = { ["--mall" as string]: mall.color };
+                const cardCls = `card mall-bar flex flex-col gap-3 p-4 transition hover:shadow-md ${
+                  tool.external ? "border-2" : ""
+                }`;
+                const cardStyle = tool.external
+                  ? {
+                      ["--mall" as string]: mall.color,
+                      borderColor: mall.color,
+                      background: `color-mix(in srgb, ${mall.color} 7%, transparent)`,
+                    }
+                  : { ["--mall" as string]: mall.color };
                 const inner = (
                   <>
                     <div className="flex gap-3">

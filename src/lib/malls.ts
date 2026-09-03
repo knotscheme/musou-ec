@@ -283,9 +283,9 @@ export const TOOLS: Tool[] = [
   {
     slug: "web-template-studio",
     mall: "shopify",
-    name: "Web Template Studio（別サービス）",
+    name: "Splicer",
     summary:
-      "Shopify などにそのまま貼れるセクション（HTML/CSS）を組んで出力できる外部ツール。新しいタブで開きます。",
+      "直感でカスタム、一瞬でLiquid。Shopify構築を加速する、無料のセクションテンプレート集。（別サービス・新しいタブで開きます）",
     kind: "client",
     icon: "layout",
     status: "live",
