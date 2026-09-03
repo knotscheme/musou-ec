@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "MUSOU-EC コネクタ",
+  "version": "0.1.0",
+  "description": "MUSOU-EC の拡張連携ツール（楽天サジェスト取得ほか）を、あなたのブラウザから直接実行します。サーバープロキシは使いません。",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://suggest.rakuten.co.jp/*",
+    "https://search.rakuten.co.jp/*",
+    "https://www.rakuten.co.jp/*",
+    "https://item.rakuten.co.jp/*",
+    "https://ranking.rakuten.co.jp/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_popup": "popup.html", "default_title": "MUSOU-EC コネクタ" },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://knotscheme.github.io/musou-ec/*",
+        "http://localhost:3000/*",
+        "http://127.0.0.1:3000/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import { ExtensionNote } from "@/components/ExtensionNote";
 import { downloadCSV } from "@/lib/csv";
 import { toHankaku } from "@/lib/text";
 import { recordHistory } from "@/lib/history";
+import { useExtension, extRequest } from "@/lib/extension";
 
 const GOJUON = "あかさたなはまやらわ".split("");
 const ALPHA = "abcdefghijklmnopqrstuvwxyz".split("");
@@ -14,6 +15,32 @@ export default function RakutenSuggest() {
   const [seed, setSeed] = useState("キャンプ チェア");
   const [raw, setRaw] = useState("");
   const [mode, setMode] = useState<"gojuon" | "alpha">("gojuon");
+  const { ready: extReady } = useExtension();
+  const [fetching, setFetching] = useState(false);
+  const [fetchMsg, setFetchMsg] = useState("");
+
+  async function autoFetch() {
+    if (!seed.trim()) return;
+    setFetching(true);
+    setFetchMsg("拡張で取得中…（十数秒かかります）");
+    try {
+      const r = await extRequest<{ keywords: string[] }>(
+        { type: "rakutenSuggest", seed: seed.trim(), mode },
+        90000,
+      );
+      const got = r?.keywords ?? [];
+      if (!got.length) {
+        setFetchMsg("候補が取得できませんでした。楽天側の仕様変更の可能性があります（手動貼り付けをご利用ください）。");
+      } else {
+        setRaw((prev) => [prev, ...got].filter(Boolean).join("\n"));
+        setFetchMsg(`${got.length} 件を取得しました。`);
+      }
+    } catch (e) {
+      setFetchMsg(`取得エラー：${(e as Error).message}`);
+    } finally {
+      setFetching(false);
+    }
+  }
 
   const probes = useMemo(() => {
     const s = seed.trim();
@@ -47,10 +74,19 @@ export default function RakutenSuggest() {
 
   return (
     <ToolShell slug="rakuten-suggest">
-      <ExtensionNote
-        auto="シードワードを登録すると、拡張があなたのブラウザから楽天のサジェストを深掘り取得し CSV 化します。"
-        manual="下のリンクから楽天検索を開き、検索窓に出るサジェスト候補をコピーして貼り付け → 整形・重複除去・CSV化します。"
-      />
+      {extReady ? (
+        <div className="card border-[var(--brand)] p-4 text-sm">
+          <p className="font-semibold text-[var(--brand)]">⧉ MUSOU-EC コネクタ 接続中</p>
+          <p className="mt-1 text-[var(--muted)]">
+            シード語と展開方法を選んで「拡張で自動取得」を押すと、あなたのブラウザから楽天サジェストを深掘りして下の欄に入れます。
+          </p>
+        </div>
+      ) : (
+        <ExtensionNote
+          auto="シードワードを登録すると、拡張があなたのブラウザから楽天のサジェストを深掘り取得します。"
+          manual="下のリンクから楽天検索を開き、検索窓に出るサジェスト候補をコピーして貼り付け → 整形・重複除去・CSV化します。拡張は apps/extension を「パッケージ化されていない拡張機能」として読み込むと有効になります。"
+        />
+      )}
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Field label="シードキーワード">
@@ -58,11 +94,23 @@ export default function RakutenSuggest() {
         </Field>
         <Field label="展開方法">
           <select value={mode} onChange={(e) => setMode(e.target.value as "gojuon" | "alpha")} className="w-full rounded-md border px-3 py-2 text-sm">
-            <option value="gojuon">五十音（あ〜わ）</option>
+            <option value="gojuon">五十音（あ〜ん）</option>
             <option value="alpha">アルファベット（a〜z）</option>
           </select>
         </Field>
+        {extReady && (
+          <Field label="自動取得">
+            <button
+              onClick={autoFetch}
+              disabled={fetching}
+              className="w-full rounded-md bg-[var(--brand)] px-3 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              {fetching ? "取得中…" : "拡張で自動取得"}
+            </button>
+          </Field>
+        )}
       </div>
+      {fetchMsg && <p className="text-sm text-[var(--muted)]">{fetchMsg}</p>}
 
       <div className="card p-4">
         <p className="mb-2 text-sm font-semibold">手動収集リンク（開いてサジェストをコピー）</p>

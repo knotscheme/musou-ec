@@ -12,7 +12,8 @@ const eslintConfig = defineConfig([
       "react-hooks/set-state-in-effect": "off",
     },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
+  // apps/extension は Chrome拡張（chrome.* グローバル前提の素の JS）なので Next 用 lint の対象外
+  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "apps/**"]),
 ]);
 
 export default eslintConfig;
