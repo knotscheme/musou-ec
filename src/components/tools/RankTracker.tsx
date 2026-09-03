@@ -39,6 +39,9 @@ export default function RankTracker() {
   const [checking, setChecking] = useState(false);
   const [checkMsg, setCheckMsg] = useState("");
   const [pages, setPages] = useState(3);
+  const [bulk, setBulk] = useState("");
+  const [bulkBusy, setBulkBusy] = useState(false);
+  const [bulkMsg, setBulkMsg] = useState("");
 
   const owner = typeof window !== "undefined" ? getOwnerId() : "";
 
@@ -110,6 +113,56 @@ export default function RankTracker() {
     setNote("");
   }
 
+  async function runBulk() {
+    const pairs = bulk
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .map((l) => l.split(/[\t,]/).map((s) => s.trim()))
+      .map(([keyword, tgt]) => ({ keyword: keyword || "", target: tgt || "" }))
+      .filter((p) => p.keyword && p.target);
+    if (!pairs.length) {
+      setBulkMsg("「キーワード , 商品URL（またはコード）」を1行ずつ入力してください。");
+      return;
+    }
+    setBulkBusy(true);
+    const today = new Date().toISOString().slice(0, 10);
+    const added: Entry[] = [];
+    let notFound = 0;
+    for (let i = 0; i < pairs.length; i++) {
+      setBulkMsg(`${i + 1}/${pairs.length}：「${pairs[i].keyword}」を確認中…`);
+      try {
+        const r = await extRequest<{ rank: number; error?: string }>(
+          { type: "rakutenRank", keyword: pairs[i].keyword, target: pairs[i].target, pages },
+          90000,
+        );
+        if (r?.rank) {
+          added.push({
+            id: `${Date.now()}-${i}-${Math.random().toString(36).slice(2, 6)}`,
+            owner,
+            keyword: pairs[i].keyword,
+            target: pairs[i].target,
+            rank: r.rank,
+            date: today,
+            note: "",
+          });
+        } else {
+          notFound++;
+        }
+      } catch {
+        notFound++;
+      }
+      await new Promise((res) => setTimeout(res, 200));
+    }
+    if (added.length) {
+      const next = [...all, ...added];
+      setAll(next);
+      await saveAll(next);
+    }
+    setBulkBusy(false);
+    setBulkMsg(`完了：${added.length} 件を記録${notFound ? `（${notFound} 件は圏外/未検出）` : ""}。下の「CSVダウンロード」で一括出力できます。`);
+  }
+
   async function remove(id: string) {
     const next = all.filter((e) => e.id !== id);
     setAll(next);
@@ -172,6 +225,50 @@ export default function RankTracker() {
         </div>
         {checkMsg && <p className="mt-1.5 text-xs text-[var(--muted)]">{checkMsg}</p>}
       </div>
+
+      {extReady && (
+        <div className="card p-4">
+          <p className="mb-1 text-sm font-semibold">一括で順位取得（1行 = キーワード , 商品URL/コード）</p>
+          <textarea
+            value={bulk}
+            onChange={(e) => setBulk(e.target.value)}
+            rows={5}
+            placeholder={"本革ベルト, https://item.rakuten.co.jp/shop/xxxx/\nメンズ 財布, shop/yyyy\nレザー キーケース, https://item.rakuten.co.jp/shop/zzzz/"}
+            className="w-full rounded-md border px-3 py-2 font-mono text-xs"
+          />
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <button
+              onClick={runBulk}
+              disabled={bulkBusy || !bulk.trim()}
+              className="rounded-md bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              {bulkBusy ? "取得中…" : "一括で順位を取得して記録"}
+            </button>
+            <label className="cursor-pointer rounded-md border px-3 py-2 text-sm font-semibold">
+              CSV/テキストを読み込む
+              <input
+                type="file"
+                accept=".csv,.txt,text/plain,text/csv"
+                className="hidden"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  const t = await f.text();
+                  setBulk(
+                    t
+                      .split(/\r?\n/)
+                      .filter((l) => l.trim())
+                      .join("\n"),
+                  );
+                  e.target.value = "";
+                }}
+              />
+            </label>
+            <span className="text-xs text-[var(--muted)]">今日の日付で記録。走査ページ数は上の設定を使用</span>
+          </div>
+          {bulkMsg && <p className="mt-1.5 text-xs text-[var(--muted)]">{bulkMsg}</p>}
+        </div>
+      )}
 
       {byKeyword.length > 0 && (
         <>
