@@ -99,7 +99,10 @@ export function Sidebar() {
                   <span className="text-[var(--muted)]">{open[mid] ? "−" : "+"}</span>
                 </button>
                 {open[mid] && (
-                  <ul className="mb-1 ml-4 border-l pl-2" style={{ borderColor: mall.color }}>
+                  <ul
+                    className="mb-1 ml-[18px] border-l pl-3"
+                    style={{ borderColor: `color-mix(in srgb, ${mall.color} 26%, transparent)` }}
+                  >
                     {tools.map((tool) => {
                       const href = `/tools/${tool.slug}/`;
                       const active = pathname === href;
