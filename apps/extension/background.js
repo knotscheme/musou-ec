@@ -68,6 +68,18 @@ async function rakutenSuggestOne(keyword, rp) {
   return [];
 }
 
+/** seed と語がかぶるか判定するための「重なり片」を作る（空白トークン＋2文字N-gram） */
+function overlapPieces(keyword) {
+  const pieces = new Set();
+  keyword.split(/\s+/).forEach((t) => {
+    if (t.length >= 2) pieces.add(t);
+  });
+  const flat = keyword.replace(/\s+/g, "");
+  for (let i = 0; i + 2 <= flat.length; i++) pieces.add(flat.slice(i, i + 2));
+  if (!pieces.size && flat) pieces.add(flat); // 1文字 seed の保険
+  return [...pieces];
+}
+
 /** 検索結果ページの「関連キーワード」等を収集（サジェストとは別ソース） */
 async function rakutenRelated(keyword) {
   const url = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(keyword)}/`;
@@ -77,11 +89,11 @@ async function rakutenRelated(keyword) {
   } catch (_e) {
     return [];
   }
-  const out = new Set();
-  const add = (w) => {
+  const raw = [];
+  const push = (w) => {
     if (typeof w !== "string") return;
     const s = w.replace(/\s+/g, " ").trim();
-    if (s && s.length >= 2 && s.length <= 40 && s !== keyword) out.add(s);
+    if (s && s.length >= 2 && s.length <= 40) raw.push(s);
   };
 
   // 1) 埋め込みJSON中の関連ワード（キー名は変わりうるので広めに）
@@ -89,24 +101,27 @@ async function rakutenRelated(keyword) {
     /"(?:relatedKeywords?|relatedWords?|reword|relateWord|suggestKeywords?)"\s*:\s*(\[[^\]]*\])/gi,
   )) {
     try {
-      JSON.parse(m[1]).forEach((v) => add(typeof v === "string" ? v : v && (v.word || v.keyword || v.name)));
+      JSON.parse(m[1]).forEach((v) => push(typeof v === "string" ? v : v && (v.word || v.keyword || v.name)));
     } catch (_e) {
       /* noop */
     }
   }
 
-  // 2) /search/mall/<kw>/ へのリンク。ノイズ除去のため seed と語がかぶるものだけ採用
-  const tokens = keyword.split(/\s+/).filter((t) => t.length >= 2);
+  // 2) /search/mall/<kw>/ へのリンク
   for (const m of html.matchAll(/\/search\/mall\/([^/"?<>]+)\//g)) {
-    let w;
     try {
-      w = decodeURIComponent(m[1]).replace(/\+/g, " ").trim();
+      push(decodeURIComponent(m[1]).replace(/\+/g, " "));
     } catch (_e) {
-      continue;
+      /* noop */
     }
-    if (!w || w === keyword) continue;
-    const hit = w.includes(keyword) || tokens.some((t) => w.includes(t));
-    if (hit) add(w);
+  }
+
+  // seed と語がかぶるものだけ採用（人気キーワード等のノイズを除去）
+  const pieces = overlapPieces(keyword);
+  const out = new Set();
+  for (const w of raw) {
+    if (w === keyword) continue;
+    if (pieces.some((p) => w.includes(p))) out.add(w);
   }
   return [...out];
 }
@@ -170,6 +185,10 @@ async function handle(req) {
       let calls = 0;
       const MAX_CALLS = 400;
 
+      // seed と語がかぶるものだけ通す（サジェストAPIも短い prefix だとトレンド語を返すため）
+      const seedPieces = overlapPieces(seed);
+      const relevant = (w) => w === seed || seedPieces.some((p) => w.includes(p));
+
       async function sweep(base, sfx) {
         for (const x of sfx) {
           if (calls >= MAX_CALLS) return;
@@ -184,8 +203,8 @@ async function handle(req) {
       await sweep(seed, ["", ...suffix]);
 
       // 2段目：1段目で得た候補が薄いとき、上位の候補をさらに展開（軽い接尾辞セットで）
-      const lvl1 = [...all].filter((k) => k !== seed && k.length <= 40).slice(0, 15);
-      if (all.size < 40) {
+      const lvl1 = [...all].filter((k) => k !== seed && k.length <= 40 && relevant(k)).slice(0, 15);
+      if ([...all].filter(relevant).length < 40) {
         for (const base of lvl1) {
           if (calls >= MAX_CALLS) break;
           await sweep(base, suffixLite);
@@ -194,7 +213,7 @@ async function handle(req) {
 
       // 別ソース：検索結果ページの関連キーワード（seed + 主要候補いくつか）
       let related = 0;
-      const relBases = [seed, ...[...all].filter((k) => k !== seed).slice(0, 10)];
+      const relBases = [seed, ...lvl1.slice(0, 10)];
       for (const b of relBases) {
         const r = await rakutenRelated(b);
         r.forEach((k) => all.add(k));
@@ -202,7 +221,7 @@ async function handle(req) {
         await new Promise((res) => setTimeout(res, 90));
       }
 
-      const keywords = [...all].sort((a, b) => a.localeCompare(b, "ja"));
+      const keywords = [...all].filter(relevant).sort((a, b) => a.localeCompare(b, "ja"));
       return keywords.length
         ? { keywords, tried: calls + relBases.length, related }
         : { keywords: [], debug: lastSuggestError || "候補ゼロ（原因不明）" };
