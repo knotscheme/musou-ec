@@ -3,70 +3,78 @@
     "id": "UCtuLOc17lOop5_iKZKPcXYQ",
     "name": "売れるネットショップの教科書",
     "platform": "common",
-    "category": "構築・設定",
-    "relatedToolPath": ""
-  },
-  {
-    "query": "水上浩一EC実践会",
-    "name": "水上浩一EC実践会",
-    "platform": "common",
-    "category": "集客・SEO",
-    "relatedToolPath": ""
+    "category": "構築・設定"
   },
   {
     "query": "むーさんチャンネル Shopify",
     "name": "むーさんチャンネル（Shopify）",
     "platform": "shopify",
-    "category": "構築・設定",
-    "relatedToolPath": ""
-  },
-  {
-    "query": "せどりTV 本山まさし",
-    "name": "せどりTV 本山まさし",
-    "platform": "amazon",
-    "category": "業務効率化",
-    "relatedToolPath": ""
+    "category": "構築・設定"
   },
   {
     "query": "いとう社長 物販 せどり",
     "name": "いとう社長（物販）",
     "platform": "amazon",
-    "category": "業務効率化",
-    "relatedToolPath": ""
-  },
-  {
-    "query": "寺田式転売スクール",
-    "name": "寺田式転売スクール",
-    "platform": "amazon",
-    "category": "業務効率化",
-    "relatedToolPath": ""
-  },
-  {
-    "query": "せどりぶ",
-    "name": "せどりぶ",
-    "platform": "amazon",
-    "category": "業務効率化",
-    "relatedToolPath": ""
+    "category": "業務効率化"
   },
   {
     "query": "作間せどり",
     "name": "作間せどり",
     "platform": "amazon",
-    "category": "業務効率化",
-    "relatedToolPath": ""
+    "category": "業務効率化"
   },
   {
-    "query": "圧倒的乞食チャンネル せどり",
-    "name": "圧倒的 乞食チャンネル",
+    "query": "寺田式物販スクール 中国輸入",
+    "name": "寺田式物販スクール",
     "platform": "amazon",
-    "category": "業務効率化",
-    "relatedToolPath": ""
+    "category": "業務効率化"
+  },
+
+  {
+    "video": "-ZuYvAAnEtA",
+    "platform": "rakuten",
+    "category": "集客・SEO"
   },
   {
-    "query": "転売の1歩先へ 日本ネット物販スクール",
-    "name": "日本ネット物販スクール",
+    "video": "unCDaG9o350",
+    "platform": "rakuten",
+    "category": "集客・SEO"
+  },
+  {
+    "query": "楽天市場 コンサル 広告 SEO 解説",
+    "name": "楽天EC 広告・SEO解説",
+    "platform": "rakuten",
+    "category": "集客・SEO"
+  },
+  {
+    "query": "Amazon スポンサープロダクト 広告 運用 解説",
+    "name": "Amazon広告 運用解説",
     "platform": "amazon",
-    "category": "業務効率化",
-    "relatedToolPath": ""
+    "category": "集客・SEO"
+  },
+  {
+    "query": "ネットショップ 集客 SNS Instagram 解説",
+    "name": "EC集客・SNS解説",
+    "platform": "common",
+    "category": "集客・SEO"
+  },
+
+  {
+    "query": "ECサイト CVR改善 コンバージョン率 解説",
+    "name": "EC CVR改善解説",
+    "platform": "common",
+    "category": "転換・CRO"
+  },
+  {
+    "query": "D2C ブランド マーケティング LP 解説",
+    "name": "D2Cマーケティング解説",
+    "platform": "common",
+    "category": "転換・CRO"
+  },
+  {
+    "query": "Shopify 売上アップ CVR 改善",
+    "name": "Shopify CVR改善",
+    "platform": "shopify",
+    "category": "転換・CRO"
   }
 ]

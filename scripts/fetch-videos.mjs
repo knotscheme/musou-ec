@@ -69,23 +69,31 @@ async function resolveIds(channels) {
       console.warn(`SKIP ${c.name || c.query || c.handle || "?"}: id未指定 & APIキー無し`);
       continue;
     }
+    const label = c.handle || c.video || c.query;
     try {
       let id;
+      let resolvedName;
       if (c.handle) {
         const j = await api("channels", { part: "id", forHandle: String(c.handle).replace(/^@/, "") });
         id = j.items?.[0]?.id;
+      } else if (c.video) {
+        // 動画IDから、その投稿チャンネルを特定する
+        const j = await api("videos", { part: "snippet", id: c.video });
+        id = j.items?.[0]?.snippet?.channelId;
+        resolvedName = j.items?.[0]?.snippet?.channelTitle;
       } else if (c.query) {
-        const j = await api("search", { part: "id", type: "channel", q: c.query, maxResults: "1" });
+        const j = await api("search", { part: "snippet", type: "channel", q: c.query, maxResults: "1" });
         id = j.items?.[0]?.id?.channelId;
+        resolvedName = j.items?.[0]?.snippet?.channelTitle;
       }
       if (id) {
-        console.log(`RESOLVE ${c.handle || c.query} -> ${id}`);
-        resolved.push({ ...c, id });
+        console.log(`RESOLVE ${label} -> ${id}${resolvedName ? ` (${resolvedName})` : ""}`);
+        resolved.push({ ...c, id, name: c.name || resolvedName || "" });
       } else {
-        console.warn(`SKIP ${c.handle || c.query}: チャンネルを解決できませんでした`);
+        console.warn(`SKIP ${label}: チャンネルを解決できませんでした`);
       }
     } catch (err) {
-      console.warn(`SKIP ${c.handle || c.query}: ${err.message}`);
+      console.warn(`SKIP ${label}: ${err.message}`);
     }
   }
   return resolved;
@@ -204,7 +212,7 @@ async function main() {
     console.error("channels.json を読めませんでした:", err.message);
   }
   const entries = (Array.isArray(channels) ? channels : []).filter(
-    (c) => c && (c.id || c.handle || c.query),
+    (c) => c && (c.id || c.handle || c.query || c.video),
   );
 
   let all = [];
