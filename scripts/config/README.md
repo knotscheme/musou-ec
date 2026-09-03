@@ -16,15 +16,32 @@
 
 ## チャンネルIDの調べ方
 
-- チャンネルページを開く → ページのソースで `"channelId":"UC..."` を検索
-- または `https://www.youtube.com/@ハンドル` を開き、URL が `/channel/UC...` に変わるページ（登録/概要など）から取得
+- チャンネルページを開く → ページのソース（右クリック→ページのソースを表示）で
+  `"channelId":"UC` を検索してコピー
+- または URL が `youtube.com/channel/UC...` になっているページ（他サイトからのリンク等）から
+
+## ⚠ 取得には YouTube Data API キーが必要
+
+`scripts/fetch-videos.mjs` は次の順で動きます。
+
+1. 環境変数 `YT_API_KEY` があれば **YouTube Data API v3** で取得（確実）
+2. 無ければ RSS フォールバック（`feeds/videos.xml`）→ **GitHub Actions の実行環境では
+   YouTube 側にブロックされ 404 になるため実質使えない**
+
+### API キーの作成と登録
+
+1. Google Cloud Console → プロジェクト作成 →「YouTube Data API v3」を有効化
+2. 「認証情報」→「APIキー」を作成（利用制限は YouTube Data API v3 のみに絞ると安全）
+3. GitHub リポジトリ → Settings → Secrets and variables → Actions → New repository secret
+   - Name: `YT_API_KEY`
+   - Value: 作成したキー
+4. Actions タブ →「Update learn videos」→ Run workflow で手動実行して確認
+
+無料枠は 10,000 units/日。30チャンネルを1日1回取得しても数百 units 程度です。
 
 ## 反映のしくみ
 
 1. `.github/workflows/update-videos.yml` が毎日 03:00(JST) に `scripts/fetch-videos.mjs` を実行
-2. 各チャンネルの RSS（`https://www.youtube.com/feeds/videos.xml?channel_id=<id>`）から最新動画を取得
-3. `platform` / `category` / `relatedToolPath` を各動画に結合し、公開日の新しい順で
-   `src/data/videos.json` に書き出し
-4. 差分があれば commit & push → Pages の再ビルドが走り、`/learn` に反映
-
-手動実行は GitHub の Actions タブ →「Update learn videos」→ Run workflow。
+2. 各チャンネルの最新動画を取得し、`platform` / `category` / `relatedToolPath` を結合、
+   公開日の新しい順で `src/data/videos.json` に書き出し
+3. 差分があれば commit & push → Pages の再ビルドが走り `/learn` に反映

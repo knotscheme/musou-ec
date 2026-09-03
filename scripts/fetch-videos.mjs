@@ -1,12 +1,18 @@
 /**
- * 学ぶ（動画学習）用データ生成スクリプト（依存パッケージなし・ESM）。
+ * 学ぶ（動画学習）用データ生成スクリプト（ESM・依存パッケージなし）。
  *
- * scripts/config/channels.json の各チャンネルの YouTube RSS を取得し、
+ * scripts/config/channels.json の各チャンネルの最新動画を取得し、
  * 動画メタ（videoId / title / publishedAt / thumbnailUrl）に
  * platform / category / relatedToolPath を結合して
  * src/data/videos.json へ公開日の新しい順で書き出す。
  *
- * Node 18+（グローバル fetch）を前提。GitHub Actions から実行。
+ * 取得方法:
+ *   - 環境変数 YT_API_KEY があれば YouTube Data API v3 を使う（推奨・確実）。
+ *   - 無ければ YouTube RSS（feeds/videos.xml）にフォールバック。
+ *     ※ GitHub Actions など一部の環境では YouTube 側に RSS をブロックされ 404 になる。
+ *       その場合は YT_API_KEY を GitHub Secrets に設定すること。
+ *
+ * Node 18+（グローバル fetch）前提。
  */
 
 import fs from "node:fs";
@@ -19,6 +25,11 @@ const CHANNELS_PATH = path.join(ROOT, "scripts", "config", "channels.json");
 const OUT_PATH = path.join(ROOT, "src", "data", "videos.json");
 
 const PLATFORMS = ["rakuten", "amazon", "yahoo", "shopify", "common"];
+const PER_CHANNEL = 15;
+const API_KEY = process.env.YT_API_KEY || "";
+
+const UA =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
 
 function decodeEntities(s) {
   return String(s || "")
@@ -30,12 +41,75 @@ function decodeEntities(s) {
     .replace(/&amp;/g, "&");
 }
 
+/* ---------- YouTube Data API v3 ---------- */
+
+async function api(pathname, params) {
+  const usp = new URLSearchParams({ ...params, key: API_KEY });
+  const res = await fetch(`https://www.googleapis.com/youtube/v3/${pathname}?${usp}`);
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error?.message || `HTTP ${res.status}`);
+  return json;
+}
+
+async function fetchViaApi(channels) {
+  const out = [];
+  // まとめて uploads プレイリストIDを取得（1リクエスト50件まで）
+  const meta = new Map();
+  for (let i = 0; i < channels.length; i += 50) {
+    const batch = channels.slice(i, i + 50);
+    const j = await api("channels", {
+      part: "contentDetails,snippet",
+      id: batch.map((c) => c.id).join(","),
+      maxResults: "50",
+    });
+    for (const item of j.items || []) {
+      meta.set(item.id, {
+        uploads: item.contentDetails?.relatedPlaylists?.uploads,
+        title: item.snippet?.title || "",
+      });
+    }
+  }
+
+  for (const ch of channels) {
+    const m = meta.get(ch.id);
+    if (!m?.uploads) {
+      console.warn(`SKIP ${ch.name || ch.id}: チャンネルが見つかりません`);
+      continue;
+    }
+    try {
+      const j = await api("playlistItems", {
+        part: "snippet,contentDetails",
+        playlistId: m.uploads,
+        maxResults: String(PER_CHANNEL),
+      });
+      const rows = (j.items || [])
+        .map((it) => {
+          const videoId = it.contentDetails?.videoId || it.snippet?.resourceId?.videoId;
+          if (!videoId) return null;
+          return {
+            videoId,
+            title: it.snippet?.title || "",
+            publishedAt: it.contentDetails?.videoPublishedAt || it.snippet?.publishedAt || "",
+            thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
+          };
+        })
+        .filter(Boolean);
+      console.log(`OK   ${m.title || ch.name || ch.id}: ${rows.length} 件`);
+      out.push(...withMeta(rows, ch, m.title));
+    } catch (err) {
+      console.warn(`SKIP ${ch.name || ch.id}: ${err.message}`);
+    }
+  }
+  return out;
+}
+
+/* ---------- RSS フォールバック ---------- */
+
 function pick(xml, tag) {
   const m = xml.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`));
   return m ? decodeEntities(m[1].trim()) : "";
 }
 
-/** YouTube feed XML → 動画メタ配列（依存なしの簡易パーサ） */
 function parseFeed(xml) {
   const out = [];
   const entries = xml.match(/<entry>[\s\S]*?<\/entry>/g) || [];
@@ -52,15 +126,30 @@ function parseFeed(xml) {
   return out;
 }
 
-async function fetchChannel(ch) {
-  const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(ch.id)}`;
-  const res = await fetch(url, { headers: { "user-agent": "musou-ec-learn/1.0" } });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const xml = await res.text();
-  return parseFeed(xml).map((v) => ({
+async function fetchViaRss(channels) {
+  const out = [];
+  for (const ch of channels) {
+    try {
+      const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(ch.id)}`;
+      const res = await fetch(url, { headers: { "user-agent": UA } });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const rows = parseFeed(await res.text()).slice(0, PER_CHANNEL);
+      console.log(`OK   ${ch.name || ch.id}: ${rows.length} 件`);
+      out.push(...withMeta(rows, ch, ch.name));
+    } catch (err) {
+      console.warn(`SKIP ${ch.name || ch.id}: ${err.message}`);
+    }
+  }
+  return out;
+}
+
+/* ---------- 共通 ---------- */
+
+function withMeta(rows, ch, channelName) {
+  return rows.map((v) => ({
     ...v,
     channelId: ch.id,
-    channelName: ch.name || "",
+    channelName: channelName || ch.name || "",
     platform: PLATFORMS.includes(ch.platform) ? ch.platform : "common",
     category: ch.category || "",
     relatedToolPath: ch.relatedToolPath || "",
@@ -78,15 +167,15 @@ async function main() {
     (c) => c && typeof c.id === "string" && /^UC[\w-]{20,}$/.test(c.id),
   );
 
-  const all = [];
-  for (const ch of channels) {
-    try {
-      const rows = await fetchChannel(ch);
-      console.log(`OK   ${ch.name || ch.id}: ${rows.length} 件`);
-      all.push(...rows);
-    } catch (err) {
-      console.warn(`SKIP ${ch.name || ch.id}: ${err.message}`); // 1チャンネル失敗しても止めない
-    }
+  let all = [];
+  if (channels.length === 0) {
+    console.log("チャンネル未登録。");
+  } else if (API_KEY) {
+    console.log(`YouTube Data API で ${channels.length} チャンネル取得`);
+    all = await fetchViaApi(channels);
+  } else {
+    console.log(`YT_API_KEY 未設定 → RSS で ${channels.length} チャンネル取得（環境により失敗あり）`);
+    all = await fetchViaRss(channels);
   }
 
   const seen = new Set();

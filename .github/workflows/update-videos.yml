@@ -20,8 +20,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Fetch YouTube RSS -> src/data/videos.json
+      - name: Fetch YouTube videos -> src/data/videos.json
         run: node scripts/fetch-videos.mjs
+        env:
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
       - name: Commit if changed
         run: |
           if [ -n "$(git status --porcelain src/data/videos.json)" ]; then
