@@ -8,11 +8,21 @@
 
   const VERSION = chrome.runtime.getManifest().version;
 
-  // 起動を知らせる（ページ側の hasExtension 判定に使う）
+  // ① DOM属性マーカー：document_start で <html> に打ち込む。
+  //    ページ側はこれを同期的に読むだけでよく、メッセージのタイミング勝負にならない。
+  function mark() {
+    try {
+      if (document.documentElement) document.documentElement.setAttribute("data-musou-ext", VERSION);
+    } catch (e) {}
+  }
+  mark();
+  document.addEventListener("DOMContentLoaded", mark);
+
+  // ② メッセージでも起動を知らせる（後から登録されたリスナー救済のフォールバック）
   function announce() {
+    mark();
     window.postMessage({ source: `${TAG}-ext`, type: "ready", version: VERSION }, "*");
   }
-  // document_start だとページ側のリスナー登録前になりうるので、数回＋各イベントで送る
   announce();
   [50, 200, 600, 1500, 3000].forEach((ms) => setTimeout(announce, ms));
   document.addEventListener("DOMContentLoaded", announce);

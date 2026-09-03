@@ -9,6 +9,14 @@ let extVersion: string | null = null;
 const readyListeners = new Set<(v: string) => void>();
 
 if (typeof window !== "undefined") {
+  // 拡張が document_start で打ち込む DOM属性マーカーを同期的に読む（レースなし）
+  try {
+    const m = document.documentElement.getAttribute("data-musou-ext");
+    if (m) extVersion = m;
+  } catch {
+    /* noop */
+  }
+
   window.addEventListener("message", (ev) => {
     if (ev.source !== window) return;
     const d = ev.data as { source?: string; type?: string; version?: string };
