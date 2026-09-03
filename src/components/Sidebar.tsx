@@ -47,7 +47,7 @@ export function Sidebar() {
   return (
     <>
       <aside
-        className={`fixed inset-y-0 left-0 z-30 w-64 shrink-0 overflow-y-auto border-r bg-[var(--surface)] transition-transform max-lg:hidden lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 shrink-0 overflow-y-auto border-r bg-[var(--surface)] transition-transform max-lg:hidden lg:sticky lg:top-0 lg:h-screen lg:self-start lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
