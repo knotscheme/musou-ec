@@ -104,8 +104,8 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
 
   return (
     <div className="mt-5">
-      {/* スクロール時に上部固定するフィルタバー（ダッシュボードのモールタブと同じ挙動） */}
-      <div className="sticky top-0 z-20 mb-4 -mx-4 space-y-1.5 border-b bg-[color-mix(in_srgb,var(--surface)_82%,transparent)] px-4 py-2 backdrop-blur-md sm:mx-0 sm:rounded-xl sm:border sm:p-2 lg:top-2">
+      {/* スクロール時に上部固定するフィルタバー */}
+      <div className="sticky top-0 z-20 mb-4 -mx-4 space-y-1.5 border-b bg-[var(--surface)] px-4 py-2.5 shadow-[0_6px_16px_-8px_rgba(0,0,0,.35)] sm:mx-0 sm:rounded-xl sm:border sm:p-2 lg:top-2">
       <div className="flex flex-wrap items-center gap-1.5">
         {platformTabs.map((t) => {
           const on = platform === t.key;
