@@ -7,6 +7,7 @@ import { idbGet, idbPut } from "@/lib/idb";
 import { getOwnerId } from "@/lib/guest";
 import { downloadCSV } from "@/lib/csv";
 import { useExtension, extRequest } from "@/lib/extension";
+import { DownloadButton } from "@/components/DownloadButton";
 
 interface Entry {
   id: string;
@@ -267,18 +268,17 @@ export default function RankTracker() {
                 }}
               />
             </label>
-            <button
-              onClick={() =>
+            <DownloadButton
+              onDownload={() =>
                 downloadCSV("rank-tracker-template", [
                   ["キーワード", "商品URLまたはコード"],
                   ["本革ベルト", "https://item.rakuten.co.jp/yourshop/lb076/"],
                   ["メンズ 財布", "yourshop/bt101"],
                 ])
               }
-              className="rounded-md border px-3 py-2 text-sm font-semibold text-[var(--brand)]"
             >
               テンプレDL
-            </button>
+            </DownloadButton>
             <span className="text-xs text-[var(--muted)]">今日の日付で記録。走査ページ数は上の設定を使用</span>
           </div>
           {bulkMsg && <p className="mt-1.5 text-xs text-[var(--muted)]">{bulkMsg}</p>}

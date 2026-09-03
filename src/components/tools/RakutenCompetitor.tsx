@@ -6,6 +6,7 @@ import { ExtensionNote } from "@/components/ExtensionNote";
 import { downloadCSV } from "@/lib/csv";
 import { recordHistory } from "@/lib/history";
 import { useExtension, extRequest } from "@/lib/extension";
+import { DownloadButton } from "@/components/DownloadButton";
 
 interface Extracted {
   label: string;
@@ -247,18 +248,17 @@ export default function RakutenCompetitor() {
                 }}
               />
             </label>
-            <button
-              onClick={() =>
+            <DownloadButton
+              onDownload={() =>
                 downloadCSV("competitor-template", [
                   ["競合URL"],
                   ["https://item.rakuten.co.jp/shopA/xxxx/"],
                   ["https://store.shopping.yahoo.co.jp/shopB/yyyy.html"],
                 ])
               }
-              className="rounded-md border px-3 py-2 text-sm font-semibold text-[var(--brand)]"
             >
               テンプレDL
-            </button>
+            </DownloadButton>
           </div>
           <p className="mt-1 text-xs text-[var(--muted)]">
             ※ 既存の枠は貼り付けたURLで置き換わります。取得後そのまま下の比較表・CSVに反映されます。
@@ -319,9 +319,9 @@ export default function RakutenCompetitor() {
       {rows.length > 0 && (
         <>
           <Field label="">
-            <button onClick={exportCsv} className="rounded-md bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white">
+            <DownloadButton onDownload={exportCsv} className="border-[var(--brand)]">
               比較表CSV
-            </button>
+            </DownloadButton>
           </Field>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] border-collapse text-xs">
