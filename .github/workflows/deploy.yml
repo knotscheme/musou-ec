@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # 動画データ更新ワークフローが main に commit しても push イベントは発火しないため、
+  # その完了をトリガーにして再ビルドする
+  workflow_run:
+    workflows: ["Update learn videos"]
+    types: [completed]
 
 permissions:
   contents: read
