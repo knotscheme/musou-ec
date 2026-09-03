@@ -17,11 +17,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja">
-      <head>
+    <html lang="ja" suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        {/* body 先頭のインラインスクリプト＝HTMLパース中に同期実行され、描画前にテーマを確定させる */}
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
-      </head>
-      <body>
         <ThemeSync />
         <I18nProvider>
           <div className="flex min-h-screen">
