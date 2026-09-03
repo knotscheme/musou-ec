@@ -359,7 +359,7 @@ export const TOOLS: Tool[] = [
     icon: "target",
     status: "live",
     external: "https://sayatori-ai.onrender.com/lp",
-    accent: "#0ea5e9",
+    accent: "#94a3b8",
   },
   // 統合ハブ（重複していた小ツールをタブでまとめたもの）
   {
