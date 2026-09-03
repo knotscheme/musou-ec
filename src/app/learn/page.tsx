@@ -18,6 +18,12 @@ const fmtDate = (s: string) => {
   const d = new Date(s);
   return Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString("ja-JP");
 };
+const fmtViews = (n?: number) => {
+  const v = n ?? 0;
+  if (v >= 10000) return `${(v / 10000).toFixed(v >= 100000 ? 0 : 1)}万回`;
+  return `${v.toLocaleString("ja-JP")}回`;
+};
+type SortKey = "new" | "views";
 
 export default function LearnPage() {
   const [selected, setSelected] = useState<string | null>(null);
@@ -68,15 +74,21 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
   const { get } = useLearn();
   const [platform, setPlatform] = useState<MallId | "all" | "fav">("all");
   const [purpose, setPurpose] = useState<string | "all">("all");
+  const [sort, setSort] = useState<SortKey>("new");
 
   const list = useMemo(() => {
-    return VIDEOS.filter((v) => {
-      if (platform === "fav") return get(v.videoId).fav;
-      if (platform !== "all" && v.platform !== platform) return false;
-      if (purpose !== "all" && v.category !== purpose) return false;
+    const v = VIDEOS.filter((x) => {
+      if (platform === "fav") return get(x.videoId).fav;
+      if (platform !== "all" && x.platform !== platform) return false;
+      if (purpose !== "all" && x.category !== purpose) return false;
       return true;
     });
-  }, [platform, purpose, get]);
+    return [...v].sort((a, b) =>
+      sort === "views"
+        ? (b.viewCount ?? 0) - (a.viewCount ?? 0)
+        : new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+    );
+  }, [platform, purpose, sort, get]);
 
   const platformTabs: { key: MallId | "all" | "fav"; label: string; color?: string }[] = [
     { key: "all", label: "すべて" },
@@ -105,7 +117,7 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
         })}
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-1.5">
+      <div className="mb-4 flex flex-wrap items-center gap-1.5">
         {(["all", ...PURPOSE_CATEGORIES] as const).map((p) => {
           const on = purpose === p;
           return (
@@ -120,6 +132,22 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
             </button>
           );
         })}
+        <span className="ml-auto inline-flex overflow-hidden rounded-md border text-xs font-semibold">
+          {(
+            [
+              ["new", "新着順"],
+              ["views", "再生数順"],
+            ] as [SortKey, string][]
+          ).map(([k, label]) => (
+            <button
+              key={k}
+              onClick={() => setSort(k)}
+              className={`px-2.5 py-1 ${sort === k ? "bg-[var(--brand)] text-white" : ""}`}
+            >
+              {label}
+            </button>
+          ))}
+        </span>
       </div>
 
       {list.length === 0 ? (
@@ -179,7 +207,9 @@ function VideoCard({ video, onOpen }: { video: LearnVideo; onOpen: () => void })
           {video.title}
         </button>
         <div className="mt-auto flex items-center justify-between pt-1">
-          <span className="text-[11px] text-[var(--muted)]">{fmtDate(video.publishedAt)}</span>
+          <span className="text-[11px] text-[var(--muted)]">
+            {fmtViews(video.viewCount)} ・ {fmtDate(video.publishedAt)}
+          </span>
           <button
             onClick={() => toggleFav(video.videoId)}
             title="お気に入り"
@@ -231,6 +261,7 @@ function VideoDetail({ video, onBack }: { video: LearnVideo; onBack: () => void 
             <span style={{ color: mall.color }}>{mall.label}</span>
             {video.category && <span>・{video.category}</span>}
             {video.channelName && <span>・{video.channelName}</span>}
+            <span>・{fmtViews(video.viewCount)}</span>
             <span>・{fmtDate(video.publishedAt)}</span>
             <a
               href={`https://www.youtube.com/watch?v=${video.videoId}`}

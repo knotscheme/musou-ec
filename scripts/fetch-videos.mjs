@@ -51,6 +51,44 @@ async function api(pathname, params) {
   return json;
 }
 
+/**
+ * id が無い（handle / query しか無い）エントリを、Data API でチャンネルIDに解決する。
+ * - handle: "@xxx" → channels.list(forHandle)（1 unit・確実）
+ * - query : チャンネル名 → search(type=channel)（100 units・あいまい一致）
+ */
+async function resolveIds(channels) {
+  const resolved = [];
+  for (const c of channels) {
+    if (typeof c.id === "string" && /^UC[\w-]{20,}$/.test(c.id)) {
+      resolved.push(c);
+      continue;
+    }
+    if (!API_KEY) {
+      console.warn(`SKIP ${c.name || c.query || c.handle || "?"}: id未指定 & APIキー無し`);
+      continue;
+    }
+    try {
+      let id;
+      if (c.handle) {
+        const j = await api("channels", { part: "id", forHandle: String(c.handle).replace(/^@/, "") });
+        id = j.items?.[0]?.id;
+      } else if (c.query) {
+        const j = await api("search", { part: "id", type: "channel", q: c.query, maxResults: "1" });
+        id = j.items?.[0]?.id?.channelId;
+      }
+      if (id) {
+        console.log(`RESOLVE ${c.handle || c.query} -> ${id}`);
+        resolved.push({ ...c, id });
+      } else {
+        console.warn(`SKIP ${c.handle || c.query}: チャンネルを解決できませんでした`);
+      }
+    } catch (err) {
+      console.warn(`SKIP ${c.handle || c.query}: ${err.message}`);
+    }
+  }
+  return resolved;
+}
+
 async function fetchViaApi(channels) {
   const out = [];
   // まとめて uploads プレイリストIDを取得（1リクエスト50件まで）
@@ -163,23 +201,53 @@ async function main() {
   } catch (err) {
     console.error("channels.json を読めませんでした:", err.message);
   }
-  channels = (Array.isArray(channels) ? channels : []).filter(
-    (c) => c && typeof c.id === "string" && /^UC[\w-]{20,}$/.test(c.id),
+  const entries = (Array.isArray(channels) ? channels : []).filter(
+    (c) => c && (c.id || c.handle || c.query),
   );
 
   let all = [];
-  if (channels.length === 0) {
+  if (entries.length === 0) {
     console.log("チャンネル未登録。");
   } else if (API_KEY) {
-    console.log(`YouTube Data API で ${channels.length} チャンネル取得`);
-    all = await fetchViaApi(channels);
+    const resolved = await resolveIds(entries);
+    // 重複IDを排除
+    const uniq = [];
+    const idset = new Set();
+    for (const c of resolved) {
+      if (idset.has(c.id)) continue;
+      idset.add(c.id);
+      uniq.push(c);
+    }
+    console.log(`YouTube Data API で ${uniq.length} チャンネル取得`);
+    all = await fetchViaApi(uniq);
   } else {
-    console.log(`YT_API_KEY 未設定 → RSS で ${channels.length} チャンネル取得（環境により失敗あり）`);
-    all = await fetchViaRss(channels);
+    const idOnly = entries.filter((c) => typeof c.id === "string" && /^UC[\w-]{20,}$/.test(c.id));
+    console.log(`YT_API_KEY 未設定 → RSS で ${idOnly.length} チャンネル取得（環境により失敗あり）`);
+    all = await fetchViaRss(idOnly);
   }
 
   const seen = new Set();
   const deduped = all.filter((v) => (seen.has(v.videoId) ? false : (seen.add(v.videoId), true)));
+
+  // 再生回数（統計）をまとめて取得（videos.list は 50件/リクエスト・1 unit）
+  if (API_KEY && deduped.length) {
+    try {
+      for (let i = 0; i < deduped.length; i += 50) {
+        const batch = deduped.slice(i, i + 50);
+        const j = await api("videos", {
+          part: "statistics",
+          id: batch.map((v) => v.videoId).join(","),
+          maxResults: "50",
+        });
+        const stat = new Map((j.items || []).map((it) => [it.id, Number(it.statistics?.viewCount) || 0]));
+        for (const v of batch) v.viewCount = stat.get(v.videoId) ?? 0;
+      }
+    } catch (err) {
+      console.warn(`統計取得スキップ: ${err.message}`);
+    }
+  }
+  for (const v of deduped) if (typeof v.viewCount !== "number") v.viewCount = 0;
+
   deduped.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 
   fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });

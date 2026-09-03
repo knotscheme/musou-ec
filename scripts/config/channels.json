@@ -7,8 +7,85 @@
     "relatedToolPath": ""
   },
   {
-    "id": "UC6E6rLByiXFaxtK__PXXM_g",
-    "name": "日本ネット物販スクール公式チャンネル",
+    "query": "水上浩一EC実践会",
+    "name": "水上浩一EC実践会",
+    "platform": "common",
+    "category": "集客・SEO",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "むーさんチャンネル Shopify",
+    "name": "むーさんチャンネル（Shopify）",
+    "platform": "shopify",
+    "category": "構築・設定",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "せどりTV 本山まさし",
+    "name": "せどりTV 本山まさし",
+    "platform": "amazon",
+    "category": "業務効率化",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "副業せどり Vlog 小嶋けんたろう",
+    "name": "副業せどり Vlog 小嶋けんたろう",
+    "platform": "amazon",
+    "category": "業務効率化",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "いとう社長 物販 せどり",
+    "name": "いとう社長（物販）",
+    "platform": "amazon",
+    "category": "業務効率化",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "寺田式転売スクール",
+    "name": "寺田式転売スクール",
+    "platform": "amazon",
+    "category": "業務効率化",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "せどりぶ",
+    "name": "せどりぶ",
+    "platform": "amazon",
+    "category": "業務効率化",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "作間せどり",
+    "name": "作間せどり",
+    "platform": "amazon",
+    "category": "業務効率化",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "圧倒的乞食チャンネル せどり",
+    "name": "圧倒的 乞食チャンネル",
+    "platform": "amazon",
+    "category": "業務効率化",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "V-LOG RYO物販研究所",
+    "name": "V-LOG RYO物販研究所",
+    "platform": "amazon",
+    "category": "業務効率化",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "yokoken せどり 物販",
+    "name": "yokoken",
+    "platform": "amazon",
+    "category": "業務効率化",
+    "relatedToolPath": ""
+  },
+  {
+    "query": "転売の1歩先へ 日本ネット物販スクール",
+    "name": "日本ネット物販スクール",
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": ""

@@ -7,6 +7,8 @@ export interface LearnVideo {
   title: string;
   publishedAt: string;
   thumbnailUrl: string;
+  /** 再生回数（取得できないときは 0） */
+  viewCount?: number;
   channelId: string;
   channelName: string;
   /** rakuten | amazon | yahoo | shopify | common */
