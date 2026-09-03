@@ -145,7 +145,8 @@ export default function PageReverse() {
   return (
     <ToolShell slug="page-reverse">
       <ExtensionNote
-        auto="競合ページのURLを指定するだけで、拡張があなたのブラウザからHTMLを取得し自動解析します。"
+        connected={extReady}
+        auto="ページURLを入れて「拡張で取得」を押すと、あなたのブラウザからHTMLを取得して自動解析します（楽天/Yahoo/Amazon対応）。"
         manual="競合ページを開き、右クリック →「ページのソースを表示」→ 全選択コピー → 下に貼り付け。"
       />
 

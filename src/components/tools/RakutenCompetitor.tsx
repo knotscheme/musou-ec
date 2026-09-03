@@ -133,7 +133,8 @@ export default function RakutenCompetitor() {
   return (
     <ToolShell slug="rakuten-competitor">
       <ExtensionNote
-        auto="競合商品ページのURLを登録すると、拡張が定期的に価格・ポイント・レビュー・順位を取得し推移を記録します。"
+        connected={extReady}
+        auto="各枠に競合商品ページのURL（楽天/Yahoo/Amazon）を入れて「拡張で取得」を押すと、HTMLを取得して価格・ポイント・レビュー等を自動抽出します。"
         manual="競合の商品ページを開き、ソース（Ctrl+U → 全選択コピー）を各枠に貼り付け。価格・ポイント・レビュー等を自動抽出します。"
       />
 

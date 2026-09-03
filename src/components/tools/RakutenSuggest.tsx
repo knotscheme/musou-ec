@@ -92,19 +92,11 @@ export default function RakutenSuggest() {
 
   return (
     <ToolShell slug="rakuten-suggest">
-      {extReady ? (
-        <div className="card border-[var(--brand)] p-4 text-sm">
-          <p className="font-semibold text-[var(--brand)]">⧉ MUSOU-EC コネクタ 接続中</p>
-          <p className="mt-1 text-[var(--muted)]">
-            シード語と展開方法を選んで「拡張で自動取得」を押すと、あなたのブラウザから楽天サジェストを深掘りして下の欄に入れます。
-          </p>
-        </div>
-      ) : (
-        <ExtensionNote
-          auto="シードワードを登録すると、拡張があなたのブラウザから楽天のサジェストを深掘り取得します。"
-          manual="下のリンクから楽天検索を開き、検索窓に出るサジェスト候補をコピーして貼り付け → 整形・重複除去・CSV化します。拡張は apps/extension を「パッケージ化されていない拡張機能」として読み込むと有効になります。"
-        />
-      )}
+      <ExtensionNote
+        connected={extReady}
+        auto="シード語と展開方法を選んで「拡張で自動取得」を押すと、あなたのブラウザから楽天サジェストを深掘りして下の欄に入れます。"
+        manual="下のリンクから楽天検索を開き、検索窓に出るサジェスト候補をコピーして貼り付け → 整形・重複除去・CSV化します。"
+      />
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Field label="シードキーワード">

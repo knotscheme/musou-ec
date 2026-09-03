@@ -1,5 +1,21 @@
-/** 拡張連携ツールの共通バナー（拡張は準備中、手動フォールバックあり）。 */
-export function ExtensionNote({ auto, manual }: { auto: string; manual: string }) {
+/** 拡張連携ツールの共通バナー。connected=true なら「接続中」表示、false なら手動フォールバック案内。 */
+export function ExtensionNote({
+  auto,
+  manual,
+  connected = false,
+}: {
+  auto: string;
+  manual: string;
+  connected?: boolean;
+}) {
+  if (connected) {
+    return (
+      <div className="card border-[var(--brand)] p-4 text-sm">
+        <p className="font-semibold text-[var(--brand)]">⧉ MUSOU-EC コネクタ 接続中</p>
+        <p className="mt-1 text-[var(--muted)]">{auto}</p>
+      </div>
+    );
+  }
   return (
     <div className="card border-dashed p-4 text-sm">
       <p className="font-semibold">⧉ Chrome拡張連携ツール</p>
@@ -18,7 +34,7 @@ export function ExtensionNote({ auto, manual }: { auto: string; manual: string }
         </li>
       </ul>
       <p className="mt-2 text-xs text-[var(--muted)]">
-        ※ 拡張パッケージ（<code>musou-ec-extension</code>）は準備中です。
+        ※ Chrome拡張「MUSOU-EC コネクタ」（<code>apps/extension</code>）を開発者モードで読み込むと自動取得が有効になります。
       </p>
     </div>
   );

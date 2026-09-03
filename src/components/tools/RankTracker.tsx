@@ -125,7 +125,8 @@ export default function RankTracker() {
   return (
     <ToolShell slug="rank-tracker">
       <ExtensionNote
-        auto="キーワードと対象商品を登録すると、拡張が毎日あなたのブラウザから検索順位を自動取得し、この表に記録します。"
+        connected={extReady}
+        auto="キーワードと対象商品（商品URL/コード）を入れて「拡張で順位を取得」を押すと、あなたのブラウザから楽天検索を走査し順位を自動入力します。「記録を追加」で推移を保存。"
         manual="検索して見つけた順位を手入力で記録します。推移・ベスト/ワースト・増減を自動集計します（記録はこの端末に保存）。"
       />
 
