@@ -7,7 +7,7 @@ import { Glyph } from "@/components/Glyph";
 const ITEMS = [
   { href: "/", icon: "home", label: "ダッシュボード", match: (p: string) => p === "/" },
   { href: "/mypage/", icon: "bookmark", label: "マイページ", match: (p: string) => p.startsWith("/mypage") },
-  { href: "/history/", icon: "history", label: "実行履歴", match: (p: string) => p.startsWith("/history") },
+  { href: "/learn/", icon: "book", label: "学ぶ", match: (p: string) => p.startsWith("/learn") },
   { href: "/settings/", icon: "settings", label: "設定", match: (p: string) => p.startsWith("/settings") },
 ] as const;
 

@@ -61,6 +61,7 @@ export function Sidebar() {
         <nav className="px-2 pb-8 text-sm">
           <NavLink href="/" active={pathname === "/"} label={t("nav_dashboard")} icon="home" onClick={() => setMobileOpen(false)} />
           <NavLink href="/mypage/" active={pathname.startsWith("/mypage")} label="マイページ" icon="bookmark" onClick={() => setMobileOpen(false)} />
+          <NavLink href="/learn/" active={pathname.startsWith("/learn")} label="学ぶ" icon="book" onClick={() => setMobileOpen(false)} />
           <Link
             href="/wishlist/"
             onClick={() => setMobileOpen(false)}
@@ -75,7 +76,6 @@ export function Sidebar() {
             <Glyph name="bulb" size={17} />
             あったらいいな
           </Link>
-          <NavLink href="/history/" active={pathname.startsWith("/history")} label={t("nav_history")} icon="history" onClick={() => setMobileOpen(false)} />
           <NavLink href="/settings/" active={pathname.startsWith("/settings")} label={t("nav_settings")} icon="settings" onClick={() => setMobileOpen(false)} />
 
           <div className="mt-4 mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">

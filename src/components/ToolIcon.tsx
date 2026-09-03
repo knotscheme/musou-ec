@@ -204,6 +204,13 @@ export const PATHS: Record<string, React.ReactNode> = {
       <path d="M7 10l5 5 5-5M12 15V3" />
     </>
   ),
+  book: (
+    <>
+      <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z" />
+      <path d="M19 17H6a2 2 0 0 0-2 2" />
+    </>
+  ),
+  play: <path d="M8 5v14l11-7z" />,
   home: (
     <>
       <path d="M3 10.5 12 3l9 7.5" />

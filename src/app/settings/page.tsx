@@ -14,6 +14,7 @@ import {
 import { getGuestId, getMemberId, linkGuestToMember, unlinkMember } from "@/lib/guest";
 import { Field } from "@/components/ToolShell";
 import { Glyph } from "@/components/Glyph";
+import { HistoryList } from "@/components/HistoryList";
 
 export default function SettingsPage() {
   const { t } = useI18n();
@@ -166,6 +167,16 @@ export default function SettingsPage() {
           ※ MVP では認証バックエンド未接続のためモック。Supabase 等の実ログイン後に
           <code>linkGuestToMember()</code> を呼べば、チャット・ツール履歴の owner が会員IDへ移送されます。
         </p>
+      </section>
+
+      <section id="history" className="card space-y-4 p-5 scroll-mt-24">
+        <div>
+          <h2 className="font-bold">実行履歴</h2>
+          <p className="mt-1 text-sm text-[var(--muted)]">
+            ツールの実行結果はこの端末の IndexedDB に保存されています（owner 単位）。
+          </p>
+        </div>
+        <HistoryList />
       </section>
     </div>
   );
