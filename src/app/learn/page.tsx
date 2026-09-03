@@ -119,8 +119,8 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
             platform === "fav" ? "border-[var(--brand)] bg-[var(--brand)] text-white" : "text-[var(--muted)]"
           }`}
         >
-          <Glyph name="bookmark" size={12} />
-          お気に入り
+          <Glyph name="bookmark" size={12} filled />
+          マイリスト
         </button>
       </div>
 
@@ -219,10 +219,10 @@ function VideoCard({ video, onOpen }: { video: LearnVideo; onOpen: () => void })
           </span>
           <button
             onClick={() => toggleFav(video.videoId)}
-            title="お気に入り"
+            title={p.fav ? "マイリストから外す" : "マイリストに保存"}
             className={`rounded p-1 ${p.fav ? "text-[var(--brand)]" : "text-[var(--muted)]"}`}
           >
-            <Glyph name="bookmark" size={14} />
+            <Glyph name="bookmark" size={14} filled={p.fav} />
           </button>
         </div>
       </div>
@@ -307,8 +307,8 @@ function VideoDetail({ video, onBack }: { video: LearnVideo; onBack: () => void 
                 p.fav ? "border-[var(--brand)] text-[var(--brand)]" : "text-[var(--muted)]"
               }`}
             >
-              <Glyph name="bookmark" size={13} />
-              {p.fav ? "お気に入り登録済み" : "お気に入りに追加"}
+              <Glyph name="bookmark" size={13} filled={p.fav} />
+              {p.fav ? "マイリストに保存済み" : "マイリストに保存"}
             </button>
           </div>
 

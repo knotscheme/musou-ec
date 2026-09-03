@@ -9,11 +9,13 @@ export function Glyph({
   size = 16,
   className = "",
   strokeWidth = 1.9,
+  filled = false,
 }: {
   name: string;
   size?: number;
   className?: string;
   strokeWidth?: number;
+  filled?: boolean;
 }) {
   const glyph = PATHS[name];
   if (!glyph) return null;
@@ -22,7 +24,7 @@ export function Glyph({
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="none"
+      fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
       strokeWidth={strokeWidth}
       strokeLinecap="round"
