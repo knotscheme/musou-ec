@@ -130,14 +130,16 @@ export default function Dashboard() {
               {tools.map((tool) => {
                 const status = getStatus(tool);
                 const emph = tool.accent ?? mall.color;
-                const cardCls = `card mall-bar flex flex-col gap-3 p-4 transition hover:shadow-md ${
+                const cardCls = `card mall-bar flex flex-col gap-3 p-4 transition hover:shadow-lg ${
                   tool.external ? "border-2" : ""
                 }`;
+                // 外部ツールは「白い浮いたカード」で目立たせる（背景に色は乗せない）
                 const cardStyle = tool.external
                   ? {
                       ["--mall" as string]: emph,
                       borderColor: emph,
-                      background: `color-mix(in srgb, ${emph} 7%, transparent)`,
+                      background: "var(--surface)",
+                      boxShadow: `0 8px 24px rgba(15, 23, 42, 0.12)`,
                     }
                   : { ["--mall" as string]: mall.color };
                 const inner = (
