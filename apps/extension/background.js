@@ -68,6 +68,49 @@ async function rakutenSuggestOne(keyword, rp) {
   return [];
 }
 
+/** 検索結果ページの「関連キーワード」等を収集（サジェストとは別ソース） */
+async function rakutenRelated(keyword) {
+  const url = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(keyword)}/`;
+  let html;
+  try {
+    html = await fetchText(url);
+  } catch (_e) {
+    return [];
+  }
+  const out = new Set();
+  const add = (w) => {
+    if (typeof w !== "string") return;
+    const s = w.replace(/\s+/g, " ").trim();
+    if (s && s.length >= 2 && s.length <= 40 && s !== keyword) out.add(s);
+  };
+
+  // 1) 埋め込みJSON中の関連ワード（キー名は変わりうるので広めに）
+  for (const m of html.matchAll(
+    /"(?:relatedKeywords?|relatedWords?|reword|relateWord|suggestKeywords?)"\s*:\s*(\[[^\]]*\])/gi,
+  )) {
+    try {
+      JSON.parse(m[1]).forEach((v) => add(typeof v === "string" ? v : v && (v.word || v.keyword || v.name)));
+    } catch (_e) {
+      /* noop */
+    }
+  }
+
+  // 2) /search/mall/<kw>/ へのリンク。ノイズ除去のため seed と語がかぶるものだけ採用
+  const tokens = keyword.split(/\s+/).filter((t) => t.length >= 2);
+  for (const m of html.matchAll(/\/search\/mall\/([^/"?<>]+)\//g)) {
+    let w;
+    try {
+      w = decodeURIComponent(m[1]).replace(/\+/g, " ").trim();
+    } catch (_e) {
+      continue;
+    }
+    if (!w || w === keyword) continue;
+    const hit = w.includes(keyword) || tokens.some((t) => w.includes(t));
+    if (hit) add(w);
+  }
+  return [...out];
+}
+
 /** 各候補URLを順に叩いて生の結果（status/先頭240字）を返す診断用 */
 async function probeUrl(url) {
   const t0 = Date.now();
@@ -149,9 +192,19 @@ async function handle(req) {
         }
       }
 
+      // 別ソース：検索結果ページの関連キーワード（seed + 主要候補いくつか）
+      let related = 0;
+      const relBases = [seed, ...[...all].filter((k) => k !== seed).slice(0, 10)];
+      for (const b of relBases) {
+        const r = await rakutenRelated(b);
+        r.forEach((k) => all.add(k));
+        related += r.length;
+        await new Promise((res) => setTimeout(res, 90));
+      }
+
       const keywords = [...all].sort((a, b) => a.localeCompare(b, "ja"));
       return keywords.length
-        ? { keywords, tried: calls }
+        ? { keywords, tried: calls + relBases.length, related }
         : { keywords: [], debug: lastSuggestError || "候補ゼロ（原因不明）" };
     }
 
@@ -159,7 +212,9 @@ async function handle(req) {
       const seed = String(req.seed || "キャンプ").trim() || "キャンプ";
       const results = [];
       for (const u of suggestUrls(seed)) results.push(await probeUrl(u));
-      return { results };
+      results.push(await probeUrl(`https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed)}/`));
+      const related = await rakutenRelated(seed);
+      return { results, relatedCount: related.length, relatedSample: related.slice(0, 20) };
     }
 
     default:
