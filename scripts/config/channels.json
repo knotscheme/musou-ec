@@ -31,6 +31,25 @@
   },
 
   {
+    "handle": "@naotomatsushita",
+    "name": "松下直人のYahoo!ショッピング売上アップチャンネル",
+    "platform": "yahoo",
+    "category": "集客・SEO"
+  },
+  {
+    "video": "iXqTns_EJ4s",
+    "name": "Yahoo!ショッピング運営ノウハウ",
+    "platform": "yahoo",
+    "category": "構築・設定"
+  },
+  {
+    "query": "Yahoo!ショッピング 出店 ストア運営 解説",
+    "name": "Yahoo!ショッピング出店解説",
+    "platform": "yahoo",
+    "category": "業務効率化"
+  },
+
+  {
     "video": "-ZuYvAAnEtA",
     "platform": "rakuten",
     "category": "集客・SEO"
