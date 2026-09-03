@@ -25,17 +25,22 @@ async function fetchText(url) {
 
 let lastSuggestError = "";
 
-/** 楽天サジェスト（1キーワード）。エンドポイント仕様は変わりうるので複数試す。 */
-async function rakutenSuggestOne(keyword) {
+/** サジェスト候補エンドポイント（1キーワード分のURL一覧を組み立てる） */
+function suggestUrls(keyword) {
   const q = encodeURIComponent(keyword);
   const cb = `jsonp${Date.now()}`;
-  const tryUrls = [
-    `https://api.suggest.search.rakuten.co.jp/suggest?cl=dir&rid=0&sid=0&q=${q}&oe=utf-8&sl=pm_swg&cb=${cb}`,
-    `https://api.suggest.search.rakuten.co.jp/suggest?cl=dir&rid=0&sid=0&q=${q}&sl=pm_swg&cb=${cb}`,
+  return [
+    `https://api.suggest.search.rakuten.co.jp/suggest?cl=dir&rid=0&sid=0&q=${q}&oe=UTF-8&sl=pm_swg&cb=${cb}`,
+    `https://suggest.search.rakuten.co.jp/suggest?cl=dir&rid=0&sid=0&q=${q}&oe=UTF-8&sl=pm_swg&cb=${cb}`,
+    `https://search.rakuten.co.jp/suggest?q=${q}`,
     `https://suggest.rakuten.co.jp/?q=${q}&format=json&count=10`,
-    `https://suggest.rakuten.co.jp/?q=${q}&format=jsonp&count=10&callback=cb`,
   ];
-  for (const url of tryUrls) {
+}
+
+/** 楽天サジェスト（1キーワード）。エンドポイント仕様は変わりうるので複数試す。 */
+async function rakutenSuggestOne(keyword) {
+  const errs = [];
+  for (const url of suggestUrls(keyword)) {
     try {
       let body = await fetchText(url);
       // JSONP なら callback(...) を剥がす
@@ -44,12 +49,33 @@ async function rakutenSuggestOne(keyword) {
       const json = JSON.parse(body.trim());
       const out = extractSuggestStrings(json);
       if (out.length) return out;
-      lastSuggestError = "応答は取得できたが候補文字列が見つからない（形式変更の可能性）";
+      errs.push(`${url.split("?")[0]} → 応答OKだが候補ゼロ`);
     } catch (e) {
-      lastSuggestError = `${url.split("?")[0]} → ${(e && e.message) || e}`;
+      errs.push(`${url.split("?")[0]} → ${(e && e.message) || e}`);
     }
   }
+  lastSuggestError = errs.join(" ／ ");
   return [];
+}
+
+/** 各候補URLを順に叩いて生の結果（status/先頭240字）を返す診断用 */
+async function probeUrl(url) {
+  const t0 = Date.now();
+  try {
+    const res = await fetch(url, { credentials: "omit", headers: { Accept: "*/*" } });
+    const buf = await res.arrayBuffer();
+    let text = new TextDecoder("utf-8").decode(buf);
+    if (text.includes("�")) {
+      try {
+        text = new TextDecoder("euc-jp").decode(buf);
+      } catch (_e) {
+        /* noop */
+      }
+    }
+    return { url, ok: res.ok, status: res.status, ms: Date.now() - t0, len: text.length, head: text.slice(0, 240) };
+  } catch (e) {
+    return { url, ok: false, status: 0, ms: Date.now() - t0, error: String((e && e.message) || e) };
+  }
 }
 
 /** 楽天サジェスト応答の形が複数ありうるので、文字列らしきものを拾う */
@@ -96,6 +122,13 @@ async function handle(req) {
       return keywords.length
         ? { keywords }
         : { keywords: [], debug: lastSuggestError || "候補ゼロ（原因不明）" };
+    }
+
+    case "rakutenSuggestProbe": {
+      const seed = String(req.seed || "キャンプ").trim() || "キャンプ";
+      const results = [];
+      for (const u of suggestUrls(seed)) results.push(await probeUrl(u));
+      return { results };
     }
 
     default:

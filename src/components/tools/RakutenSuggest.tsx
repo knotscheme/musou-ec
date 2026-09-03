@@ -18,6 +18,20 @@ export default function RakutenSuggest() {
   const { ready: extReady } = useExtension();
   const [fetching, setFetching] = useState(false);
   const [fetchMsg, setFetchMsg] = useState("");
+  const [probeOut, setProbeOut] = useState("");
+
+  async function runProbe() {
+    setProbeOut("診断中…");
+    try {
+      const r = await extRequest<{ results: unknown[] }>(
+        { type: "rakutenSuggestProbe", seed: seed.trim() || "キャンプ" },
+        60000,
+      );
+      setProbeOut(JSON.stringify(r?.results ?? r, null, 2));
+    } catch (e) {
+      setProbeOut(`診断エラー：${(e as Error).message}`);
+    }
+  }
 
   async function autoFetch() {
     if (!seed.trim()) return;
@@ -113,6 +127,18 @@ export default function RakutenSuggest() {
         )}
       </div>
       {fetchMsg && <p className="text-sm text-[var(--muted)]">{fetchMsg}</p>}
+      {extReady && (
+        <div className="space-y-1">
+          <button onClick={runProbe} className="text-xs text-[var(--muted)] underline">
+            接続診断（うまく取れない時）
+          </button>
+          {probeOut && (
+            <pre className="max-h-72 overflow-auto rounded bg-[var(--surface-soft)] p-2 text-[11px] leading-tight">
+              {probeOut}
+            </pre>
+          )}
+        </div>
+      )}
 
       <div className="card p-4">
         <p className="mb-2 text-sm font-semibold">手動収集リンク（開いてサジェストをコピー）</p>
