@@ -25,29 +25,39 @@ async function fetchText(url) {
 
 let lastSuggestError = "";
 
-/** サジェスト候補エンドポイント（1キーワード分のURL一覧を組み立てる） */
-function suggestUrls(keyword) {
+/** サジェスト候補エンドポイント（1キーワード分のURL一覧を組み立てる）
+ *  現行は楽天の検索窓が使う autocomplete ゲートウェイ。rp トークンは無しでも通る想定で、
+ *  必要なら req.rp（検索ページから取得したもの）を付与する。 */
+function suggestUrls(keyword, rp) {
   const q = encodeURIComponent(keyword);
-  const cb = `jsonp${Date.now()}`;
+  const rpp = rp ? `&rp=${encodeURIComponent(rp)}` : "";
   return [
-    `https://api.suggest.search.rakuten.co.jp/suggest?cl=dir&rid=0&sid=0&q=${q}&oe=UTF-8&sl=pm_swg&cb=${cb}`,
-    `https://suggest.search.rakuten.co.jp/suggest?cl=dir&rid=0&sid=0&q=${q}&oe=UTF-8&sl=pm_swg&cb=${cb}`,
-    `https://search.rakuten.co.jp/suggest?q=${q}`,
-    `https://suggest.rakuten.co.jp/?q=${q}&format=json&count=10`,
+    `https://rdc-api-catalog-gateway-api.rakuten.co.jp/SUI/autocomplete/pc?q=${q}${rpp}&acc=1&aid=57`,
   ];
 }
 
-/** 楽天サジェスト（1キーワード）。エンドポイント仕様は変わりうるので複数試す。 */
-async function rakutenSuggestOne(keyword) {
+/** autocomplete 応答 { suggestions:[{name,type}], ... } から keyword 名だけ取り出す */
+function parseSuggestBody(body) {
+  let s = body.trim();
+  const m = s.match(/^[^(]*\((.*)\)[\s;]*$/s); // 念のため JSONP 対応
+  if (m) s = m[1];
+  const json = JSON.parse(s);
+  if (json && Array.isArray(json.suggestions)) {
+    return json.suggestions
+      .filter((it) => it && typeof it.name === "string" && (!it.type || it.type === "keyword"))
+      .map((it) => it.name.trim())
+      .filter(Boolean);
+  }
+  return extractSuggestStrings(json); // 形式が変わった時の保険
+}
+
+/** 楽天サジェスト（1キーワード）。 */
+async function rakutenSuggestOne(keyword, rp) {
   const errs = [];
-  for (const url of suggestUrls(keyword)) {
+  for (const url of suggestUrls(keyword, rp)) {
     try {
-      let body = await fetchText(url);
-      // JSONP なら callback(...) を剥がす
-      const m = body.match(/^[^(]*\((.*)\)[\s;]*$/s);
-      if (m) body = m[1];
-      const json = JSON.parse(body.trim());
-      const out = extractSuggestStrings(json);
+      const body = await fetchText(url);
+      const out = parseSuggestBody(body);
       if (out.length) return out;
       errs.push(`${url.split("?")[0]} → 応答OKだが候補ゼロ`);
     } catch (e) {
@@ -110,11 +120,12 @@ async function handle(req) {
       const seed = String(req.seed || "").trim();
       if (!seed) return { keywords: [] };
       const mode = req.mode === "alpha" ? ALPHA : GOJUON;
+      const rp = req.rp ? String(req.rp) : "";
       const probes = [seed, ...mode.map((x) => `${seed} ${x}`)];
       const all = new Set();
       // 直列（相手サーバーに優しく）
       for (const p of probes) {
-        const got = await rakutenSuggestOne(p);
+        const got = await rakutenSuggestOne(p, rp);
         got.forEach((k) => all.add(k));
         await new Promise((r) => setTimeout(r, 120));
       }
