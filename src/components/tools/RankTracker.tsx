@@ -38,6 +38,7 @@ export default function RankTracker() {
   const { ready: extReady } = useExtension();
   const [checking, setChecking] = useState(false);
   const [checkMsg, setCheckMsg] = useState("");
+  const [pages, setPages] = useState(3);
 
   const owner = typeof window !== "undefined" ? getOwnerId() : "";
 
@@ -47,11 +48,11 @@ export default function RankTracker() {
       return;
     }
     setChecking(true);
-    setCheckMsg("拡張で楽天検索を確認中…（上位約135位まで）");
+    setCheckMsg(`拡張で楽天検索を確認中…（上位約${pages * 45}位まで）`);
     try {
       const r = await extRequest<{ rank: number; page?: number; checked?: number; error?: string }>(
-        { type: "rakutenRank", keyword: kw.trim(), target: target.trim(), pages: 3 },
-        60000,
+        { type: "rakutenRank", keyword: kw.trim(), target: target.trim(), pages },
+        90000,
       );
       if (r?.rank) {
         setRank(String(r.rank));
@@ -144,13 +145,29 @@ export default function RankTracker() {
             記録を追加
           </button>
           {extReady && (
-            <button
-              onClick={checkRank}
-              disabled={checking}
-              className="rounded-md border border-[var(--brand)] px-4 py-2 text-sm font-semibold text-[var(--brand)] disabled:opacity-50"
-            >
-              {checking ? "確認中…" : "拡張で順位を取得"}
-            </button>
+            <>
+              <button
+                onClick={checkRank}
+                disabled={checking}
+                className="rounded-md border border-[var(--brand)] px-4 py-2 text-sm font-semibold text-[var(--brand)] disabled:opacity-50"
+              >
+                {checking ? "確認中…" : "拡張で順位を取得"}
+              </button>
+              <label className="text-xs text-[var(--muted)]">
+                走査ページ数{" "}
+                <select
+                  value={pages}
+                  onChange={(e) => setPages(Number(e.target.value))}
+                  className="rounded border px-1.5 py-1 text-xs"
+                >
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <option key={n} value={n}>
+                      {n}（約{n * 45}位）
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </>
           )}
         </div>
         {checkMsg && <p className="mt-1.5 text-xs text-[var(--muted)]">{checkMsg}</p>}

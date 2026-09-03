@@ -20,69 +20,105 @@ interface Extracted {
   jan: string;
 }
 
+function num(v: unknown): number | null {
+  if (v == null) return null;
+  const n = parseInt(String(v).replace(/[^\d]/g, ""), 10);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
 function extract(html: string, label: string): Extracted {
   const doc = new DOMParser().parseFromString(html, "text/html");
-  const text = (doc.body?.textContent || "").replace(/\s+/g, " ");
+
+  // ── 1) JSON-LD（最も信頼できる）
+  let ldPrice: number | null = null;
+  let ldRating: number | null = null;
+  let ldReview: number | null = null;
+  let ldName = "";
+  for (const s of Array.from(doc.querySelectorAll('script[type="application/ld+json"]'))) {
+    try {
+      const j = JSON.parse(s.textContent || "");
+      const nodes = Array.isArray(j) ? j : j["@graph"] ? j["@graph"] : [j];
+      for (const n of nodes) {
+        if (!n || typeof n !== "object") continue;
+        if (!/product/i.test(String(n["@type"] || ""))) continue;
+        if (!ldName && n.name) ldName = String(n.name);
+        const off = Array.isArray(n.offers) ? n.offers[0] : n.offers;
+        if (off) ldPrice = ldPrice ?? num(off.price ?? off.lowPrice ?? off.highPrice);
+        const ar = n.aggregateRating;
+        if (ar) {
+          if (ldRating == null && ar.ratingValue != null) ldRating = parseFloat(ar.ratingValue);
+          ldReview = ldReview ?? num(ar.reviewCount ?? ar.ratingCount);
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+
+  // ── 2) 楽天の埋め込みJS
+  const scripts = Array.from(doc.querySelectorAll("script"))
+    .map((s) => s.textContent || "")
+    .join("\n");
+  const grab = (re: RegExp): number | null => {
+    const m = scripts.match(re);
+    return m ? num(m[1]) : null;
+  };
+  const jsPrice = grab(/"itemPrice"\s*:\s*"?(\d{2,8})"?/) ?? grab(/"price"\s*:\s*"?(\d{2,8})"?/);
+  const jsReview = grab(/"reviewCount"\s*:\s*"?(\d{1,7})"?/) ?? grab(/"reviewNum"\s*:\s*"?(\d{1,7})"?/);
+  const jsRatingM = scripts.match(/"(?:reviewAverage|ratingValue|reviewAvg)"\s*:\s*"?([0-5](?:\.\d+)?)"?/);
+  const jsRating = jsRatingM ? parseFloat(jsRatingM[1]) : null;
 
   const meta = (p: string) => doc.querySelector(`meta[property="${p}"], meta[name="${p}"]`)?.getAttribute("content") || "";
+  const ipPrice = num(
+    doc.querySelector('[itemprop="price"]')?.getAttribute("content") || doc.querySelector('[itemprop="price"]')?.textContent,
+  );
+
+  // ── 3) 可視テキスト（script/style を除去してから）
+  doc.querySelectorAll("script, style, noscript, template").forEach((el) => el.remove());
+  const text = (doc.body?.textContent || "").replace(/\s+/g, " ");
+  let textPrice: number | null = null;
+  const freq = new Map<number, number>();
+  for (const m of text.matchAll(/([1-9][\d,]{2,8})\s*円/g)) {
+    const n = parseInt(m[1].replace(/,/g, ""), 10);
+    if (n >= 100 && n <= 3_000_000) freq.set(n, (freq.get(n) || 0) + 1);
+  }
+  if (freq.size) textPrice = [...freq.entries()].sort((a, b) => b[1] - a[1] || b[0] - a[0])[0][0];
+
+  const price = ldPrice ?? jsPrice ?? ipPrice ?? textPrice;
+
   const name =
+    ldName ||
     (doc.querySelector("h1")?.textContent || "").trim() ||
     meta("og:title") ||
     (doc.querySelector("title")?.textContent || "").trim();
 
-  const itempropPrice = doc.querySelector('[itemprop="price"]')?.getAttribute("content") ||
-    doc.querySelector('[itemprop="price"]')?.textContent || "";
-  const priceCandidates: number[] = [];
-  const ip = parseInt(itempropPrice.replace(/[^\d]/g, ""), 10);
-  if (ip) priceCandidates.push(ip);
-  for (const m of text.matchAll(/([\d,]{3,})\s*円/g)) {
-    const n = parseInt(m[1].replace(/,/g, ""), 10);
-    if (n >= 100 && n <= 5_000_000) priceCandidates.push(n);
+  const rcM = text.match(/(?:レビュー|口コミ|評価)\D{0,8}([\d,]+)\s*件/) || text.match(/([\d,]+)\s*件のレビュー/);
+  const reviewCount = ldReview ?? jsReview ?? (rcM ? parseInt(rcM[1].replace(/,/g, ""), 10) : null);
+
+  let rating = ldRating ?? jsRating;
+  if (rating == null) {
+    const m = text.match(/([0-5](?:\.\d{1,2})?)\s*(?:点|\/\s*5|★)/);
+    if (m) rating = parseFloat(m[1]);
   }
-  for (const m of text.matchAll(/[¥￥]\s?([\d,]{3,})/g)) {
-    const n = parseInt(m[1].replace(/,/g, ""), 10);
-    if (n >= 100 && n <= 5_000_000) priceCandidates.push(n);
-  }
-  const price = priceCandidates.length
-    ? priceCandidates.sort((a, b) => countOcc(text, String(a)) - countOcc(text, String(b))).pop() ?? priceCandidates[0]
-    : null;
 
-  const pointM = text.match(/([\d,]+)\s*(?:ポイント|pt|P)\b/i) || text.match(/ポイント\s*([\d,]+)/);
-  const point = pointM ? parseInt(pointM[1].replace(/,/g, ""), 10) : null;
-
-  const rcM =
-    text.match(/(?:レビュー|口コミ|評価)\D{0,8}([\d,]+)\s*件/) ||
-    text.match(/([\d,]+)\s*件のレビュー/) ||
-    (doc.querySelector('[itemprop="reviewCount"]')?.getAttribute("content")
-      ? [null, doc.querySelector('[itemprop="reviewCount"]')!.getAttribute("content")!]
-      : null);
-  const reviewCount = rcM ? parseInt(String(rcM[1]).replace(/,/g, ""), 10) : null;
-
-  const rtM =
-    (doc.querySelector('[itemprop="ratingValue"]')?.getAttribute("content")
-      ? [null, doc.querySelector('[itemprop="ratingValue"]')!.getAttribute("content")!]
-      : null) ||
-    text.match(/([0-5](?:\.\d{1,2})?)\s*(?:点|\/\s*5|★)/);
-  const rating = rtM ? parseFloat(String(rtM[1])) : null;
+  const pointM = text.match(/([\d,]{1,7})\s*(?:ポイント|pt)\b/i);
+  let point = pointM ? parseInt(pointM[1].replace(/,/g, ""), 10) : null;
+  if (point != null && price != null && point >= price) point = null; // 誤検出ガード
 
   const janM = text.match(/\b(\d{13})\b/);
 
   return {
     label,
     name: name.slice(0, 80),
-    price,
+    price: price ?? null,
     point,
-    reviewCount,
-    rating: rating != null && rating <= 5 ? rating : null,
+    reviewCount: reviewCount ?? null,
+    rating: rating != null && rating >= 0 && rating <= 5 ? rating : null,
     shop: meta("og:site_name") || "",
     freeShip: /送料無料/.test(text),
     fast: /(あす楽|翌日配送|即日発送|365日発送)/.test(text),
     jan: janM ? janM[1] : "",
   };
-}
-
-function countOcc(hay: string, needle: string): number {
-  return hay.split(needle).length - 1;
 }
 
 export default function RakutenCompetitor() {

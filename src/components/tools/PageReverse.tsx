@@ -30,6 +30,11 @@ interface Analysis {
 
 function analyze(html: string, baseHost: string): Analysis {
   const doc = new DOMParser().parseFromString(html, "text/html");
+  // 本文カウント・頻出語の前に、非表示/非本文要素を除去（script が本文に混ざるのを防ぐ）
+  const jsonLdRaw = Array.from(doc.querySelectorAll<HTMLScriptElement>('script[type="application/ld+json"]')).map(
+    (s) => s.textContent || "",
+  );
+  doc.querySelectorAll("script, style, noscript, template, svg").forEach((el) => el.remove());
   const q = <T extends Element>(s: string) => Array.from(doc.querySelectorAll<T>(s));
 
   const headings = q<HTMLElement>("h1,h2,h3,h4").map((h) => ({
@@ -51,11 +56,10 @@ function analyze(html: string, baseHost: string): Analysis {
       else external++;
     } else if (href.startsWith("/") || href.startsWith("#") || href.startsWith("?")) internal++;
   }
-  const jsonLd = q<HTMLScriptElement>('script[type="application/ld+json"]');
   const jsonLdTypes: string[] = [];
-  for (const s of jsonLd) {
+  for (const raw of jsonLdRaw) {
     try {
-      const j = JSON.parse(s.textContent || "");
+      const j = JSON.parse(raw);
       const arr = Array.isArray(j) ? j : j["@graph"] ? j["@graph"] : [j];
       for (const node of arr) if (node && node["@type"]) jsonLdTypes.push(String(node["@type"]));
     } catch {
