@@ -366,7 +366,7 @@ export const TOOLS: Tool[] = [
     slug: "image-studio",
     mall: "common",
     name: "商品画像スタジオ",
-    summary: "リサイズ・圧縮／モール規定サイズ書き出し／帯・SALEバッジ合成 をタブでまとめた画像加工ツール。すべてブラウザ内処理。",
+    summary: "リサイズ・圧縮／画像結合（縦長づくり）／モール規定サイズ書き出し／帯・SALEバッジ合成 をタブでまとめた画像加工ツール。すべてブラウザ内処理。",
     kind: "client",
     icon: "crop",
     status: "live",

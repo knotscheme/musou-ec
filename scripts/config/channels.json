@@ -5,7 +5,7 @@
   { "query": "D2C ブランド マーケティング LP 解説", "name": "D2Cマーケティング解説", "platform": "common", "category": "転換・CRO" },
 
   { "video": "-ZuYvAAnEtA", "platform": "rakuten", "category": "集客・SEO" },
-  { "query": "楽天市場 コンサル 広告 SEO 解説", "name": "楽天EC 広告・SEO解説", "platform": "rakuten", "category": "集客・SEO" },
+  { "query": "楽天市場 出店 店舗運営 コンサル 億超え", "name": "楽天市場 出店・運営", "platform": "rakuten", "category": "集客・SEO" },
   { "query": "楽天市場 店舗運営 売上アップ RPP広告", "name": "楽天市場 運営・広告", "platform": "rakuten", "category": "集客・SEO" },
   { "query": "楽天市場 SEO 検索順位 対策 出店者", "name": "楽天SEO対策", "platform": "rakuten", "category": "集客・SEO" },
   { "query": "楽天GOLD ページ制作 デザイン 特集ページ", "name": "楽天GOLD ページ制作", "platform": "rakuten", "category": "構築・設定" },
@@ -13,8 +13,9 @@
   { "handle": "@naotomatsushita", "name": "松下直人のYahoo!ショッピング売上アップチャンネル", "platform": "yahoo", "category": "集客・SEO" },
   { "query": "Yahoo!ショッピング 出店 運営 攻略", "name": "Yahoo!ショッピング運営", "platform": "yahoo", "category": "構築・設定" },
   { "query": "Yahoo!ショッピング アイテムマッチ広告 運用 解説", "name": "Yahoo!ショッピング広告運用", "platform": "yahoo", "category": "集客・SEO" },
-  { "query": "ストアクリエイターPro 商品登録 カテゴリ 使い方", "name": "ストアクリエイターPro活用", "platform": "yahoo", "category": "構築・設定" },
-  { "query": "ヤフーショッピング セール 5のつく日 攻略 店舗", "name": "Yahoo!ショッピング販促", "platform": "yahoo", "category": "集客・SEO" },
+  { "query": "Yahoo!ショッピング コンサル 売上アップ 出店者", "name": "Yahoo!ショッピングコンサル", "platform": "yahoo", "category": "業務効率化" },
+  { "query": "ヤフーショッピング 運営代行 集客 検索", "name": "Yahoo!ショッピング集客", "platform": "yahoo", "category": "集客・SEO" },
+  { "query": "Yahoo ショッピング 商品ページ 作り方 改善", "name": "Yahoo!ショッピング商品ページ", "platform": "yahoo", "category": "転換・CRO" },
 
   { "query": "Amazon スポンサープロダクト 広告 運用 解説", "name": "Amazon広告 運用解説", "platform": "amazon", "category": "集客・SEO" },
   { "query": "いとう社長 物販 せどり", "name": "いとう社長（物販）", "platform": "amazon", "category": "業務効率化" },
