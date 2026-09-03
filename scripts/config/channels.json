@@ -1,99 +1,30 @@
 [
-  {
-    "id": "UCtuLOc17lOop5_iKZKPcXYQ",
-    "name": "売れるネットショップの教科書",
-    "platform": "common",
-    "category": "構築・設定"
-  },
-  {
-    "query": "むーさんチャンネル Shopify",
-    "name": "むーさんチャンネル（Shopify）",
-    "platform": "shopify",
-    "category": "構築・設定"
-  },
-  {
-    "query": "いとう社長 物販 せどり",
-    "name": "いとう社長（物販）",
-    "platform": "amazon",
-    "category": "業務効率化"
-  },
-  {
-    "query": "作間せどり",
-    "name": "作間せどり",
-    "platform": "amazon",
-    "category": "業務効率化"
-  },
-  {
-    "query": "寺田式物販スクール 中国輸入",
-    "name": "寺田式物販スクール",
-    "platform": "amazon",
-    "category": "業務効率化"
-  },
+  { "id": "UCtuLOc17lOop5_iKZKPcXYQ", "name": "売れるネットショップの教科書", "platform": "common", "category": "構築・設定" },
+  { "query": "ネットショップ 集客 SNS Instagram 解説", "name": "EC集客・SNS解説", "platform": "common", "category": "集客・SEO" },
+  { "query": "ECサイト CVR改善 コンバージョン率 解説", "name": "EC CVR改善解説", "platform": "common", "category": "転換・CRO" },
+  { "query": "D2C ブランド マーケティング LP 解説", "name": "D2Cマーケティング解説", "platform": "common", "category": "転換・CRO" },
 
-  {
-    "handle": "@naotomatsushita",
-    "name": "松下直人のYahoo!ショッピング売上アップチャンネル",
-    "platform": "yahoo",
-    "category": "集客・SEO"
-  },
-  {
-    "query": "ヤフーショッピング 出店 売上アップ ノウハウ",
-    "name": "ヤフーショッピング運営ノウハウ",
-    "platform": "yahoo",
-    "category": "構築・設定"
-  },
-  {
-    "query": "Yahoo!ショッピング 広告 検索対策 解説",
-    "name": "Yahoo!ショッピング広告・SEO解説",
-    "platform": "yahoo",
-    "category": "業務効率化"
-  },
+  { "video": "-ZuYvAAnEtA", "platform": "rakuten", "category": "集客・SEO" },
+  { "query": "楽天市場 コンサル 広告 SEO 解説", "name": "楽天EC 広告・SEO解説", "platform": "rakuten", "category": "集客・SEO" },
+  { "query": "楽天市場 店舗運営 売上アップ RPP広告", "name": "楽天市場 運営・広告", "platform": "rakuten", "category": "集客・SEO" },
+  { "query": "楽天市場 SEO 検索順位 対策 出店者", "name": "楽天SEO対策", "platform": "rakuten", "category": "集客・SEO" },
+  { "query": "楽天GOLD ページ制作 デザイン 特集ページ", "name": "楽天GOLD ページ制作", "platform": "rakuten", "category": "構築・設定" },
 
-  {
-    "video": "-ZuYvAAnEtA",
-    "platform": "rakuten",
-    "category": "集客・SEO"
-  },
-  {
-    "video": "unCDaG9o350",
-    "platform": "rakuten",
-    "category": "集客・SEO"
-  },
-  {
-    "query": "楽天市場 コンサル 広告 SEO 解説",
-    "name": "楽天EC 広告・SEO解説",
-    "platform": "rakuten",
-    "category": "集客・SEO"
-  },
-  {
-    "query": "Amazon スポンサープロダクト 広告 運用 解説",
-    "name": "Amazon広告 運用解説",
-    "platform": "amazon",
-    "category": "集客・SEO"
-  },
-  {
-    "query": "ネットショップ 集客 SNS Instagram 解説",
-    "name": "EC集客・SNS解説",
-    "platform": "common",
-    "category": "集客・SEO"
-  },
+  { "handle": "@naotomatsushita", "name": "松下直人のYahoo!ショッピング売上アップチャンネル", "platform": "yahoo", "category": "集客・SEO" },
+  { "query": "Yahoo!ショッピング 出店 運営 攻略", "name": "Yahoo!ショッピング運営", "platform": "yahoo", "category": "構築・設定" },
+  { "query": "Yahoo!ショッピング アイテムマッチ広告 運用 解説", "name": "Yahoo!ショッピング広告運用", "platform": "yahoo", "category": "集客・SEO" },
+  { "query": "ストアクリエイターPro 商品登録 カテゴリ 使い方", "name": "ストアクリエイターPro活用", "platform": "yahoo", "category": "構築・設定" },
+  { "query": "ヤフーショッピング セール 5のつく日 攻略 店舗", "name": "Yahoo!ショッピング販促", "platform": "yahoo", "category": "集客・SEO" },
 
-  {
-    "query": "ECサイト CVR改善 コンバージョン率 解説",
-    "name": "EC CVR改善解説",
-    "platform": "common",
-    "category": "転換・CRO"
-  },
-  {
-    "query": "D2C ブランド マーケティング LP 解説",
-    "name": "D2Cマーケティング解説",
-    "platform": "common",
-    "category": "転換・CRO"
-  },
-  {
-    "query": "Shopify 売上アップ CVR 改善",
-    "name": "Shopify CVR改善",
-    "platform": "shopify",
-    "category": "転換・CRO"
-  }
+  { "query": "Amazon スポンサープロダクト 広告 運用 解説", "name": "Amazon広告 運用解説", "platform": "amazon", "category": "集客・SEO" },
+  { "query": "いとう社長 物販 せどり", "name": "いとう社長（物販）", "platform": "amazon", "category": "業務効率化" },
+  { "query": "作間せどり", "name": "作間せどり", "platform": "amazon", "category": "業務効率化" },
+  { "query": "Amazon FBA 出品 販売 メーカー仕入れ 解説", "name": "Amazon物販・メーカー仕入れ", "platform": "amazon", "category": "業務効率化" },
+  { "query": "Amazon 商品ページ A+ ブランド登録 改善 解説", "name": "Amazon商品ページ改善", "platform": "amazon", "category": "転換・CRO" },
+
+  { "query": "むーさんチャンネル Shopify", "name": "むーさんチャンネル（Shopify）", "platform": "shopify", "category": "構築・設定" },
+  { "query": "Shopify 売上アップ CVR 改善", "name": "Shopify CVR改善", "platform": "shopify", "category": "転換・CRO" },
+  { "query": "Shopify 構築 テーマ カスタマイズ Liquid 解説", "name": "Shopify構築・テーマ", "platform": "shopify", "category": "構築・設定" },
+  { "query": "Shopify アプリ おすすめ 使い方 解説", "name": "Shopifyアプリ活用", "platform": "shopify", "category": "業務効率化" },
+  { "query": "Shopify 集客 広告 Instagram SEO 解説", "name": "Shopify集客", "platform": "shopify", "category": "集客・SEO" }
 ]

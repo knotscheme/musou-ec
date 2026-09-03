@@ -29,6 +29,8 @@ const PER_CHANNEL = 20;
 const API_KEY = process.env.YT_API_KEY || "";
 /** これより前に公開された動画は除外（EC情報は古いと使えないため）。MIN_PUBLISHED で上書き可。 */
 const MIN_PUBLISHED = process.env.MIN_PUBLISHED || "2025-01-01";
+/** ラジオ／毎日配信の連番回・ライブ配信・切り抜き等は学習向きでないので除外 */
+const EXCLUDE_TITLE = /ラジオ|ﾗｼﾞｵ|\bradio\b|生配信|ライブ配信|LIVE配信|ライブ配信中|アーカイブ配信|ポッドキャスト|podcast|切り抜き|^#\s?\d{2,4}[\s　]/i;
 
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
@@ -238,13 +240,19 @@ async function main() {
 
   const minTs = new Date(MIN_PUBLISHED).getTime();
   const seen = new Set();
+  let excludedTitle = 0;
   const deduped = all.filter((v) => {
     if (seen.has(v.videoId)) return false;
     seen.add(v.videoId);
     const ts = new Date(v.publishedAt).getTime();
-    return !Number.isNaN(ts) && ts >= minTs;
+    if (Number.isNaN(ts) || ts < minTs) return false;
+    if (EXCLUDE_TITLE.test(v.title || "")) {
+      excludedTitle++;
+      return false;
+    }
+    return true;
   });
-  console.log(`公開日フィルタ: ${MIN_PUBLISHED} 以降のみ → ${deduped.length} 件`);
+  console.log(`フィルタ後: ${MIN_PUBLISHED} 以降 & ラジオ等除外(${excludedTitle}件) → ${deduped.length} 件`);
 
   // 再生回数（統計）をまとめて取得（videos.list は 50件/リクエスト・1 unit）
   if (API_KEY && deduped.length) {
