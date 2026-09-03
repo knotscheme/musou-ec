@@ -129,6 +129,33 @@ export default function RakutenCompetitor() {
   const { ready: extReady } = useExtension();
   const [busyIdx, setBusyIdx] = useState<number | null>(null);
   const [msg, setMsg] = useState("");
+  const [bulk, setBulk] = useState("");
+  const [bulkBusy, setBulkBusy] = useState(false);
+
+  async function runBulk() {
+    const urls = bulk
+      .split(/\r?\n/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((u) => (/^https?:\/\//i.test(u) ? u : "https://" + u));
+    if (!urls.length) return;
+    setBulkBusy(true);
+    const fresh = urls.map((u, i) => ({ label: `競合${String.fromCharCode(65 + i)}`, url: u, html: "" }));
+    setBlocks(fresh);
+    for (let i = 0; i < fresh.length; i++) {
+      setMsg(`一括取得 ${i + 1}/${fresh.length}…`);
+      try {
+        const r = await extRequest<{ text: string }>({ type: "fetchText", url: fresh[i].url }, 30000);
+        fresh[i] = { ...fresh[i], html: r?.text || "" };
+        setBlocks([...fresh]);
+      } catch (e) {
+        setMsg(`${fresh[i].label}: 取得エラー ${(e as Error).message}`);
+      }
+      await new Promise((res) => setTimeout(res, 300));
+    }
+    setMsg(`一括取得 完了（${fresh.length} 件）`);
+    setBulkBusy(false);
+  }
 
   async function fetchBlock(i: number) {
     const raw = blocks[i].url.trim();
@@ -155,10 +182,11 @@ export default function RakutenCompetitor() {
   );
 
   function exportCsv() {
+    const urlByLabel = new Map(blocks.map((b) => [b.label, b.url]));
     downloadCSV("rakuten-competitor", [
-      ["ラベル", "商品名", "価格", "ポイント", "実質価格", "レビュー件数", "評価", "ショップ", "送料無料", "翌日配送", "JAN"],
+      ["ラベル", "URL", "商品名", "価格", "ポイント", "実質価格", "レビュー件数", "評価", "ショップ", "送料無料", "翌日配送", "JAN"],
       ...rows.map((r) => [
-        r.label, r.name, r.price ?? "", r.point ?? "",
+        r.label, urlByLabel.get(r.label) ?? "", r.name, r.price ?? "", r.point ?? "",
         r.price != null ? r.price - (r.point ?? 0) : "",
         r.reviewCount ?? "", r.rating ?? "", r.shop, r.freeShip ? "○" : "", r.fast ? "○" : "", r.jan,
       ]),
@@ -173,6 +201,29 @@ export default function RakutenCompetitor() {
         auto="各枠に競合商品ページのURL（楽天/Yahoo/Amazon）を入れて「拡張で取得」を押すと、HTMLを取得して価格・ポイント・レビュー等を自動抽出します。"
         manual="競合の商品ページを開き、ソース（Ctrl+U → 全選択コピー）を各枠に貼り付け。価格・ポイント・レビュー等を自動抽出します。"
       />
+
+      {extReady && (
+        <div className="card p-3">
+          <p className="mb-1 text-sm font-semibold">URLをまとめて取得（1行1件）</p>
+          <textarea
+            value={bulk}
+            onChange={(e) => setBulk(e.target.value)}
+            rows={4}
+            placeholder={"https://item.rakuten.co.jp/shopA/xxxx/\nhttps://item.rakuten.co.jp/shopB/yyyy/\nhttps://store.shopping.yahoo.co.jp/..."}
+            className="w-full rounded-md border px-3 py-2 font-mono text-xs"
+          />
+          <button
+            onClick={runBulk}
+            disabled={bulkBusy || !bulk.trim()}
+            className="mt-2 rounded-md bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          >
+            {bulkBusy ? "取得中…" : "一括で取得して比較"}
+          </button>
+          <p className="mt-1 text-xs text-[var(--muted)]">
+            ※ 既存の枠は貼り付けたURLで置き換わります。取得後そのまま下の比較表・CSVに反映されます。
+          </p>
+        </div>
+      )}
 
       <div className="space-y-3">
         {blocks.map((b, i) => (
