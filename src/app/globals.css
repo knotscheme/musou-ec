@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 :root {
+  /* ライト固定（各ツール・ページビルダーのCSSが白基調のハードコードを多く含むため、
+     端末のダークモード設定には追従しない）。 */
+  color-scheme: light;
+
   --background: #f6f7f9;
   --surface: #ffffff;
   --surface-soft: #eef0f3;
@@ -15,18 +19,6 @@
   --mall-amazon: #e47911;
   --mall-shopify: #1a8a5a;
   --mall-common: #5b6472;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #101216;
-    --surface: #181b20;
-    --surface-soft: #1f2228;
-    --foreground: #eef0f3;
-    --muted: #9aa3b0;
-    --line: rgba(238, 240, 243, 0.14);
-    --brand: #a78bfa;
-  }
 }
 
 @theme inline {
