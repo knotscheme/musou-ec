@@ -6,6 +6,7 @@ import { ExtensionNote } from "@/components/ExtensionNote";
 import { CopyBox } from "@/components/CopyBox";
 import { wordFrequency } from "@/lib/text";
 import { recordHistory } from "@/lib/history";
+import { useExtension, extRequest } from "@/lib/extension";
 
 interface Analysis {
   title: string;
@@ -100,14 +101,38 @@ function analyze(html: string, baseHost: string): Analysis {
 export default function PageReverse() {
   const [html, setHtml] = useState("");
   const [url, setUrl] = useState("");
+  const { ready: extReady } = useExtension();
+  const [fetching, setFetching] = useState(false);
+  const [fetchMsg, setFetchMsg] = useState("");
+
+  const fullUrl = useMemo(() => (url.trim() ? (/^https?:\/\//i.test(url.trim()) ? url.trim() : "https://" + url.trim()) : ""), [url]);
 
   const host = useMemo(() => {
     try {
-      return url ? new URL(/^https?:\/\//.test(url) ? url : "https://" + url).host : "";
+      return fullUrl ? new URL(fullUrl).host : "";
     } catch {
       return "";
     }
-  }, [url]);
+  }, [fullUrl]);
+
+  async function fetchViaExt() {
+    if (!fullUrl) return;
+    setFetching(true);
+    setFetchMsg("拡張でHTMLを取得中…");
+    try {
+      const r = await extRequest<{ text: string }>({ type: "fetchText", url: fullUrl }, 30000);
+      if (r?.text) {
+        setHtml(r.text);
+        setFetchMsg(`取得しました（${r.text.length.toLocaleString()} 文字）。`);
+      } else {
+        setFetchMsg("空の応答でした。");
+      }
+    } catch (e) {
+      setFetchMsg(`取得エラー：${(e as Error).message}（対応ドメインは楽天/Yahoo/Amazon。それ以外は貼り付けをご利用ください）`);
+    } finally {
+      setFetching(false);
+    }
+  }
 
   const a = useMemo(() => (html.trim().length > 50 ? analyze(html, host) : null), [html, host]);
 
@@ -124,15 +149,27 @@ export default function PageReverse() {
         manual="競合ページを開き、右クリック →「ページのソースを表示」→ 全選択コピー → 下に貼り付け。"
       />
 
-      <Field label="ページURL（任意・内部/外部リンク判定に使用）">
-        <TextInput value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://item.rakuten.co.jp/shop/xxxx/" />
+      <Field label="ページURL（内部/外部リンク判定・拡張取得に使用）">
+        <div className="flex gap-2">
+          <TextInput value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://item.rakuten.co.jp/shop/xxxx/" />
+          {extReady && (
+            <button
+              onClick={fetchViaExt}
+              disabled={fetching || !fullUrl}
+              className="shrink-0 rounded-md bg-[var(--brand)] px-3 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              {fetching ? "取得中…" : "拡張で取得"}
+            </button>
+          )}
+        </div>
       </Field>
+      {fetchMsg && <p className="text-xs text-[var(--muted)]">{fetchMsg}</p>}
       <Field label="ページのHTMLソース">
         <textarea
           value={html}
           onChange={(e) => setHtml(e.target.value)}
           rows={6}
-          placeholder="ページのソース（Ctrl+U → 全選択コピー）を貼り付け"
+          placeholder="ページのソース（Ctrl+U → 全選択コピー）を貼り付け／上の「拡張で取得」でも可"
           className="w-full rounded-md border px-3 py-2 font-mono text-xs"
         />
       </Field>

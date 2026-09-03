@@ -5,6 +5,7 @@ import { ToolShell, Field } from "@/components/ToolShell";
 import { ExtensionNote } from "@/components/ExtensionNote";
 import { downloadCSV } from "@/lib/csv";
 import { recordHistory } from "@/lib/history";
+import { useExtension, extRequest } from "@/lib/extension";
 
 interface Extracted {
   label: string;
@@ -85,10 +86,32 @@ function countOcc(hay: string, needle: string): number {
 }
 
 export default function RakutenCompetitor() {
-  const [blocks, setBlocks] = useState<{ label: string; html: string }[]>([
-    { label: "競合A", html: "" },
-    { label: "競合B", html: "" },
+  const [blocks, setBlocks] = useState<{ label: string; url: string; html: string }[]>([
+    { label: "競合A", url: "", html: "" },
+    { label: "競合B", url: "", html: "" },
   ]);
+  const { ready: extReady } = useExtension();
+  const [busyIdx, setBusyIdx] = useState<number | null>(null);
+  const [msg, setMsg] = useState("");
+
+  async function fetchBlock(i: number) {
+    const raw = blocks[i].url.trim();
+    if (!raw) return;
+    const u = /^https?:\/\//i.test(raw) ? raw : "https://" + raw;
+    setBusyIdx(i);
+    setMsg("");
+    try {
+      const r = await extRequest<{ text: string }>({ type: "fetchText", url: u }, 30000);
+      if (r?.text) {
+        setBlocks((bs) => bs.map((x, k) => (k === i ? { ...x, html: r.text } : x)));
+        setMsg(`${blocks[i].label}: 取得 ${r.text.length.toLocaleString()} 文字`);
+      } else setMsg(`${blocks[i].label}: 空の応答`);
+    } catch (e) {
+      setMsg(`${blocks[i].label}: 取得エラー ${(e as Error).message}`);
+    } finally {
+      setBusyIdx(null);
+    }
+  }
 
   const rows = useMemo(
     () => blocks.filter((b) => b.html.trim().length > 100).map((b) => extract(b.html, b.label)),
@@ -129,21 +152,39 @@ export default function RakutenCompetitor() {
                 </button>
               )}
             </div>
+            {extReady && (
+              <div className="mb-2 flex gap-2">
+                <input
+                  value={b.url}
+                  onChange={(e) => setBlocks(blocks.map((x, k) => (k === i ? { ...x, url: e.target.value } : x)))}
+                  placeholder="競合商品ページURL"
+                  className="flex-1 rounded-md border px-2 py-1 text-xs"
+                />
+                <button
+                  onClick={() => fetchBlock(i)}
+                  disabled={busyIdx === i || !b.url.trim()}
+                  className="shrink-0 rounded-md bg-[var(--brand)] px-3 py-1 text-xs font-semibold text-white disabled:opacity-50"
+                >
+                  {busyIdx === i ? "取得中…" : "拡張で取得"}
+                </button>
+              </div>
+            )}
             <textarea
               value={b.html}
               onChange={(e) => setBlocks(blocks.map((x, k) => (k === i ? { ...x, html: e.target.value } : x)))}
               rows={3}
-              placeholder="競合商品ページのHTMLソースを貼り付け"
+              placeholder="競合商品ページのHTMLソースを貼り付け／上のURL＋「拡張で取得」でも可"
               className="w-full rounded-md border px-3 py-2 font-mono text-xs"
             />
           </div>
         ))}
         <button
-          onClick={() => setBlocks([...blocks, { label: `競合${String.fromCharCode(65 + blocks.length)}`, html: "" }])}
+          onClick={() => setBlocks([...blocks, { label: `競合${String.fromCharCode(65 + blocks.length)}`, url: "", html: "" }])}
           className="rounded-md border px-3 py-1.5 text-sm font-semibold"
         >
           + 競合枠を追加
         </button>
+        {msg && <p className="text-xs text-[var(--muted)]">{msg}</p>}
       </div>
 
       {rows.length > 0 && (

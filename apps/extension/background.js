@@ -126,6 +126,50 @@ async function rakutenRelated(keyword) {
   return [...out];
 }
 
+/** 楽天検索結果での対象商品の順位を調べる。
+ *  target は「shop/itemcode」「item.rakuten.co.jp/shop/itemcode/」「フルURL」いずれでも可。 */
+async function rakutenRank(keyword, target, maxPages) {
+  const norm = (s) =>
+    String(s || "")
+      .trim()
+      .replace(/^https?:\/\//i, "")
+      .replace(/^item\.rakuten\.co\.jp\//i, "")
+      .replace(/[/\s]+$/g, "")
+      .toLowerCase();
+  const needle = norm(target);
+  if (!needle) return { rank: 0, error: "対象（商品URL/コード）が空です" };
+
+  const seen = new Set();
+  let position = 0;
+  const pages = Math.max(1, Math.min(5, maxPages || 3));
+  for (let page = 1; page <= pages; page++) {
+    const url = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(keyword)}/?p=${page}`;
+    let html;
+    try {
+      html = await fetchText(url);
+    } catch (e) {
+      return { rank: 0, checked: seen.size, error: `検索結果の取得に失敗（p${page}）：${(e && e.message) || e}` };
+    }
+    const pageItems = [];
+    for (const m of html.matchAll(/item\.rakuten\.co\.jp\/([a-z0-9_.-]+\/[a-z0-9_.-]+)\/?/gi)) {
+      const key = m[1].toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        pageItems.push(key);
+      }
+    }
+    for (const it of pageItems) {
+      position++;
+      if (it === needle || it.includes(needle) || needle.includes(it)) {
+        return { rank: position, page, checked: seen.size, matched: it };
+      }
+    }
+    if (!pageItems.length) break; // これ以上ページが無い
+    await new Promise((r) => setTimeout(r, 200));
+  }
+  return { rank: 0, checked: seen.size, error: `上位 ${seen.size} 件に見つかりませんでした` };
+}
+
 /** 各候補URLを順に叩いて生の結果（status/先頭240字）を返す診断用 */
 async function probeUrl(url) {
   const t0 = Date.now();
@@ -225,6 +269,14 @@ async function handle(req) {
       return keywords.length
         ? { keywords, tried: calls + relBases.length, related }
         : { keywords: [], debug: lastSuggestError || "候補ゼロ（原因不明）" };
+    }
+
+    case "rakutenRank": {
+      return await rakutenRank(
+        String(req.keyword || "").trim(),
+        String(req.target || "").trim(),
+        Number(req.pages) || 3,
+      );
     }
 
     case "rakutenSuggestProbe": {

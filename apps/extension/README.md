@@ -21,10 +21,12 @@ Chrome Web Store に出さなくても使えます。
   拡張IDをページ側に書かなくて済む relay 方式。
 - `background.js` … 拡張の権限でクロスオリジン fetch。現状の対応リクエスト:
   - `ping` … 接続確認
-  - `fetchText` … 指定URLの本文取得（`host_permissions` の範囲内）
-  - `rakutenSuggest` … シード語＋五十音/アルファベット総当たりで楽天サジェストを深掘り
-- `host_permissions` は楽天ドメインのみ（`suggest/search/www/item/ranking .rakuten.co.jp`）。
-  検索順位計測・競合リサーチを実装する際に必要なドメインを追記する。
+  - `fetchText` … 指定URLの本文取得（`host_permissions` の範囲内）。競合リサーチ／ページ逆算で使用
+  - `rakutenSuggest` … シード語＋五十音/アルファベット総当たり＋検索結果ページの関連語で楽天サジェストを深掘り
+  - `rakutenRank` … 楽天検索結果（最大5ページ）から対象商品の順位を算出
+  - `rakutenSuggestProbe` … サジェスト系エンドポイントの疎通診断
+- `host_permissions` … `*.rakuten.co.jp` / `*.yahoo.co.jp` / `*.amazon.co.jp` / `*.amazon.com`。
+  これ以外のドメインは拡張取得できないので、その場合はページのHTMLを手動貼り付けする。
 
 ## Chrome Web Store に出す場合（任意・後日）
 

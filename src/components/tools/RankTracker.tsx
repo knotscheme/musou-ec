@@ -6,6 +6,7 @@ import { ExtensionNote } from "@/components/ExtensionNote";
 import { idbGet, idbPut } from "@/lib/idb";
 import { getOwnerId } from "@/lib/guest";
 import { downloadCSV } from "@/lib/csv";
+import { useExtension, extRequest } from "@/lib/extension";
 
 interface Entry {
   id: string;
@@ -34,8 +35,36 @@ export default function RankTracker() {
   const [rank, setRank] = useState("");
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [note, setNote] = useState("");
+  const { ready: extReady } = useExtension();
+  const [checking, setChecking] = useState(false);
+  const [checkMsg, setCheckMsg] = useState("");
 
   const owner = typeof window !== "undefined" ? getOwnerId() : "";
+
+  async function checkRank() {
+    if (!kw.trim() || !target.trim()) {
+      setCheckMsg("キーワードと対象（商品URL/コード）を入力してください。");
+      return;
+    }
+    setChecking(true);
+    setCheckMsg("拡張で楽天検索を確認中…（上位約135位まで）");
+    try {
+      const r = await extRequest<{ rank: number; page?: number; checked?: number; error?: string }>(
+        { type: "rakutenRank", keyword: kw.trim(), target: target.trim(), pages: 3 },
+        60000,
+      );
+      if (r?.rank) {
+        setRank(String(r.rank));
+        setCheckMsg(`${r.rank} 位（${r.page}ページ目 / ${r.checked} 件を確認）。「記録を追加」で保存できます。`);
+      } else {
+        setCheckMsg(r?.error || "見つかりませんでした。");
+      }
+    } catch (e) {
+      setCheckMsg(`取得エラー：${(e as Error).message}`);
+    } finally {
+      setChecking(false);
+    }
+  }
 
   useEffect(() => {
     loadAll().then(setAll);
@@ -109,9 +138,21 @@ export default function RankTracker() {
           <Field label="日付"><input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full rounded-md border px-3 py-2 text-sm" /></Field>
           <Field label="メモ"><TextInput value={note} onChange={(e) => setNote(e.target.value)} /></Field>
         </div>
-        <button onClick={add} className="mt-2 rounded-md bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white">
-          記録を追加
-        </button>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          <button onClick={add} className="rounded-md bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white">
+            記録を追加
+          </button>
+          {extReady && (
+            <button
+              onClick={checkRank}
+              disabled={checking}
+              className="rounded-md border border-[var(--brand)] px-4 py-2 text-sm font-semibold text-[var(--brand)] disabled:opacity-50"
+            >
+              {checking ? "確認中…" : "拡張で順位を取得"}
+            </button>
+          )}
+        </div>
+        {checkMsg && <p className="mt-1.5 text-xs text-[var(--muted)]">{checkMsg}</p>}
       </div>
 
       {byKeyword.length > 0 && (

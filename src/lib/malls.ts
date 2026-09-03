@@ -123,19 +123,19 @@ export const TOOLS: Tool[] = [
     slug: "rank-tracker",
     mall: "rakuten",
     name: "検索順位自動計測ツール",
-    summary: "登録キーワードの検索順位を定期取得し推移をローカル保存。拡張機能（準備中）から実行。",
+    summary: "キーワード×対象商品の楽天検索順位を MUSOU-EC コネクタで取得、推移・ベスト/ワーストをこの端末に記録。手入力でも可。",
     kind: "extension",
     icon: "chart",
-    status: "wip",
+    status: "live",
   },
   {
     slug: "rakuten-competitor",
     mall: "rakuten",
     name: "競合店舗リサーチ",
-    summary: "競合商品ページから価格・ポイント・レビュー数/評価・ランキングを取得し比較表化。拡張機能（準備中）連携。",
+    summary: "競合商品ページ（楽天/Yahoo/Amazon）を MUSOU-EC コネクタでURL取得し、価格・ポイント・実質価格・レビュー数/評価を比較表・CSV化。",
     kind: "extension",
     icon: "users",
-    status: "wip",
+    status: "live",
   },
 
   // ── Yahoo!ショッピング ────────────────────
@@ -484,10 +484,10 @@ export const TOOLS: Tool[] = [
     slug: "page-reverse",
     mall: "common",
     name: "ページ構成リバースエンジニアリング",
-    summary: "競合商品ページの DOM 構成・見出し・画像枚数・文字数を抽出。拡張機能（準備中）連携。",
+    summary: "競合ページのHTMLを MUSOU-EC コネクタでURL取得し、DOM構成・見出し階層・画像枚数/alt率・文字数・構造化データ・頻出語を抽出。貼り付けでも可。",
     kind: "extension",
     icon: "layers",
-    status: "wip",
+    status: "live",
   },
 ];
 
