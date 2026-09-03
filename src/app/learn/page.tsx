@@ -90,15 +90,14 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
     );
   }, [platform, purpose, sort, get]);
 
-  const platformTabs: { key: MallId | "all" | "fav"; label: string; color?: string }[] = [
+  const platformTabs: { key: MallId | "all"; label: string; color?: string }[] = [
     { key: "all", label: "すべて" },
     ...MALL_ORDER.map((m) => ({ key: m, label: MALLS[m].label, color: MALLS[m].color })),
-    { key: "fav", label: "お気に入り" },
   ];
 
   return (
     <div className="mt-5">
-      <div className="mb-3 flex gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="mb-3 flex flex-wrap items-center gap-1.5">
         {platformTabs.map((t) => {
           const on = platform === t.key;
           return (
@@ -110,11 +109,19 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
               }`}
               style={on ? { background: t.color ?? "var(--brand)" } : undefined}
             >
-              {t.key === "fav" && <Glyph name="bookmark" size={12} />}
               {t.label}
             </button>
           );
         })}
+        <button
+          onClick={() => setPlatform("fav")}
+          className={`ml-auto flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+            platform === "fav" ? "border-[var(--brand)] bg-[var(--brand)] text-white" : "text-[var(--muted)]"
+          }`}
+        >
+          <Glyph name="bookmark" size={12} />
+          お気に入り
+        </button>
       </div>
 
       <div className="mb-4 flex flex-wrap items-center gap-1.5">
