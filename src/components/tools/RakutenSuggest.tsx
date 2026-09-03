@@ -24,13 +24,15 @@ export default function RakutenSuggest() {
     setFetching(true);
     setFetchMsg("拡張で取得中…（十数秒かかります）");
     try {
-      const r = await extRequest<{ keywords: string[] }>(
+      const r = await extRequest<{ keywords: string[]; debug?: string }>(
         { type: "rakutenSuggest", seed: seed.trim(), mode },
         90000,
       );
       const got = r?.keywords ?? [];
       if (!got.length) {
-        setFetchMsg("候補が取得できませんでした。楽天側の仕様変更の可能性があります（手動貼り付けをご利用ください）。");
+        setFetchMsg(
+          `候補が取得できませんでした。手動貼り付けをご利用ください。${r?.debug ? `（詳細: ${r.debug}）` : ""}`,
+        );
       } else {
         setRaw((prev) => [prev, ...got].filter(Boolean).join("\n"));
         setFetchMsg(`${got.length} 件を取得しました。`);

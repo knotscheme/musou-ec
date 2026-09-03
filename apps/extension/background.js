@@ -9,13 +9,29 @@ const ALPHA = "abcdefghijklmnopqrstuvwxyz".split("");
 async function fetchText(url) {
   const res = await fetch(url, { credentials: "omit", headers: { "Accept": "*/*" } });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.text();
+  // 楽天サジェストは oe 指定を無視して EUC-JP を返すことがあるので、
+  // UTF-8 で読んで文字化け（U+FFFD）が出たら euc-jp で読み直す。
+  const buf = await res.arrayBuffer();
+  let text = new TextDecoder("utf-8").decode(buf);
+  if (text.includes("�")) {
+    try {
+      text = new TextDecoder("euc-jp").decode(buf);
+    } catch (_e) {
+      /* euc-jp 非対応環境ならそのまま */
+    }
+  }
+  return text;
 }
+
+let lastSuggestError = "";
 
 /** 楽天サジェスト（1キーワード）。エンドポイント仕様は変わりうるので複数試す。 */
 async function rakutenSuggestOne(keyword) {
   const q = encodeURIComponent(keyword);
+  const cb = `jsonp${Date.now()}`;
   const tryUrls = [
+    `https://api.suggest.search.rakuten.co.jp/suggest?cl=dir&rid=0&sid=0&q=${q}&oe=utf-8&sl=pm_swg&cb=${cb}`,
+    `https://api.suggest.search.rakuten.co.jp/suggest?cl=dir&rid=0&sid=0&q=${q}&sl=pm_swg&cb=${cb}`,
     `https://suggest.rakuten.co.jp/?q=${q}&format=json&count=10`,
     `https://suggest.rakuten.co.jp/?q=${q}&format=jsonp&count=10&callback=cb`,
   ];
@@ -23,13 +39,14 @@ async function rakutenSuggestOne(keyword) {
     try {
       let body = await fetchText(url);
       // JSONP なら callback(...) を剥がす
-      const m = body.match(/^\s*[\w$.]+\((.*)\)\s*;?\s*$/s);
+      const m = body.match(/^[^(]*\((.*)\)[\s;]*$/s);
       if (m) body = m[1];
-      const json = JSON.parse(body);
+      const json = JSON.parse(body.trim());
       const out = extractSuggestStrings(json);
       if (out.length) return out;
-    } catch (_e) {
-      /* 次を試す */
+      lastSuggestError = "応答は取得できたが候補文字列が見つからない（形式変更の可能性）";
+    } catch (e) {
+      lastSuggestError = `${url.split("?")[0]} → ${(e && e.message) || e}`;
     }
   }
   return [];
@@ -75,7 +92,10 @@ async function handle(req) {
         got.forEach((k) => all.add(k));
         await new Promise((r) => setTimeout(r, 120));
       }
-      return { keywords: [...all].sort((a, b) => a.localeCompare(b, "ja")) };
+      const keywords = [...all].sort((a, b) => a.localeCompare(b, "ja"));
+      return keywords.length
+        ? { keywords }
+        : { keywords: [], debug: lastSuggestError || "候補ゼロ（原因不明）" };
     }
 
     default:

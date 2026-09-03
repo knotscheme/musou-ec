@@ -1,10 +1,11 @@
 {
   "manifest_version": 3,
   "name": "MUSOU-EC コネクタ",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MUSOU-EC の拡張連携ツール（楽天サジェスト取得ほか）を、あなたのブラウザから直接実行します。サーバープロキシは使いません。",
   "permissions": ["storage"],
   "host_permissions": [
+    "https://api.suggest.search.rakuten.co.jp/*",
     "https://suggest.rakuten.co.jp/*",
     "https://search.rakuten.co.jp/*",
     "https://www.rakuten.co.jp/*",
