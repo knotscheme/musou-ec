@@ -70,11 +70,14 @@ export default function LearnPage() {
 
 /* ───────────────────── 一覧（ポータル） ───────────────────── */
 
+const PAGE = 24;
+
 function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
   const { get } = useLearn();
   const [platform, setPlatform] = useState<MallId | "all" | "fav">("all");
   const [purpose, setPurpose] = useState<string | "all">("all");
   const [sort, setSort] = useState<SortKey>("new");
+  const [limit, setLimit] = useState(PAGE);
 
   const list = useMemo(() => {
     const v = VIDEOS.filter((x) => {
@@ -89,6 +92,10 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
         : new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
     );
   }, [platform, purpose, sort, get]);
+
+  // 絞り込み・並び替えを変えたら先頭に戻す
+  useEffect(() => setLimit(PAGE), [platform, purpose, sort]);
+  const shown = list.slice(0, limit);
 
   const platformTabs: { key: MallId | "all"; label: string; color?: string }[] = [
     { key: "all", label: "すべて" },
@@ -172,11 +179,23 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
           )}
         </div>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {list.map((v) => (
-            <VideoCard key={v.videoId} video={v} onOpen={() => onOpen(v.videoId)} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {shown.map((v) => (
+              <VideoCard key={v.videoId} video={v} onOpen={() => onOpen(v.videoId)} />
+            ))}
+          </div>
+          {limit < list.length && (
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => setLimit((n) => n + PAGE)}
+                className="rounded-md border px-5 py-2 text-sm font-semibold"
+              >
+                さらに表示（残り {list.length - limit} 本）
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
@@ -190,7 +209,7 @@ function VideoCard({ video, onOpen }: { video: LearnVideo; onOpen: () => void })
 
   return (
     <div
-      className="card mall-bar flex flex-col overflow-hidden p-0"
+      className="card mall-bar flex flex-col overflow-hidden p-0 [contain-intrinsic-size:auto_320px] [content-visibility:auto]"
       style={{ ["--mall" as string]: mall.color }}
     >
       <button onClick={onOpen} className="relative block text-left">
