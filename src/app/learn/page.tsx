@@ -97,7 +97,9 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
 
   return (
     <div className="mt-5">
-      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+      {/* スクロール時に上部固定するフィルタバー（ダッシュボードのモールタブと同じ挙動） */}
+      <div className="sticky top-0 z-20 mb-4 -mx-4 space-y-1.5 border-b bg-[color-mix(in_srgb,var(--surface)_82%,transparent)] px-4 py-2 backdrop-blur-md sm:mx-0 sm:rounded-xl sm:border sm:p-2 lg:top-2">
+      <div className="flex flex-wrap items-center gap-1.5">
         {platformTabs.map((t) => {
           const on = platform === t.key;
           return (
@@ -124,7 +126,7 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
         </button>
       </div>
 
-      <div className="mb-4 flex flex-wrap items-center gap-1.5">
+      <div className="flex flex-wrap items-center gap-1.5">
         {(["all", ...PURPOSE_CATEGORIES] as const).map((p) => {
           const on = purpose === p;
           return (
@@ -155,6 +157,7 @@ function VideoList({ onOpen }: { onOpen: (id: string) => void }) {
             </button>
           ))}
         </span>
+      </div>
       </div>
 
       {list.length === 0 ? (
