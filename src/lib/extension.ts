@@ -13,10 +13,16 @@ if (typeof window !== "undefined") {
     if (ev.source !== window) return;
     const d = ev.data as { source?: string; type?: string; version?: string };
     if (d && d.source === "musou-ec-ext" && d.type === "ready") {
-      extVersion = d.version || "0";
-      readyListeners.forEach((cb) => cb(extVersion!));
+      if (extVersion === null) {
+        extVersion = d.version || "0";
+        readyListeners.forEach((cb) => cb(extVersion!));
+      }
     }
   });
+  // 拡張の content script が先に "ready" を投げて取りこぼしても拾えるよう hello を数回送る
+  const hello = () => window.postMessage({ source: "musou-ec-page", type: "hello" }, "*");
+  hello();
+  [100, 400, 1200, 3000].forEach((ms) => setTimeout(hello, ms));
 }
 
 export function hasExtension(): boolean {

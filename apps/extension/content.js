@@ -6,20 +6,29 @@
 (function () {
   const TAG = "musou-ec";
 
+  const VERSION = chrome.runtime.getManifest().version;
+
   // 起動を知らせる（ページ側の hasExtension 判定に使う）
   function announce() {
-    window.postMessage(
-      { source: `${TAG}-ext`, type: "ready", version: chrome.runtime.getManifest().version },
-      "*",
-    );
+    window.postMessage({ source: `${TAG}-ext`, type: "ready", version: VERSION }, "*");
   }
+  // document_start だとページ側のリスナー登録前になりうるので、数回＋各イベントで送る
   announce();
+  [50, 200, 600, 1500, 3000].forEach((ms) => setTimeout(announce, ms));
   document.addEventListener("DOMContentLoaded", announce);
+  window.addEventListener("load", announce);
 
   window.addEventListener("message", (ev) => {
     if (ev.source !== window) return;
     const d = ev.data;
-    if (!d || d.source !== `${TAG}-page` || !d.id || !d.req) return;
+    if (!d || d.source !== `${TAG}-page`) return;
+
+    // ページ側からの hello に即応（リスナーが後から登録されたケースを救済）
+    if (d.type === "hello") {
+      announce();
+      return;
+    }
+    if (!d.id || !d.req) return;
 
     chrome.runtime.sendMessage({ __musou: "req", id: d.id, req: d.req }, (res) => {
       const err = chrome.runtime.lastError;
