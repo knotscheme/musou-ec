@@ -5,12 +5,14 @@ import Link from "next/link";
 import { MALLS, type MallId } from "@/lib/malls";
 import { ToolIcon } from "@/components/ToolIcon";
 import { StatusBadge, VoteButton } from "@/components/ToolMeta";
+import { getOwnerId } from "@/lib/guest";
 import {
   SEED_IDEAS,
   MALL_CHOICES,
   ENDPOINT_CONFIGURED,
   submitIdea,
   listLocalIdeas,
+  deleteLocalIdea,
   rankedWipTools,
   getVotes,
   pingEndpoint,
@@ -28,6 +30,11 @@ export default function WishlistPage() {
   const [votes, setVotes] = useState<Record<string, number>>({});
   const [tick, setTick] = useState(0);
   const [pingMsg, setPingMsg] = useState("");
+  const [myOwner, setMyOwner] = useState("");
+
+  useEffect(() => {
+    setMyOwner(getOwnerId());
+  }, []);
 
   useEffect(() => {
     listLocalIdeas().then(setLocal);
@@ -182,6 +189,19 @@ export default function WishlistPage() {
               </div>
               <span className="text-xs text-[var(--muted)]">{idea.count} 票</span>
               <VoteButton voteId={`idea:${idea.id}`} onChange={() => getVotes().then(setVotes)} />
+              {idea.owner !== "seed" && myOwner && idea.owner === myOwner && (
+                <button
+                  onClick={async () => {
+                    if (!confirm("この投稿を取り消しますか？")) return;
+                    await deleteLocalIdea(idea.id);
+                    setTick((n) => n + 1);
+                  }}
+                  title="自分の投稿を取り消す"
+                  className="shrink-0 rounded border px-2 py-1 text-[11px] font-semibold text-[var(--muted)] hover:text-[var(--foreground)]"
+                >
+                  取消
+                </button>
+              )}
             </div>
           ))}
         </div>

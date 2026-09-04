@@ -111,6 +111,13 @@ export async function listLocalIdeas(): Promise<IdeaSubmission[]> {
   return readIdeas();
 }
 
+/** 自分の端末から投稿したアイデアを取り消す（集計側にも idea-delete を通知）。 */
+export async function deleteLocalIdea(id: string): Promise<void> {
+  const list = await readIdeas();
+  await writeIdeas(list.filter((x) => x.id !== id));
+  post("idea-delete", { id });
+}
+
 /** 開発中ツール一覧を「投票数の多い順」で返す（優先度ランキング用） */
 export async function rankedWipTools() {
   const votes = await readVotes();
