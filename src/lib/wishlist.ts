@@ -62,12 +62,17 @@ async function writeIdeas(list: IdeaSubmission[]): Promise<void> {
 
 function post(kind: string, payload: Record<string, unknown>): void {
   if (!ENDPOINT) return;
+  const data = { kind, owner: getOwnerId(), ts: String(Date.now()), ...payload };
+  // GAS は /exec への POST が 302 で GET に化けることがあるため、
+  // データを本文(JSON)とクエリ文字列の両方に載せる（doGet/doPost どちらでも書ける）。
+  const qs = new URLSearchParams();
+  for (const [k, v] of Object.entries(data)) qs.set(k, String(v));
+  const url = `${ENDPOINT}${ENDPOINT.includes("?") ? "&" : "?"}${qs.toString()}`;
   try {
-    fetch(ENDPOINT, {
+    fetch(url, {
       method: "POST",
       mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ kind, owner: getOwnerId(), ts: Date.now(), ...payload }),
+      body: JSON.stringify(data),
     }).catch(() => {});
   } catch {
     /* ignore */
@@ -116,3 +121,8 @@ export async function rankedWipTools() {
 
 export const MALL_CHOICES: (MallId | "any")[] = ["any", ...MALL_ORDER];
 export const ENDPOINT_CONFIGURED = Boolean(ENDPOINT);
+
+/** 集計先GASへ疎通確認の1件を送る（responses シートに kind=test の行が増える）。 */
+export function pingEndpoint(): void {
+  post("test", { note: "接続テスト" });
+}

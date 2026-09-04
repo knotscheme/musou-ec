@@ -13,6 +13,7 @@ import {
   listLocalIdeas,
   rankedWipTools,
   getVotes,
+  pingEndpoint,
   type IdeaSubmission,
 } from "@/lib/wishlist";
 
@@ -26,6 +27,7 @@ export default function WishlistPage() {
   const [ranked, setRanked] = useState<Awaited<ReturnType<typeof rankedWipTools>>>([]);
   const [votes, setVotes] = useState<Record<string, number>>({});
   const [tick, setTick] = useState(0);
+  const [pingMsg, setPingMsg] = useState("");
 
   useEffect(() => {
     listLocalIdeas().then(setLocal);
@@ -71,6 +73,20 @@ export default function WishlistPage() {
           ? " 投票は集計サーバーに送信されます。"
           : " 現在はこの端末に保存されます（集計エンドポイント未設定）。"}
       </p>
+      {ENDPOINT_CONFIGURED && (
+        <p className="mt-1 text-xs">
+          <button
+            onClick={() => {
+              pingEndpoint();
+              setPingMsg("テスト送信しました。数秒後にスプレッドシートの responses シートを確認してください。");
+            }}
+            className="text-[var(--muted)] underline"
+          >
+            集計先へ送信テスト
+          </button>
+          {pingMsg && <span className="ml-2 text-[var(--muted)]">{pingMsg}</span>}
+        </p>
+      )}
 
       {/* 投稿フォーム */}
       <form onSubmit={handleSubmit} className="mt-6 card space-y-3 p-5">
