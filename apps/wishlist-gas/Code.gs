@@ -23,6 +23,25 @@ function doPost(e) {
 }
 
 function doGet(e) {
+  // ?debug=1 … 書き込み先スプレッドシートの情報を返す（原因切り分け用・認証不要）
+  if (e && e.parameter && e.parameter.debug) {
+    try {
+      var ss = _ss();
+      var names = ss.getSheets().map(function (s) {
+        return s.getName() + '(' + s.getLastRow() + '行)';
+      });
+      return _json({
+        ok: true,
+        spreadsheetName: ss.getName(),
+        spreadsheetId: ss.getId(),
+        spreadsheetUrl: ss.getUrl(),
+        sheets: names,
+        boundVia: SpreadsheetApp.getActiveSpreadsheet() ? 'active(bound)' : 'openById(property)',
+      });
+    } catch (err) {
+      return _json({ ok: false, error: String(err) });
+    }
+  }
   // kind パラメータがあれば「書き込み」。無ければ集計 JSON（ADMIN_TOKEN 必須）。
   if (e && e.parameter && e.parameter.kind) return _handle(e);
   return _adminSummary(e);
@@ -120,11 +139,12 @@ function _adminSummary(e) {
 }
 
 function _ss() {
+  // スクリプトプロパティ SPREADSHEET_ID を最優先（バインド先がズレていても確実に狙える）
+  var id = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
+  if (id) return SpreadsheetApp.openById(id);
   var active = SpreadsheetApp.getActiveSpreadsheet();
   if (active) return active;
-  var id = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
-  if (!id) throw new Error('SPREADSHEET_ID プロパティが未設定です');
-  return SpreadsheetApp.openById(id);
+  throw new Error('SPREADSHEET_ID プロパティを設定してください');
 }
 
 function _appendRow(ss, name, headers, values) {
