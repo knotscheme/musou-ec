@@ -33,6 +33,8 @@ jobs:
         run: npm run build
         env:
           PAGES_BASE_PATH: /musou-ec
+          # アンケート集計先（GAS ウェブアプリ URL）。未設定なら各ブラウザ内保存のみ。
+          NEXT_PUBLIC_WISHLIST_ENDPOINT: ${{ secrets.WISHLIST_ENDPOINT }}
       - run: touch out/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
