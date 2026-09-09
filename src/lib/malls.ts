@@ -137,6 +137,16 @@ export const TOOLS: Tool[] = [
     icon: "users",
     status: "live",
   },
+  {
+    slug: "rakuten-violation-risk",
+    mall: "rakuten",
+    name: "楽天 違反点数累積リスク＆リセット日計算機",
+    summary:
+      "過去の違反履歴を登録すると、過去365日の累積点数・危険度（安全/警戒/危険）・点数が消えてリセットされる日を自動計算。履歴はこの端末に保存。",
+    kind: "client",
+    icon: "alert",
+    status: "live",
+  },
 
   // ── Yahoo!ショッピング ────────────────────
   {

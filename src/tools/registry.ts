@@ -35,6 +35,7 @@ import RakutenCompetitor from "@/components/tools/RakutenCompetitor";
 import RakutenSuggest from "@/components/tools/RakutenSuggest";
 import RankTracker from "@/components/tools/RankTracker";
 import RakutenPageBuilder from "@/components/tools/RakutenPageBuilder";
+import RakutenViolationRisk from "@/components/tools/RakutenViolationRisk";
 import YahooPageBuilder from "@/components/tools/YahooPageBuilder";
 // 統合ハブ（複数ツールをタブで内包）
 import ImageStudio from "@/components/tools/ImageStudio";
@@ -85,6 +86,7 @@ export const TOOL_COMPONENTS: Record<string, ComponentType> = {
   "rakuten-suggest": RakutenSuggest,
   "rank-tracker": RankTracker,
   "rakuten-page-builder": RakutenPageBuilder,
+  "rakuten-violation-risk": RakutenViolationRisk,
   "yahoo-page-builder": YahooPageBuilder,
   // 統合ハブ
   "image-studio": ImageStudio,
