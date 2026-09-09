@@ -25,6 +25,11 @@ function ToolCard({ slug, onRemove }: { slug: string; onRemove?: () => void }) {
       className="card mall-bar flex gap-3 p-3"
       style={{ ["--mall" as string]: mall.color }}
     >
+      {tool.external && (
+        <span className="pointer-events-none absolute bottom-1 right-2 text-[10px] font-medium leading-none tracking-wide text-[var(--muted)] opacity-45">
+          PR
+        </span>
+      )}
       <ToolIcon name={tool.icon} color={mall.color} size={36} />
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-1">

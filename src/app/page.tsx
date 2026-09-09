@@ -183,6 +183,11 @@ export default function Dashboard() {
                         )}
                       </span>
                     </div>
+                    {tool.external && (
+                      <span className="pointer-events-none absolute bottom-1.5 right-2 text-[10px] font-medium leading-none tracking-wide text-[var(--muted)] opacity-45">
+                        PR
+                      </span>
+                    )}
                   </>
                 );
                 return tool.external ? (
