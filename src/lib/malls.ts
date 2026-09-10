@@ -500,6 +500,16 @@ export const TOOLS: Tool[] = [
     status: "live",
   },
   {
+    slug: "csv-rename",
+    mall: "common",
+    name: "CSV一括リネーム",
+    summary:
+      "複数ファイル・フォルダーの名前を、連番付与／文字の追加・削除・置換／拡張子変更／大文字小文字・全角半角／日時付与のルールを重ねて一括変換。プレビュー・アンドゥ付きで、変換マップCSVとリネーム済みZIP（適用/元に戻すスクリプト同梱）を出力。CSVの対応表リネームも可。",
+    kind: "client",
+    icon: "pencil",
+    status: "live",
+  },
+  {
     slug: "photo-cull",
     mall: "common",
     name: "撮影データ一括整理",

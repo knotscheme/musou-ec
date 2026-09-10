@@ -413,6 +413,16 @@ function parseTiffDateTime(v: DataView, tiff: number, end: number): number | nul
   return ms;
 }
 
+/** JPEG の EXIF 撮影日時（ms epoch）を読む。無ければ null。他ツールからも使う。 */
+export async function readExifCaptureMs(file: File): Promise<number | null> {
+  try {
+    const head = await file.slice(0, 256 * 1024).arrayBuffer();
+    return parseExifDateTime(head);
+  } catch {
+    return null;
+  }
+}
+
 // ============================================================================
 // 解析フェーズ
 // ============================================================================
