@@ -13,6 +13,7 @@ import {
   newRule,
   RULE_LABELS,
   splitName,
+  supportsIncludeExt,
   type RenameInput,
   type RenameRule,
   type RuleType,
@@ -21,6 +22,8 @@ import {
 interface Item {
   file: File;
   name: string;
+  /** 取り込み元フォルダ（相対）。単体ファイルは "" */
+  folder: string;
   lastModified: number;
   exifDate: number | null;
   exifTried: boolean;
@@ -52,6 +55,8 @@ export default function CsvRename() {
   const [filter, setFilter] = useState<FilterKey>("all");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
+  const [showEditor, setShowEditor] = useState(false);
+  const [editorText, setEditorText] = useState("");
 
   // ルール履歴（元に戻す / やり直す）
   const [history, setHistory] = useState<{ past: RenameRule[][]; future: RenameRule[][] }>({
@@ -77,18 +82,24 @@ export default function CsvRename() {
     setRules(nxt);
   }
 
-  async function addFiles(files: File[]) {
-    if (!files.length) return;
-    const add: Item[] = files.map((file) => ({
-      file,
-      name: file.name,
-      lastModified: file.lastModified,
-      exifDate: null,
-      exifTried: false,
-    }));
+  function addFiles(entries: { file: File; path?: string }[]) {
+    if (!entries.length) return;
+    const add: Item[] = entries.map(({ file, path }) => {
+      const p = path || file.webkitRelativePath || file.name;
+      const slash = p.lastIndexOf("/");
+      return {
+        file,
+        name: file.name,
+        folder: slash > 0 ? p.slice(0, slash) : "",
+        lastModified: file.lastModified,
+        exifDate: null,
+        exifTried: false,
+      };
+    });
     setItems((prev) => {
-      const seen = new Set(prev.map((p) => p.name + " " + p.file.size));
-      return [...prev, ...add.filter((a) => !seen.has(a.name + " " + a.file.size))];
+      const key = (it: Item) => `${it.folder}${it.name}${it.file.size}`;
+      const seen = new Set(prev.map(key));
+      return [...prev, ...add.filter((a) => !seen.has(key(a)))];
     });
     setFilter("all");
   }
@@ -144,6 +155,8 @@ export default function CsvRename() {
     return rows;
   }, [rows, filter]);
 
+  const hasFolders = useMemo(() => items.some((it) => it.folder), [items]);
+
   // ---- ルール編集 ----
   const patchRule = (id: string, patch: Partial<RenameRule>) =>
     commit((cur) => cur.map((r) => (r.id === id ? ({ ...r, ...patch } as RenameRule) : r)));
@@ -171,7 +184,7 @@ export default function CsvRename() {
         pairs.push([from, to]);
       }
       if (!pairs.length) {
-        setMsg("CSVから「旧名, 新名」の行を読み取れませんでした。1列目=元の名前, 2列目=新しい名前。");
+        setMsg("CSVから「旧名, 新名」の行を読み取れませんでした。1列目=元の名前, 2列目=新しい名前。「テンプレCSV」で雛形を出力できます。");
         return;
       }
       commit((cur) => {
@@ -184,6 +197,40 @@ export default function CsvRename() {
       setMsg(`CSVから ${pairs.length} 件の対応を読み込みました（「CSVで対応表リネーム」ルール）。`);
     };
     reader.readAsText(file);
+  }
+
+  function downloadTemplate() {
+    const rowsOut: (string | number)[][] = [["元ファイル名", "新ファイル名"]];
+    if (items.length) {
+      // 読み込み済みファイル名を1列目に、2列目は同じ名前（編集の下敷き）
+      for (const it of items) rowsOut.push([it.name, it.name]);
+    } else {
+      rowsOut.push(["IMG_0001.jpg", "トップ_メイン.jpg"], ["IMG_0002.jpg", "トップ_サブ.jpg"]);
+    }
+    downloadCSV("rename-template", rowsOut);
+  }
+
+  function openEditor() {
+    setEditorText(rows.map((r) => r.newName).join("\n"));
+    setShowEditor(true);
+  }
+  function applyTextEditor() {
+    const names = editorText.split(/\r?\n/).map((l) => l.trim());
+    while (names.length && names[names.length - 1] === "") names.pop();
+    if (!names.length) {
+      setMsg("テキストエディタが空です。1行に1つ、変更後の名前を入れてください。");
+      return;
+    }
+    commit((cur) => [
+      ...cur.filter((r) => r.type !== "textOverride"),
+      { ...newRule("textOverride"), names } as RenameRule,
+    ]);
+    setShowEditor(false);
+    setMsg(
+      names.length === items.length
+        ? `テキストエディタの ${names.length} 行を反映しました（一覧の順番どおり）。`
+        : `テキストエディタの ${names.length} 行を反映（ファイルは ${items.length} 件）。行数がずれると末尾が合いません。`,
+    );
   }
 
   function mapRows(): (string | number)[][] {
@@ -215,23 +262,28 @@ export default function CsvRename() {
       const zip = new JSZip();
       const apply: string[] = ["# 元のフォルダで実行すると、その場でリネームします", "$ErrorActionPreference = 'Stop'"];
       const undoLines: string[] = ["# リネームを元に戻します", "$ErrorActionPreference = 'Stop'"];
-      const taken = new Set<string>();
+      const taken = new Set<string>(); // フルパス(小文字)で重複回避＝同名でも別フォルダなら可
       for (const r of rows) {
         if (r.error) continue;
-        const f = items[r.index]?.file;
-        if (!f) continue;
+        const it = items[r.index];
+        if (!it) continue;
+        const dir = it.folder ? it.folder + "/" : "";
         let target = r.newName;
-        if (taken.has(target.toLowerCase())) {
+        if (taken.has((dir + target).toLowerCase())) {
           const { stem, ext } = splitName(target);
           let n = 2;
-          while (taken.has(`${stem}_${n}${ext}`.toLowerCase())) n++;
+          while (taken.has(`${dir}${stem}_${n}${ext}`.toLowerCase())) n++;
           target = `${stem}_${n}${ext}`;
         }
-        taken.add(target.toLowerCase());
-        zip.file(target, f);
-        if (target !== r.input.name) {
-          apply.push(`Rename-Item -LiteralPath ${psQuote(r.input.name)} -NewName ${psQuote(target)}`);
-          undoLines.push(`Rename-Item -LiteralPath ${psQuote(target)} -NewName ${psQuote(r.input.name)}`);
+        taken.add((dir + target).toLowerCase());
+        zip.file(dir + target, it.file);
+        if (target !== it.name) {
+          apply.push(
+            `Rename-Item -LiteralPath ${psQuote(dir + it.name)} -NewName ${psQuote(target)}`,
+          );
+          undoLines.push(
+            `Rename-Item -LiteralPath ${psQuote(dir + target)} -NewName ${psQuote(it.name)}`,
+          );
         }
       }
       zip.file("_rename_map.csv", "﻿" + toCSV(mapRows()));
@@ -255,10 +307,11 @@ export default function CsvRename() {
     <ToolShell slug="csv-rename">
       <div className="card p-4 text-sm text-[var(--muted)]">
         複数ファイル・フォルダーの名前を<strong>ルールを重ねて一括変換</strong>します。連番付与／文字の追加・削除・置換／
-        拡張子変更／大文字小文字・全角半角／更新日時(・画像はEXIF撮影日時)の付与に対応。
-        「元ファイル名,新ファイル名」の<strong>CSVを読み込んで対応表リネーム</strong>もできます。
+        拡張子変更／大文字小文字・全角半角／更新日時(・画像はEXIF撮影日時)の付与に対応。文字操作系は
+        <strong>「拡張子も対象」</strong>にでき、<strong>テキストエディタ</strong>で変更後の名前を直接編集、
+        「元ファイル名,新ファイル名」の<strong>CSVで対応表リネーム</strong>も可能。
         ブラウザ内処理で実ファイルは変更せず、<strong>変換マップCSV</strong>と
-        <strong>リネーム済みコピーのZIP（適用/元に戻す PowerShell 付き）</strong>を出力します。
+        <strong>リネーム済みコピーのZIP（フォルダ構成維持・適用/元に戻す PowerShell 付き）</strong>を出力します。
       </div>
 
       {/* 取り込み */}
@@ -287,7 +340,7 @@ export default function CsvRename() {
               type="file"
               multiple
               onChange={(e) => {
-                addFiles(Array.from(e.target.files ?? []));
+                addFiles(Array.from(e.target.files ?? []).map((file) => ({ file })));
                 e.currentTarget.value = "";
               }}
               className="hidden"
@@ -300,7 +353,12 @@ export default function CsvRename() {
               // @ts-expect-error webkitdirectory は型に無いがフォルダ選択に有効
               webkitdirectory=""
               onChange={(e) => {
-                addFiles(Array.from(e.target.files ?? []));
+                addFiles(
+                  Array.from(e.target.files ?? []).map((file) => ({
+                    file,
+                    path: file.webkitRelativePath || file.name,
+                  })),
+                );
                 e.currentTarget.value = "";
               }}
               className="hidden"
@@ -319,6 +377,15 @@ export default function CsvRename() {
               className="hidden"
             />
           </label>
+          <button
+            type="button"
+            onClick={downloadTemplate}
+            className={`${miniCls} font-semibold`}
+            title={items.length ? "読み込み済みのファイル名入りテンプレを出力" : "記入例入りテンプレを出力"}
+          >
+            <Glyph name="download" size={12} className="mr-1" />
+            テンプレCSV
+          </button>
           {items.length > 0 && (
             <button type="button" onClick={clearAll} className={`${miniCls} font-semibold text-[var(--muted)]`}>
               リストを空にする（{items.length}件）
@@ -334,6 +401,14 @@ export default function CsvRename() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-semibold">変換ルール（上から順に適用）</span>
             <div className="ml-auto flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => (showEditor ? setShowEditor(false) : openEditor())}
+                className={`${miniCls} font-semibold ${showEditor ? "border-[var(--brand)] text-[var(--brand)]" : ""}`}
+                title="変更後の名前を1行ずつ直接編集"
+              >
+                <Glyph name="pencil" size={12} /> テキストエディタ
+              </button>
               <button
                 type="button"
                 onClick={undo}
@@ -354,6 +429,42 @@ export default function CsvRename() {
               </button>
             </div>
           </div>
+
+          {showEditor && (
+            <div className="rounded-lg border border-[var(--brand)] p-3">
+              <p className="mb-1 text-xs text-[var(--muted)]">
+                下の一覧の<strong>順番どおり</strong>に、1行=1ファイルの「変更後の名前」を書きます。
+                反映すると「テキストエディタで指定」ルールが末尾に追加され、他ルールより優先されます。
+                空行はその行のファイルを変更しません。
+              </p>
+              <textarea
+                value={editorText}
+                onChange={(e) => setEditorText(e.target.value)}
+                rows={Math.min(16, Math.max(4, items.length))}
+                spellCheck={false}
+                className="w-full rounded-md border px-2.5 py-2 font-mono text-xs"
+              />
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={applyTextEditor}
+                  className="rounded-md bg-[var(--brand)] px-3 py-1 text-xs font-semibold text-white"
+                >
+                  反映する
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditorText(rows.map((r) => r.newName).join("\n"))}
+                  className={`${miniCls} font-semibold`}
+                >
+                  現在の変更後を読み込み直す
+                </button>
+                <span className="text-xs text-[var(--muted)]">
+                  {editorText.split(/\r?\n/).filter((l, i, a) => l.trim() !== "" || i < a.length - 1).length} 行 / ファイル {items.length} 件
+                </span>
+              </div>
+            </div>
+          )}
 
           {rules.map((rule, i) => (
             <RuleCard
@@ -438,6 +549,7 @@ export default function CsvRename() {
               <thead className="bg-[var(--surface-soft)] text-xs text-[var(--muted)]">
                 <tr>
                   <th className="w-10 px-2 py-2 text-right">#</th>
+                  {hasFolders && <th className="px-3 py-2 text-left">フォルダ名</th>}
                   <th className="px-3 py-2 text-left">元の名前</th>
                   <th className="w-6 px-1 py-2" />
                   <th className="px-3 py-2 text-left">新しい名前</th>
@@ -449,6 +561,14 @@ export default function CsvRename() {
                     <td className="px-2 py-1.5 text-right tabular-nums text-xs text-[var(--muted)]">
                       {r.index + 1}
                     </td>
+                    {hasFolders && (
+                      <td
+                        className="max-w-[1px] truncate px-3 py-1.5 text-xs text-[var(--muted)]"
+                        title={items[r.index]?.folder || ""}
+                      >
+                        {items[r.index]?.folder || "—"}
+                      </td>
+                    )}
                     <td className="max-w-[1px] truncate px-3 py-1.5 text-[var(--muted)]" title={r.input.name}>
                       {r.input.name}
                     </td>
@@ -474,7 +594,7 @@ export default function CsvRename() {
                 ))}
                 {view.length === 0 && (
                   <tr className="border-t">
-                    <td colSpan={4} className="px-3 py-6 text-center text-sm text-[var(--muted)]">
+                    <td colSpan={hasFolders ? 5 : 4} className="px-3 py-6 text-center text-sm text-[var(--muted)]">
                       この条件に一致するファイルはありません。
                     </td>
                   </tr>
@@ -546,6 +666,16 @@ function RuleCard({
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         <RuleFields rule={rule} onPatch={onPatch} />
       </div>
+      {supportsIncludeExt(rule.type) && "includeExt" in rule && (
+        <label className="mt-2 flex items-center gap-2 text-xs text-[var(--muted)]">
+          <input
+            type="checkbox"
+            checked={rule.includeExt}
+            onChange={(e) => onPatch({ includeExt: e.target.checked })}
+          />
+          拡張子も対象にする（フルネームに適用）
+        </label>
+      )}
     </div>
   );
 }
@@ -744,9 +874,17 @@ function RuleFields({
           </Field>
           <p className="col-span-full text-[11px] text-[var(--muted)]">
             上の「CSVで対応表を読み込み」で取り込んだ {rule.pairs.length} 件の対応を使います。
-            1列目=元の名前 / 2列目=新しい名前。
+            1列目=元の名前 / 2列目=新しい名前。雛形は「テンプレCSV」ボタンから
+            （ファイル読み込み後なら現在のファイル名入りで出力）。
           </p>
         </>
+      );
+    case "textOverride":
+      return (
+        <p className="col-span-full text-[11px] text-[var(--muted)]">
+          「テキストエディタ」で指定した {rule.names.length} 行の名前を、一覧の順番どおりに使います。
+          他のルールより優先。編集し直すには上の「テキストエディタ」ボタンから。
+        </p>
       );
     default:
       return null;

@@ -276,7 +276,7 @@ export default function PhotoCull() {
         onDrop={async (e) => {
           e.preventDefault();
           setDragOver(false);
-          analyze(await filesFromDrop(e.dataTransfer));
+          analyze((await filesFromDrop(e.dataTransfer)).map((d) => d.file));
         }}
         className={`card flex flex-col items-center gap-2 border-dashed p-8 text-center transition ${
           dragOver ? "border-[var(--brand)] bg-[var(--surface-soft)]" : ""

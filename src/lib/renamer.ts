@@ -12,17 +12,24 @@
 
 export type RulePosition = "prefix" | "suffix";
 
+/** 拡張子も対象にできる文字操作系ルールに付く共通フラグ */
+export interface IncludeExt {
+  /** true なら拡張子を含むフルネームに適用する */
+  includeExt: boolean;
+}
+
 export type RenameRule =
   | { id: string; enabled: boolean; type: "sequence"; position: RulePosition | "replace"; start: number; step: number; digits: number; separator: string }
-  | { id: string; enabled: boolean; type: "insert"; text: string; position: "prefix" | "suffix" | "at"; index: number }
-  | { id: string; enabled: boolean; type: "deleteChars"; from: "start" | "end"; count: number }
-  | { id: string; enabled: boolean; type: "deleteKeyword"; keyword: string; all: boolean }
-  | { id: string; enabled: boolean; type: "replace"; find: string; replaceWith: string; regex: boolean; all: boolean; caseInsensitive: boolean }
+  | ({ id: string; enabled: boolean; type: "insert"; text: string; position: "prefix" | "suffix" | "at"; index: number } & IncludeExt)
+  | ({ id: string; enabled: boolean; type: "deleteChars"; from: "start" | "end"; count: number } & IncludeExt)
+  | ({ id: string; enabled: boolean; type: "deleteKeyword"; keyword: string; all: boolean } & IncludeExt)
+  | ({ id: string; enabled: boolean; type: "replace"; find: string; replaceWith: string; regex: boolean; all: boolean; caseInsensitive: boolean } & IncludeExt)
   | { id: string; enabled: boolean; type: "ext"; mode: "set" | "lower" | "upper"; value: string }
-  | { id: string; enabled: boolean; type: "caseConv"; mode: "lower" | "upper" | "capitalize" }
-  | { id: string; enabled: boolean; type: "widthConv"; mode: "toHalf" | "toFull"; scope: "alnum" | "katakana" | "both" }
+  | ({ id: string; enabled: boolean; type: "caseConv"; mode: "lower" | "upper" | "capitalize" } & IncludeExt)
+  | ({ id: string; enabled: boolean; type: "widthConv"; mode: "toHalf" | "toFull"; scope: "alnum" | "katakana" | "both" } & IncludeExt)
   | { id: string; enabled: boolean; type: "date"; source: "modified" | "exif"; format: string; position: RulePosition; separator: string }
-  | { id: string; enabled: boolean; type: "csvMap"; pairs: [string, string][]; matchBy: "name" | "stem" };
+  | { id: string; enabled: boolean; type: "csvMap"; pairs: [string, string][]; matchBy: "name" | "stem" }
+  | { id: string; enabled: boolean; type: "textOverride"; names: string[] };
 
 export type RuleType = RenameRule["type"];
 
@@ -247,9 +254,20 @@ function applyRule(
       }
       return { stem, ext };
     }
+    case "textOverride": {
+      const n = rule.names[ctx.index];
+      if (n == null || n.trim() === "") return { stem, ext };
+      const sp = splitName(n.trim());
+      return { stem: sp.stem, ext: sp.ext };
+    }
     default:
       return { stem, ext };
   }
+}
+
+/** 拡張子も対象にできるルール種別か */
+export function supportsIncludeExt(t: RuleType): boolean {
+  return t === "insert" || t === "deleteChars" || t === "deleteKeyword" || t === "replace" || t === "caseConv" || t === "widthConv";
 }
 
 // ============================================================================
@@ -267,7 +285,15 @@ export function computeRows(
     let error: string | null = null;
     for (const rule of active) {
       try {
-        ({ stem, ext } = applyRule(rule, stem, ext, { index, input }));
+        const useFull = "includeExt" in rule && rule.includeExt && supportsIncludeExt(rule.type);
+        if (useFull) {
+          const res = applyRule(rule, stem + ext, "", { index, input });
+          const sp = splitName(res.stem + res.ext);
+          stem = sp.stem;
+          ext = sp.ext;
+        } else {
+          ({ stem, ext } = applyRule(rule, stem, ext, { index, input }));
+        }
       } catch (e) {
         error = `ルール「${ruleLabel(rule.type)}」でエラー: ${(e as Error).message}`;
         break;
@@ -324,6 +350,7 @@ export const RULE_LABELS: Record<RuleType, string> = {
   widthConv: "全角・半角",
   date: "日付・時刻の付与",
   csvMap: "CSVで対応表リネーム",
+  textOverride: "テキストエディタで指定",
 };
 export function ruleLabel(t: RuleType): string {
   return RULE_LABELS[t] ?? t;
@@ -337,24 +364,26 @@ export function newRule(type: RuleType): RenameRule {
     case "sequence":
       return { ...base, type, position: "suffix", start: 1, step: 1, digits: 3, separator: "_" };
     case "insert":
-      return { ...base, type, text: "", position: "prefix", index: 0 };
+      return { ...base, type, text: "", position: "prefix", index: 0, includeExt: false };
     case "deleteChars":
-      return { ...base, type, from: "start", count: 1 };
+      return { ...base, type, from: "start", count: 1, includeExt: false };
     case "deleteKeyword":
-      return { ...base, type, keyword: "", all: true };
+      return { ...base, type, keyword: "", all: true, includeExt: false };
     case "replace":
-      return { ...base, type, find: "", replaceWith: "", regex: false, all: true, caseInsensitive: false };
+      return { ...base, type, find: "", replaceWith: "", regex: false, all: true, caseInsensitive: false, includeExt: false };
     case "ext":
       return { ...base, type, mode: "lower", value: "" };
     case "caseConv":
-      return { ...base, type, mode: "lower" };
+      return { ...base, type, mode: "lower", includeExt: false };
     case "widthConv":
-      return { ...base, type, mode: "toHalf", scope: "alnum" };
+      return { ...base, type, mode: "toHalf", scope: "alnum", includeExt: false };
     case "date":
       return { ...base, type, source: "modified", format: "YYYYMMDD", position: "prefix", separator: "_" };
     case "csvMap":
       return { ...base, type, pairs: [], matchBy: "name" };
+    case "textOverride":
+      return { ...base, type, names: [] };
     default:
-      return { ...base, type: "insert", text: "", position: "prefix", index: 0 };
+      return { ...base, type: "insert", text: "", position: "prefix", index: 0, includeExt: false };
   }
 }
