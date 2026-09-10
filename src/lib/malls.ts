@@ -499,6 +499,16 @@ export const TOOLS: Tool[] = [
     icon: "layers",
     status: "live",
   },
+  {
+    slug: "photo-cull",
+    mall: "common",
+    name: "撮影データ一括整理",
+    summary:
+      "撮影フォルダの写真をまとめて読み込み、連写・重複のベスト選別とピンボケ判定を自動化。「使える／捨て候補（連写重複・ピンボケ）」に振り分けてZIP・CSV出力。すべてブラウザ内処理。",
+    kind: "client",
+    icon: "image",
+    status: "live",
+  },
 ];
 
 export const toolsByMall = (mall: MallId): Tool[] => TOOLS.filter((t) => t.mall === mall);
