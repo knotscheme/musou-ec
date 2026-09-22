@@ -8,6 +8,8 @@ import { Glyph } from "@/components/Glyph";
 import { StatusBadge, SaveButton } from "@/components/ToolMeta";
 import { useI18n } from "@/lib/i18n";
 
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 export default function Dashboard() {
   const { t } = useI18n();
   const [activeMid, setActiveMid] = useState<string>(MALL_ORDER[0]);
@@ -60,6 +62,34 @@ export default function Dashboard() {
           WebAssembly / Web Workers / Chrome拡張）で実行し、中央サーバーのコストをゼロに近づけています。
         </p>
       </header>
+
+      {/* PR: Spider（提携EC構築SaaS）バナー。ページ最上部に配置 */}
+      <a
+        href="https://spider-ec.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group relative mb-6 flex flex-col items-center gap-4 overflow-hidden rounded-2xl p-5 text-white shadow-lg ring-1 ring-white/10 transition hover:shadow-xl sm:flex-row sm:gap-5 sm:p-6"
+        style={{ background: "linear-gradient(135deg, #3730a3 0%, #6d28d9 55%, #a21caf 100%)" }}
+      >
+        <span className="absolute right-3 top-3 rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-white/80">
+          PR
+        </span>
+        <span className="flex h-16 w-36 shrink-0 items-center justify-center rounded-xl bg-white p-2.5 shadow-sm sm:h-20 sm:w-44">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={`${BASE_PATH}/pr/spider-logo.png`} alt="Spider" className="h-full w-full object-contain" />
+        </span>
+        <div className="min-w-0 flex-1 text-center sm:text-left">
+          <div className="text-lg font-bold leading-snug sm:text-xl">
+            完全無料で本格派オンラインショップをつくろう。
+          </div>
+          <p className="mt-1 text-sm text-white/85">
+            低い手数料で、自由に売る。手数料2.5％〜・高機能EC構築・アフィリエイト搭載
+          </p>
+        </div>
+        <span className="shrink-0 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#6d28d9] transition group-hover:bg-white/90">
+          spider-ec.com を見る →
+        </span>
+      </a>
 
       {/* あったらいいな アンケート導線（目立つ場所） */}
       <Link
