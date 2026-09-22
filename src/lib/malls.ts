@@ -360,16 +360,16 @@ export const TOOLS: Tool[] = [
 
   // ── 全店舗共通 ────────────────────────────
   {
-    slug: "sayatori-ai",
+    slug: "spider-ec",
     mall: "common",
-    name: "サヤトリAI",
+    name: "Spider",
     summary:
-      "見つけるのは勘じゃなく、データ。AIがX（旧Twitter）を中心としたSNSと検索データから、伸び始めたジャンルを検出し仕入れ候補まで自動で突き合わせます。（別サービス・新しいタブで開きます）",
+      "完全無料で本格派オンラインショップをつくろう。低い手数料で、自由に売る。手数料2.5％〜・高機能EC構築・アフィリエイト搭載。（別サービス・新しいタブで開きます）",
     kind: "client",
-    icon: "target",
+    icon: "globe",
     status: "live",
-    external: "https://sayatori-ai.onrender.com/lp",
-    accent: "#94a3b8",
+    external: "https://spider-ec.com/",
+    accent: "#6d28d9",
   },
   // 統合ハブ（重複していた小ツールをタブでまとめたもの）
   {
