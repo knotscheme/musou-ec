@@ -46,6 +46,11 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [getSiteUrl("/opengraph-image")],
   },
+  // Google Search Console 所有権確認(2026-09)。HTMLタグ方式(URLプレフィックスプロパティ、
+  // https://knotscheme.github.io/musou-ec/)。
+  verification: {
+    google: "MzHBACFTr0rrpZ4CLuxa7gcpIwkIvb6u3JVl5rh7xk8",
+  },
 };
 
 const websiteJsonLd = {
