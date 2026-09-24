@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { MALLS, TOOLS } from "@/lib/malls";
 import { getSiteUrl } from "@/lib/site-url";
 import { MockTool } from "@/components/MockTool";
+import { ToolViewTracker } from "@/components/ToolViewTracker";
 import { TOOL_COMPONENTS } from "@/tools/registry";
 
 export function generateStaticParams() {
@@ -40,5 +41,10 @@ export function generateMetadata({ params }: { params: Promise<{ slug: string }>
 export default async function ToolPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const Impl = TOOL_COMPONENTS[slug];
-  return Impl ? <Impl /> : <MockTool slug={slug} />;
+  return (
+    <>
+      <ToolViewTracker slug={slug} />
+      {Impl ? <Impl /> : <MockTool slug={slug} />}
+    </>
+  );
 }
