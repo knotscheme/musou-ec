@@ -39,6 +39,7 @@ import RakutenViolationRisk from "@/components/tools/RakutenViolationRisk";
 import PhotoCull from "@/components/tools/PhotoCull";
 import CsvRename from "@/components/tools/CsvRename";
 import YahooPageBuilder from "@/components/tools/YahooPageBuilder";
+import YomiageMemo from "@/components/tools/YomiageMemo";
 // 統合ハブ（複数ツールをタブで内包）
 import ImageStudio from "@/components/tools/ImageStudio";
 import DiscountSim from "@/components/tools/DiscountSim";
@@ -90,6 +91,7 @@ export const TOOL_COMPONENTS: Record<string, ComponentType> = {
   "rakuten-page-builder": RakutenPageBuilder,
   "rakuten-violation-risk": RakutenViolationRisk,
   "photo-cull": PhotoCull,
+  "yomiage-memo": YomiageMemo,
   "csv-rename": CsvRename,
   "yahoo-page-builder": YahooPageBuilder,
   // 統合ハブ

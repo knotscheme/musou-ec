@@ -519,6 +519,16 @@ export const TOOLS: Tool[] = [
     icon: "image",
     status: "live",
   },
+  {
+    slug: "yomiage-memo",
+    mall: "common",
+    name: "読み上げメモ",
+    summary:
+      "商品説明・接客トーク・台本などをリストに保存して音声で読み上げ。自然な声（ニューラル音声）を自動選択、0.5〜3倍速に対応。メモはブラウザ内に保存。",
+    kind: "client",
+    icon: "play",
+    status: "live",
+  },
 ];
 
 export const toolsByMall = (mall: MallId): Tool[] => TOOLS.filter((t) => t.mall === mall);
