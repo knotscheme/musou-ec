@@ -1,5 +1,173 @@
 [
   {
+    "videoId": "wcL-GlMnmrA",
+    "title": "Shopifyのテスト注文・ストア公開方法｜販売前の動作確認を実演【13/13】",
+    "publishedAt": "2026-11-26T10:13:24Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/wcL-GlMnmrA/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "業務効率化",
+    "relatedToolPath": "",
+    "viewCount": 7
+  },
+  {
+    "videoId": "qFIGJbM0XXk",
+    "title": "Shopifyの決済設定｜クレジットカード決済とチェックアウト設定を実演【12/13】",
+    "publishedAt": "2026-11-26T10:12:28Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/qFIGJbM0XXk/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "業務効率化",
+    "relatedToolPath": "",
+    "viewCount": 8
+  },
+  {
+    "videoId": "mzbWVLlN3C0",
+    "title": "Shopifyの送料設定・税金設定｜一定額以上で送料無料にする方法も実演【11/13】",
+    "publishedAt": "2026-11-26T10:11:06Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/mzbWVLlN3C0/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "業務効率化",
+    "relatedToolPath": "",
+    "viewCount": 9
+  },
+  {
+    "videoId": "paFVNr5wkOo",
+    "title": "Shopifyアプリの探し方｜インストール前に確認する料金と注意点【10/13】",
+    "publishedAt": "2026-11-26T10:10:01Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/paFVNr5wkOo/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "業務効率化",
+    "relatedToolPath": "",
+    "viewCount": 2
+  },
+  {
+    "videoId": "yJmePsXArws",
+    "title": "Shopifyブログの使い方｜記事の作成・公開からメニュー表示まで実演【9/13】",
+    "publishedAt": "2026-11-26T10:09:23Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/yJmePsXArws/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "業務効率化",
+    "relatedToolPath": "",
+    "viewCount": 14
+  },
+  {
+    "videoId": "5p4_JTYX9Zw",
+    "title": "Shopifyのテーマ設定・デザイン編集｜無料テーマDawnでお店の見た目を整える【8/13】",
+    "publishedAt": "2026-11-26T10:08:33Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/5p4_JTYX9Zw/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "構築・設定",
+    "relatedToolPath": "",
+    "viewCount": 3
+  },
+  {
+    "videoId": "oW2vEzDhzic",
+    "title": "Shopifyのページ作成・メニュー設定｜作ったページをお店に表示する方法【7/13】",
+    "publishedAt": "2026-11-26T10:07:34Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/oW2vEzDhzic/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "構築・設定",
+    "relatedToolPath": "",
+    "viewCount": 3
+  },
+  {
+    "videoId": "NCSyUjonUIY",
+    "title": "Shopifyの商品登録方法｜色・サイズのバリエーションとコレクション設定【6/13】",
+    "publishedAt": "2026-11-26T10:06:10Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/NCSyUjonUIY/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "構築・設定",
+    "relatedToolPath": "",
+    "viewCount": 2
+  },
+  {
+    "videoId": "_2gGVm--ebQ",
+    "title": "Shopifyに独自ドメインを接続する方法｜お名前.comのDNS設定を実演【5/13】",
+    "publishedAt": "2026-11-26T10:05:07Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/_2gGVm--ebQ/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "業務効率化",
+    "relatedToolPath": "",
+    "viewCount": 3
+  },
+  {
+    "videoId": "n6ILl8xxT5U",
+    "title": "Shopifyの独自ドメイン取得方法｜お名前.comで購入する手順を実演【4/13】",
+    "publishedAt": "2026-11-26T10:04:32Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/n6ILl8xxT5U/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "業務効率化",
+    "relatedToolPath": "",
+    "viewCount": 3
+  },
+  {
+    "videoId": "7p_YhHNL_Zw",
+    "title": "Shopifyの初期設定｜登録したら最初にやることを画面で解説【3/13】",
+    "publishedAt": "2026-11-26T10:03:26Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/7p_YhHNL_Zw/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "構築・設定",
+    "relatedToolPath": "",
+    "viewCount": 1
+  },
+  {
+    "videoId": "kG3TKzghiQg",
+    "title": "Shopify管理画面の使い方｜基本操作とAI「Sidekick」を初心者向けに解説【2/13】",
+    "publishedAt": "2026-11-26T10:02:14Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/kG3TKzghiQg/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "業務効率化",
+    "relatedToolPath": "",
+    "viewCount": 2
+  },
+  {
+    "videoId": "ZeErkLWNwHQ",
+    "title": "Shopifyのアカウント作成・無料体験の登録手順を実演【1/13】",
+    "publishedAt": "2026-11-26T10:00:17Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/ZeErkLWNwHQ/mqdefault.jpg",
+    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
+    "channelName": "ひとりで始めるShopify運営ch",
+    "platform": "shopify",
+    "category": "業務効率化",
+    "relatedToolPath": "",
+    "viewCount": 2
+  },
+  {
+    "videoId": "uu8Q7xp05t4",
+    "title": "新商品を売るとき、どの競合を分析する？iPhoneとGoogle Pixelで考えるECの売り方 #ECマーケティング #競合分析 #新商品",
+    "publishedAt": "2026-11-26T06:44:38Z",
+    "thumbnailUrl": "https://i.ytimg.com/vi/uu8Q7xp05t4/mqdefault.jpg",
+    "channelId": "UCF6jtl_fOfVls8g4g1VCx_A",
+    "channelName": "ECを遊ぼう♪",
+    "platform": "shopify",
+    "category": "転換・CRO",
+    "relatedToolPath": "",
+    "viewCount": 11
+  },
+  {
     "videoId": "e7xR6QL-tgM",
     "title": "【トラブルになる前に】セラーセントラルで必須の初期設定5選",
     "publishedAt": "2026-11-25T11:00:21Z",
@@ -9,7 +177,7 @@
     "platform": "amazon",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 195
+    "viewCount": 314
   },
   {
     "videoId": "Yvkhh3VFXos",
@@ -21,7 +189,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 95
+    "viewCount": 122
   },
   {
     "videoId": "8v_Im5-eHSI",
@@ -33,7 +201,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 54
+    "viewCount": 71
   },
   {
     "videoId": "gV7lIs6BcRo",
@@ -45,7 +213,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 1438
+    "viewCount": 1509
   },
   {
     "videoId": "bVJRjsllqPo",
@@ -57,7 +225,7 @@
     "platform": "amazon",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 287218
+    "viewCount": 334249
   },
   {
     "videoId": "dE8MD4mJMJ4",
@@ -69,7 +237,7 @@
     "platform": "amazon",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 511833
+    "viewCount": 584382
   },
   {
     "videoId": "fX3_rVjHK5Y",
@@ -81,7 +249,7 @@
     "platform": "amazon",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 197924
+    "viewCount": 230302
   },
   {
     "videoId": "knFSWyEf9iE",
@@ -93,7 +261,7 @@
     "platform": "amazon",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 13801
+    "viewCount": 14583
   },
   {
     "videoId": "0qXDjtmGL_M",
@@ -105,7 +273,7 @@
     "platform": "amazon",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 4426
+    "viewCount": 4446
   },
   {
     "videoId": "QtpBwmqwfB8",
@@ -117,7 +285,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 289
+    "viewCount": 310
   },
   {
     "videoId": "kvMXdhgFyvo",
@@ -129,7 +297,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 232
+    "viewCount": 242
   },
   {
     "videoId": "VwFida5ZGPM",
@@ -141,7 +309,7 @@
     "platform": "rakuten",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 49
+    "viewCount": 57
   },
   {
     "videoId": "hcj9n_V_Eg4",
@@ -153,7 +321,7 @@
     "platform": "rakuten",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 82
+    "viewCount": 83
   },
   {
     "videoId": "30xl7LrlMOo",
@@ -165,7 +333,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 149
+    "viewCount": 159
   },
   {
     "videoId": "SNELr6RDejo",
@@ -177,7 +345,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 987
+    "viewCount": 1009
   },
   {
     "videoId": "dKy9OAUT-DM",
@@ -189,7 +357,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 1472
+    "viewCount": 1507
   },
   {
     "videoId": "LT53XjeogsE",
@@ -213,7 +381,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 758
+    "viewCount": 765
   },
   {
     "videoId": "NWV4eyVC8fw",
@@ -237,7 +405,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 204
+    "viewCount": 205
   },
   {
     "videoId": "gCHFh5bHiR4",
@@ -249,7 +417,7 @@
     "platform": "rakuten",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 202
+    "viewCount": 204
   },
   {
     "videoId": "K5GTC48UMaI",
@@ -261,7 +429,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 77
+    "viewCount": 78
   },
   {
     "videoId": "Oj2bMLfTc60",
@@ -273,7 +441,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 5573
+    "viewCount": 5581
   },
   {
     "videoId": "DtHg4xNgTzQ",
@@ -285,7 +453,7 @@
     "platform": "yahoo",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 298
+    "viewCount": 309
   },
   {
     "videoId": "jLbuIcaLBiA",
@@ -297,7 +465,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 374
+    "viewCount": 383
   },
   {
     "videoId": "sP6d2MUIUN8",
@@ -309,7 +477,7 @@
     "platform": "yahoo",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 318
+    "viewCount": 323
   },
   {
     "videoId": "ooLjRPEZqF0",
@@ -321,7 +489,7 @@
     "platform": "amazon",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 106087
+    "viewCount": 117877
   },
   {
     "videoId": "Up7M0JVpKY8",
@@ -345,7 +513,7 @@
     "platform": "amazon",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 139
+    "viewCount": 140
   },
   {
     "videoId": "TpSdzhd7VZw",
@@ -369,7 +537,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 321
+    "viewCount": 329
   },
   {
     "videoId": "tVeYYYX1R0A",
@@ -381,7 +549,7 @@
     "platform": "yahoo",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 7870
+    "viewCount": 8349
   },
   {
     "videoId": "OhaHbM-GmTU",
@@ -405,7 +573,7 @@
     "platform": "yahoo",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 721
+    "viewCount": 737
   },
   {
     "videoId": "cOhdHLNJ9zo",
@@ -429,7 +597,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 256
+    "viewCount": 258
   },
   {
     "videoId": "QW77gJQbHE4",
@@ -441,7 +609,7 @@
     "platform": "amazon",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 45
+    "viewCount": 46
   },
   {
     "videoId": "dsOcOdbVl9E",
@@ -465,7 +633,7 @@
     "platform": "amazon",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 161
+    "viewCount": 168
   },
   {
     "videoId": "_OgchNfjrMg",
@@ -501,7 +669,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 48
+    "viewCount": 49
   },
   {
     "videoId": "WSR3ubVpYAk",
@@ -513,7 +681,7 @@
     "platform": "yahoo",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 260
+    "viewCount": 265
   },
   {
     "videoId": "-PdKM0mf6Gw",
@@ -537,7 +705,7 @@
     "platform": "yahoo",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 1294
+    "viewCount": 1296
   },
   {
     "videoId": "y6uPCmmp35Q",
@@ -561,7 +729,7 @@
     "platform": "amazon",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 99
+    "viewCount": 100
   },
   {
     "videoId": "s3GkfKTnKIs",
@@ -597,7 +765,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 770
+    "viewCount": 771
   },
   {
     "videoId": "1qnRc2XSGA8",
@@ -609,7 +777,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 409
+    "viewCount": 415
   },
   {
     "videoId": "m0C0LIqFhro",
@@ -621,7 +789,7 @@
     "platform": "amazon",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 105891
+    "viewCount": 115176
   },
   {
     "videoId": "_VnZkPmU8Fw",
@@ -633,7 +801,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 1327
+    "viewCount": 1330
   },
   {
     "videoId": "KWzhHnA3NRE",
@@ -669,7 +837,7 @@
     "platform": "amazon",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 113031
+    "viewCount": 124677
   },
   {
     "videoId": "1NfRUP-65uU",
@@ -693,7 +861,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 928
+    "viewCount": 932
   },
   {
     "videoId": "LhFbsVcs_fY",
@@ -705,7 +873,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 324
+    "viewCount": 330
   },
   {
     "videoId": "NmKDVt0XBis",
@@ -729,7 +897,7 @@
     "platform": "rakuten",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 43
+    "viewCount": 46
   },
   {
     "videoId": "u0yO76eYEVw",
@@ -741,7 +909,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 2384
+    "viewCount": 2387
   },
   {
     "videoId": "J5hRsr1tRwI",
@@ -789,7 +957,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 820
+    "viewCount": 824
   },
   {
     "videoId": "YkOjCbDZSVE",
@@ -801,7 +969,7 @@
     "platform": "shopify",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 154
+    "viewCount": 156
   },
   {
     "videoId": "Gi-FXszAEoI",
@@ -813,7 +981,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 7091
+    "viewCount": 7094
   },
   {
     "videoId": "tjtx-5jSPPw",
@@ -825,7 +993,7 @@
     "platform": "rakuten",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 960
+    "viewCount": 968
   },
   {
     "videoId": "8Twc0BKaOUI",
@@ -837,7 +1005,7 @@
     "platform": "yahoo",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 567
+    "viewCount": 582
   },
   {
     "videoId": "_hZ7FqQjbcE",
@@ -849,7 +1017,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 648
+    "viewCount": 649
   },
   {
     "videoId": "z65xx8O8DsY",
@@ -921,7 +1089,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 86
+    "viewCount": 90
   },
   {
     "videoId": "2frLb79shI8",
@@ -957,7 +1125,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 2404
+    "viewCount": 2407
   },
   {
     "videoId": "AtjhGoKspLs",
@@ -969,7 +1137,7 @@
     "platform": "yahoo",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 386
+    "viewCount": 387
   },
   {
     "videoId": "XpdFXaMv3hw",
@@ -993,7 +1161,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 7518
+    "viewCount": 7523
   },
   {
     "videoId": "Yn6S0-isbmg",
@@ -1005,7 +1173,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 1466
+    "viewCount": 1469
   },
   {
     "videoId": "mmoUY7QZ8Vo",
@@ -1017,7 +1185,7 @@
     "platform": "yahoo",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 585
+    "viewCount": 586
   },
   {
     "videoId": "dxuBeeRfQaU",
@@ -1041,7 +1209,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 1087
+    "viewCount": 1088
   },
   {
     "videoId": "rTbx0wlKnFM",
@@ -1053,7 +1221,7 @@
     "platform": "yahoo",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 357
+    "viewCount": 358
   },
   {
     "videoId": "d9AP0AatNvw",
@@ -1077,7 +1245,7 @@
     "platform": "yahoo",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 317
+    "viewCount": 318
   },
   {
     "videoId": "JCtndw_tKA0",
@@ -1101,7 +1269,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 118
+    "viewCount": 119
   },
   {
     "videoId": "DsLXFgHy1r4",
@@ -1149,7 +1317,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 835
+    "viewCount": 839
   },
   {
     "videoId": "SmfeUK-8UMI",
@@ -1173,7 +1341,7 @@
     "platform": "rakuten",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 539
+    "viewCount": 545
   },
   {
     "videoId": "ygnrrdfhGy4",
@@ -1185,7 +1353,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 675
+    "viewCount": 676
   },
   {
     "videoId": "ZTmAuaO55o8",
@@ -1209,7 +1377,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 1152
+    "viewCount": 1188
   },
   {
     "videoId": "N3kLs8f9-GM",
@@ -1221,7 +1389,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 7084
+    "viewCount": 7088
   },
   {
     "videoId": "AJkQPcCS140",
@@ -1257,7 +1425,7 @@
     "platform": "yahoo",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 875
+    "viewCount": 878
   },
   {
     "videoId": "mvH5YI1z5eA",
@@ -1269,7 +1437,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 2185
+    "viewCount": 2186
   },
   {
     "videoId": "0huGGnZAuhY",
@@ -1281,7 +1449,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 10314
+    "viewCount": 10319
   },
   {
     "videoId": "8owSngMw3qc",
@@ -1293,7 +1461,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 554
+    "viewCount": 555
   },
   {
     "videoId": "s4lDIoowzMg",
@@ -1317,7 +1485,7 @@
     "platform": "rakuten",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 365
+    "viewCount": 366
   },
   {
     "videoId": "X2XYgx-iCPU",
@@ -1329,7 +1497,7 @@
     "platform": "shopify",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 310
+    "viewCount": 313
   },
   {
     "videoId": "oJDntD9CKmQ",
@@ -1341,7 +1509,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 2813
+    "viewCount": 2817
   },
   {
     "videoId": "CbngLT6DG34",
@@ -1389,7 +1557,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 17743
+    "viewCount": 17762
   },
   {
     "videoId": "wcQN-81ofKQ",
@@ -1413,7 +1581,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 419
+    "viewCount": 421
   },
   {
     "videoId": "2FaOygew1Ig",
@@ -1425,7 +1593,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 91
+    "viewCount": 92
   },
   {
     "videoId": "7Rj84--iJBQ",
@@ -1449,7 +1617,7 @@
     "platform": "common",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 92
+    "viewCount": 93
   },
   {
     "videoId": "Ov-MAfDO4Pw",
@@ -1461,7 +1629,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 5531
+    "viewCount": 5535
   },
   {
     "videoId": "LT-aKbzw8Fs",
@@ -1473,7 +1641,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 921
+    "viewCount": 922
   },
   {
     "videoId": "NSlEvuvz3hc",
@@ -1497,7 +1665,7 @@
     "platform": "shopify",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 217
+    "viewCount": 220
   },
   {
     "videoId": "HMmcZDMH1mM",
@@ -1509,7 +1677,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 678
+    "viewCount": 681
   },
   {
     "videoId": "tP1wPntwdlE",
@@ -1533,7 +1701,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 134
+    "viewCount": 135
   },
   {
     "videoId": "Og-XINrInEk",
@@ -1545,7 +1713,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 4087
+    "viewCount": 4089
   },
   {
     "videoId": "aqFFbxYyl7c",
@@ -1581,7 +1749,7 @@
     "platform": "shopify",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 475
+    "viewCount": 476
   },
   {
     "videoId": "huU74xStCf4",
@@ -1617,7 +1785,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 159
+    "viewCount": 160
   },
   {
     "videoId": "aX3AtQEeZtA",
@@ -1629,7 +1797,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 7066
+    "viewCount": 7074
   },
   {
     "videoId": "rt96jauA92k",
@@ -1653,7 +1821,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 238
+    "viewCount": 240
   },
   {
     "videoId": "_CzkcuSUpiE",
@@ -1677,7 +1845,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 3672
+    "viewCount": 3673
   },
   {
     "videoId": "pvrDGqQkHUw",
@@ -1689,7 +1857,7 @@
     "platform": "common",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 99
+    "viewCount": 100
   },
   {
     "videoId": "njHW-6gxcCY",
@@ -1701,7 +1869,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 2933
+    "viewCount": 2934
   },
   {
     "videoId": "MO4kBLqpLUM",
@@ -1713,7 +1881,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 20348
+    "viewCount": 20504
   },
   {
     "videoId": "WSdBsPB0dG0",
@@ -1725,7 +1893,7 @@
     "platform": "common",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 226
+    "viewCount": 227
   },
   {
     "videoId": "gmGGYkVdyi8",
@@ -1737,7 +1905,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 663
+    "viewCount": 664
   },
   {
     "videoId": "VsL-gyzmBGk",
@@ -1761,7 +1929,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 176
+    "viewCount": 178
   },
   {
     "videoId": "kZfncYeEWHo",
@@ -1785,7 +1953,7 @@
     "platform": "shopify",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 157
+    "viewCount": 159
   },
   {
     "videoId": "xjznOosqt_I",
@@ -1845,7 +2013,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 208
+    "viewCount": 209
   },
   {
     "videoId": "vRNiG-5BgCw",
@@ -1857,7 +2025,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 189
+    "viewCount": 191
   },
   {
     "videoId": "Zrr8OG_Ci3I",
@@ -1869,7 +2037,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 210
+    "viewCount": 213
   },
   {
     "videoId": "ogKfwXZiXX4",
@@ -1881,7 +2049,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 309
+    "viewCount": 313
   },
   {
     "videoId": "9UZsn63nBqU",
@@ -1893,7 +2061,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 109
+    "viewCount": 111
   },
   {
     "videoId": "RpTosJlUBj8",
@@ -1905,7 +2073,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 273
+    "viewCount": 274
   },
   {
     "videoId": "N8Vkw_f-ehM",
@@ -1941,7 +2109,7 @@
     "platform": "shopify",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 158
+    "viewCount": 160
   },
   {
     "videoId": "DQVo8XJOvPo",
@@ -1977,7 +2145,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 1253
+    "viewCount": 1254
   },
   {
     "videoId": "0hFLuYiBpnQ",
@@ -1989,7 +2157,7 @@
     "platform": "shopify",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 87
+    "viewCount": 88
   },
   {
     "videoId": "5Z_xXMFBF4Y",
@@ -2013,7 +2181,7 @@
     "platform": "common",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 131
+    "viewCount": 132
   },
   {
     "videoId": "rSdlYI8KNuM",
@@ -2037,7 +2205,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 140
+    "viewCount": 143
   },
   {
     "videoId": "WlM6upU6dB0",
@@ -2049,7 +2217,7 @@
     "platform": "shopify",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 143
+    "viewCount": 144
   },
   {
     "videoId": "psaeYWYX314",
@@ -2133,7 +2301,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 1822
+    "viewCount": 1835
   },
   {
     "videoId": "Bdw4yM0w9Ow",
@@ -2146,18 +2314,6 @@
     "category": "構築・設定",
     "relatedToolPath": "",
     "viewCount": 291
-  },
-  {
-    "videoId": "QqOemquqYVg",
-    "title": "【衝撃】GPT Image 2でEC画像は外注不要に…Nano Banana超えてレベルが違う",
-    "publishedAt": "2026-04-25T07:00:19Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/QqOemquqYVg/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 1188
   },
   {
     "videoId": "b7sNaVEpFLo",
@@ -2256,18 +2412,6 @@
     "viewCount": 78
   },
   {
-    "videoId": "MR9am6-tmq4",
-    "title": "【2026年最新】ヤフーショッピングで売れない理由はこれ！上位表示できる9ステップを完全解説",
-    "publishedAt": "2026-03-31T09:00:16Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/MR9am6-tmq4/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 824
-  },
-  {
     "videoId": "xtwQKkIAt9k",
     "title": "Shopifyの始め方と使い方を徹底解説｜外注不要で一人で完結【保存版】",
     "publishedAt": "2026-03-29T10:00:06Z",
@@ -2277,7 +2421,7 @@
     "platform": "shopify",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 16846
+    "viewCount": 16911
   },
   {
     "videoId": "PMzBOCcBasE",
@@ -2337,7 +2481,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 634
+    "viewCount": 640
   },
   {
     "videoId": "fkIu-odg8nM",
@@ -2349,7 +2493,7 @@
     "platform": "shopify",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 288
+    "viewCount": 290
   },
   {
     "videoId": "GTkbGivZDNA",
@@ -2386,30 +2530,6 @@
     "category": "転換・CRO",
     "relatedToolPath": "",
     "viewCount": 309
-  },
-  {
-    "videoId": "09x1g9pF2hY",
-    "title": "【2026年版】9割が間違えるECサイトの始め方。モール vs 自社EC、プロが教える「失敗しない判断基準」",
-    "publishedAt": "2026-01-28T01:00:01Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/09x1g9pF2hY/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 4071
-  },
-  {
-    "videoId": "Huu3jsxkqsw",
-    "title": "【2026最新版】中国輸入代行業者のラクマート代表に儲かっているOEMセラーの特徴、おすすめの運営方法聞いてみました！",
-    "publishedAt": "2026-01-23T09:00:32Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/Huu3jsxkqsw/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "rakuten",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 1113
   },
   {
     "videoId": "vuU6nfZggXo",
@@ -2460,18 +2580,6 @@
     "viewCount": 2
   },
   {
-    "videoId": "xRGj3hl9yv4",
-    "title": "【衝撃】AIで仕事が楽になるは大間違い！ルーティン消えて密度爆上がり…現場は超大変、経営者だけ得する残酷な現実 #AI #仕事の未来 #AI導入 #生産性神話 #地頭力",
-    "publishedAt": "2026-01-20T10:56:02Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/xRGj3hl9yv4/mqdefault.jpg",
-    "channelId": "UCF6jtl_fOfVls8g4g1VCx_A",
-    "channelName": "ECを遊ぼう♪",
-    "platform": "shopify",
-    "category": "転換・CRO",
-    "relatedToolPath": "",
-    "viewCount": 9
-  },
-  {
     "videoId": "-WEFJlMusGY",
     "title": "【利益商品紹介】冬に利益を取れるせどり商品だけをまとめました！",
     "publishedAt": "2026-01-12T10:15:00Z",
@@ -2506,18 +2614,6 @@
     "category": "業務効率化",
     "relatedToolPath": "",
     "viewCount": 3798
-  },
-  {
-    "videoId": "xWAs5hhHiiU",
-    "title": "makeshopとShopify「損益分岐点」の残酷な真実【徹底比較】デザインやテンプレートも紹介",
-    "publishedAt": "2025-12-21T02:16:47Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/xWAs5hhHiiU/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 495
   },
   {
     "videoId": "AI4K5XXXLRc",
@@ -2568,18 +2664,6 @@
     "viewCount": 299
   },
   {
-    "videoId": "q2w3J010jvY",
-    "title": "【徹底比較】STORES vs Shopify｜手数料・デザイン・将来性で選ぶ「事業のOS」【ECを成功させたい方必見】",
-    "publishedAt": "2025-11-28T02:33:58Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/q2w3J010jvY/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 1395
-  },
-  {
     "videoId": "gqwK97AyJsY",
     "title": "【この棚ヤバすぎ！】ヤマダ電機せどりで利益出すには○○を見れば問題なし！",
     "publishedAt": "2025-11-25T10:30:35Z",
@@ -2616,30 +2700,6 @@
     "viewCount": 258
   },
   {
-    "videoId": "gOokcnXMfWo",
-    "title": "既製品は必ずパクられる？中国輸入で勝ち続ける現実的戦略【経験者向け】",
-    "publishedAt": "2025-11-07T09:01:12Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/gOokcnXMfWo/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 730
-  },
-  {
-    "videoId": "H9WqFTG0OPk",
-    "title": "Amazonの売上激減！ヤフーショッピング初心者からの挑戦！【対談動画】",
-    "publishedAt": "2025-11-06T23:31:38Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/H9WqFTG0OPk/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 430
-  },
-  {
     "videoId": "Xd-oWD9GPrI",
     "title": "[1分で解決]ECサイトの売上をアップさせるキャンペーンの例　#ネットショップ #ec #ecサイト #楽天市場 #shorts",
     "publishedAt": "2025-11-06T08:11:28Z",
@@ -2674,18 +2734,6 @@
     "category": "集客・SEO",
     "relatedToolPath": "",
     "viewCount": 349
-  },
-  {
-    "videoId": "3qAIS3Eqdf8",
-    "title": "【徹底比較】Shopifyとカラーミーショップはどっちがおすすめ？料金・手数料・機能を比較し、本気の事業に最適なのは？",
-    "publishedAt": "2025-10-30T10:00:13Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/3qAIS3Eqdf8/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "業務効率化",
-    "relatedToolPath": "",
-    "viewCount": 1063
   },
   {
     "videoId": "U75N9ibw62o",
@@ -2805,7 +2853,7 @@
     "platform": "rakuten",
     "category": "構築・設定",
     "relatedToolPath": "",
-    "viewCount": 2156
+    "viewCount": 2158
   },
   {
     "videoId": "X-iTDThDi5U",
@@ -2817,7 +2865,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 5076
+    "viewCount": 5077
   },
   {
     "videoId": "pUXAXv7T_rY",
@@ -2856,18 +2904,6 @@
     "viewCount": 248
   },
   {
-    "videoId": "a0mmKMUNLaA",
-    "title": "垢BAN回避するには！メルカリ規約改定で、あなたは事業者判定？",
-    "publishedAt": "2025-10-07T10:00:00Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/a0mmKMUNLaA/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 1745
-  },
-  {
     "videoId": "quUq8EU9J_w",
     "title": "ECサイトの運営におけるKPIの重要項目をまとめました　#ネットショップ #ec #ecサイト #楽天市場 #shorts",
     "publishedAt": "2025-10-06T06:30:28Z",
@@ -2880,18 +2916,6 @@
     "viewCount": 398
   },
   {
-    "videoId": "URYYlJpoZ0s",
-    "title": "中国輸入どこで売る！？メルカリからヤフーショッピングやAmazonに出店する際の注意点",
-    "publishedAt": "2025-10-03T09:01:02Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/URYYlJpoZ0s/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 290
-  },
-  {
     "videoId": "lWDljYE-nWw",
     "title": "リピートせどりで月１０万円利益を出す方法とは？",
     "publishedAt": "2025-09-30T12:18:21Z",
@@ -2901,31 +2925,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 3583
-  },
-  {
-    "videoId": "irlDi_55qvo",
-    "title": "メルカリ事業禁止で大パニック！ECモール専門家が解説する今後の対応策",
-    "publishedAt": "2025-09-30T09:01:12Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/irlDi_55qvo/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 2496
-  },
-  {
-    "videoId": "S80RnWHpFQA",
-    "title": "料金だけで選ぶな！BASE vs Shopify、将来を見据えたECプラットフォームの選び方",
-    "publishedAt": "2025-09-30T02:21:20Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/S80RnWHpFQA/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "業務効率化",
-    "relatedToolPath": "",
-    "viewCount": 2721
+    "viewCount": 3585
   },
   {
     "videoId": "ou9bevZ1KFc",
@@ -2937,19 +2937,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 2080
-  },
-  {
-    "videoId": "Ei16hAjQOQ8",
-    "title": "中国輸入初心者でもできる商品リサーチのコツとは？",
-    "publishedAt": "2025-09-05T08:00:18Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/Ei16hAjQOQ8/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 1161
+    "viewCount": 2081
   },
   {
     "videoId": "3DyyO61tLTI",
@@ -2961,7 +2949,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 182
+    "viewCount": 183
   },
   {
     "videoId": "7sEcwDUb9Qo",
@@ -2974,30 +2962,6 @@
     "category": "業務効率化",
     "relatedToolPath": "",
     "viewCount": 2657
-  },
-  {
-    "videoId": "c3eeU1NxmLM",
-    "title": "有料アプリ不要？Shopify 公式の無料ツールでコスト0運用＆売上UP【Email/Flow/Inbox/Forms/Search & Discovery】",
-    "publishedAt": "2025-08-29T04:58:51Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/c3eeU1NxmLM/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "業務効率化",
-    "relatedToolPath": "",
-    "viewCount": 335
-  },
-  {
-    "videoId": "ksPCXjI531E",
-    "title": "【最新版】ヤフーショッピング×中国輸入で成功するためのリサーチ徹底解説",
-    "publishedAt": "2025-08-27T11:01:15Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/ksPCXjI531E/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 620
   },
   {
     "videoId": "pEMQul4nHKw",
@@ -3021,19 +2985,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 195
-  },
-  {
-    "videoId": "6qP1uAkqhO0",
-    "title": "副業に悩む人必見！Amazonとヤフーショッピングの中国輸入物販リアル体験談",
-    "publishedAt": "2025-08-21T11:00:15Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/6qP1uAkqhO0/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 178
+    "viewCount": 196
   },
   {
     "videoId": "DvNAIIg4D_c",
@@ -3045,7 +2997,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 102
+    "viewCount": 103
   },
   {
     "videoId": "L4ntyGIhVS8",
@@ -3057,7 +3009,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 4788
+    "viewCount": 4789
   },
   {
     "videoId": "KJiz2dUKdJk",
@@ -3069,19 +3021,7 @@
     "platform": "rakuten",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 590
-  },
-  {
-    "videoId": "0YFES_Ps-a4",
-    "title": "Amazon× OEMで月商2300万円！売上2倍に成功",
-    "publishedAt": "2025-08-14T09:00:02Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/0YFES_Ps-a4/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "amazon",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 220
+    "viewCount": 592
   },
   {
     "videoId": "USpDEJ5rtb4",
@@ -3117,7 +3057,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 97
+    "viewCount": 98
   },
   {
     "videoId": "jm4FwoIa7To",
@@ -3144,18 +3084,6 @@
     "viewCount": 671
   },
   {
-    "videoId": "jIIwOeU75iQ",
-    "title": "Shopifyの定期購入（サブスク）アプリ6選｜価格・機能・導入手順まで徹底解説",
-    "publishedAt": "2025-07-28T05:30:17Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/jIIwOeU75iQ/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "業務効率化",
-    "relatedToolPath": "",
-    "viewCount": 825
-  },
-  {
     "videoId": "5470ZqRlA20",
     "title": "Yahooショッピングにおけるレビュー活用術｜SEO対策と売上向上",
     "publishedAt": "2025-07-24T05:22:59Z",
@@ -3166,18 +3094,6 @@
     "category": "集客・SEO",
     "relatedToolPath": "",
     "viewCount": 467
-  },
-  {
-    "videoId": "ILLTOYMmjTA",
-    "title": "会社員が在宅副業物販せどりからOEMに挑戦！月商220万円達成【対談動画】",
-    "publishedAt": "2025-07-23T09:04:17Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/ILLTOYMmjTA/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 197
   },
   {
     "videoId": "czn8b1QxA8g",
@@ -3225,19 +3141,7 @@
     "platform": "yahoo",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 449
-  },
-  {
-    "videoId": "yy_kdlMkh1g",
-    "title": "【超有料級】中国輸入物販で副業からでも月1000万円達成可能なリサーチから外注まで７ステップを公開",
-    "publishedAt": "2025-07-15T11:02:47Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/yy_kdlMkh1g/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 745
+    "viewCount": 450
   },
   {
     "videoId": "m5j873g96iA",
@@ -3261,7 +3165,7 @@
     "platform": "common",
     "category": "転換・CRO",
     "relatedToolPath": "",
-    "viewCount": 97
+    "viewCount": 100
   },
   {
     "videoId": "VoORmK3TiRs",
@@ -3285,7 +3189,7 @@
     "platform": "amazon",
     "category": "業務効率化",
     "relatedToolPath": "",
-    "viewCount": 2686
+    "viewCount": 2688
   },
   {
     "videoId": "2zdWx6iMrQg",
@@ -3442,18 +3346,6 @@
     "category": "転換・CRO",
     "relatedToolPath": "",
     "viewCount": 157
-  },
-  {
-    "videoId": "gDlqbWbr9oc",
-    "title": "Shopifyのアカウント作成手順【初心者でも失敗しない】簡単3ステップを画像付きで解説",
-    "publishedAt": "2025-06-20T21:50:27Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/gDlqbWbr9oc/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "業務効率化",
-    "relatedToolPath": "",
-    "viewCount": 284
   },
   {
     "videoId": "1GE5vGfMCIg",
@@ -3648,18 +3540,6 @@
     "viewCount": 337
   },
   {
-    "videoId": "cy8zdM7csqg",
-    "title": "【完全版】Shopifyへの乗り換えガイド｜失敗しない移行方法を解説！BASE/STORESなどからShopifyへお引越し",
-    "publishedAt": "2025-05-17T08:26:52Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/cy8zdM7csqg/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "業務効率化",
-    "relatedToolPath": "",
-    "viewCount": 726
-  },
-  {
     "videoId": "jj6-S36jyGE",
     "title": "1撃10万円の商品教えちゃいます！せどり初心者でも大量回収できる商品とは？",
     "publishedAt": "2025-05-16T10:15:11Z",
@@ -3744,18 +3624,6 @@
     "viewCount": 36
   },
   {
-    "videoId": "Nz6OJqcKKCU",
-    "title": "Shopifyのメリットとデメリット3選【100以上のストア支援者が語る】",
-    "publishedAt": "2025-04-09T03:49:40Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/Nz6OJqcKKCU/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "業務効率化",
-    "relatedToolPath": "",
-    "viewCount": 246
-  },
-  {
     "videoId": "WXKc1Ayr6n4",
     "title": "#6 売れる商品ページの作り方｜撮影・詳細のコツ",
     "publishedAt": "2025-04-04T23:51:57Z",
@@ -3804,42 +3672,6 @@
     "viewCount": 800
   },
   {
-    "videoId": "wLCHnTSRkN0",
-    "title": "TAO（1688）やTemuが 日本の中国輸入セラーを駆逐する日！",
-    "publishedAt": "2025-03-21T09:01:22Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/wLCHnTSRkN0/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 2152
-  },
-  {
-    "videoId": "zMZJkfDdFPI",
-    "title": "Shopifyのテーマ設定と編集方法【必要最低限の項目だけ紹介】",
-    "publishedAt": "2025-03-21T06:15:08Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/zMZJkfDdFPI/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 1348
-  },
-  {
-    "videoId": "S-dUbde3c_I",
-    "title": "Shopifyで抽選販売を実現するプロセスと便利なアプリ紹介｜Raffle315やShopify Forms、Googleフォーム、Appify",
-    "publishedAt": "2025-03-18T04:47:19Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/S-dUbde3c_I/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "業務効率化",
-    "relatedToolPath": "",
-    "viewCount": 120
-  },
-  {
     "videoId": "qffk15m2m7g",
     "title": "ストーリーの上げ方🤭🩷#Instagram #インスタ",
     "publishedAt": "2025-03-18T04:44:18Z",
@@ -3849,7 +3681,7 @@
     "platform": "common",
     "category": "集客・SEO",
     "relatedToolPath": "",
-    "viewCount": 76564
+    "viewCount": 76732
   },
   {
     "videoId": "z_3ZowOfWDI",
@@ -3886,18 +3718,6 @@
     "category": "集客・SEO",
     "relatedToolPath": "",
     "viewCount": 189
-  },
-  {
-    "videoId": "WiJNcK6cydQ",
-    "title": "【リダイレクト設定方法】ShopifyでURLを変更する方法｜商品ページ、ブログ記事ページ、ページそれぞれ解説",
-    "publishedAt": "2025-03-05T08:44:22Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/WiJNcK6cydQ/mqdefault.jpg",
-    "channelId": "UCp09Z0wskwsHKp6HsPu_LUg",
-    "channelName": "ひとりで始めるShopify運営ch",
-    "platform": "shopify",
-    "category": "業務効率化",
-    "relatedToolPath": "",
-    "viewCount": 274
   },
   {
     "videoId": "RmURGBRZoDg",
@@ -3958,18 +3778,6 @@
     "category": "集客・SEO",
     "relatedToolPath": "",
     "viewCount": 145
-  },
-  {
-    "videoId": "WhUIBrdiWwQ",
-    "title": "ヤフーショッピングの配送危機！YFFヤマトフルフィルメント終了で店舗はどうしたらいい？",
-    "publishedAt": "2025-02-10T08:00:25Z",
-    "thumbnailUrl": "https://i.ytimg.com/vi/WhUIBrdiWwQ/mqdefault.jpg",
-    "channelId": "UCSgCwNGY12SsewEpHsCD_bw",
-    "channelName": "おくだ. 中国輸入- Yahoo!ショッピング完全攻略ガイド",
-    "platform": "yahoo",
-    "category": "構築・設定",
-    "relatedToolPath": "",
-    "viewCount": 837
   },
   {
     "videoId": "sI1yK_wnWKM",
